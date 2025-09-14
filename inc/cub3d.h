@@ -16,7 +16,14 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <unistd.h>
 
 # define BUFFER_SIZE 10
+
+void    parse_arguments(int argc, char **argv);
+void    error_handler(int code);
+char    *ft_strnstr(const char *s, const char *find, size_t len);
+size_t  ft_strlen(const char *str);
+char    *ft_strjoin(char const *s1, char const *s2);
 
 #endif

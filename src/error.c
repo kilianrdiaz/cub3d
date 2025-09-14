@@ -10,15 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../inc/cub3d.h"
 
 void    error_handler(int code)
 {
     if (code == 0)
-        printf("* Usage: ./cub3d <map file>.cub *");
-    if (code == 1)
-        printf("* Could not open specified file *");
+        printf("Usage: ./cub3d <map_file>\n");
+    else if (code == 1)
+        printf("Wrong file type. Expected file: *.cub\n");
+    else if (code == 2)
+        printf("Could not open specified file\n");
     else
-        printf("* Unknown error code *");
+        printf("Unknown error code\n");
     exit(0);
 }
