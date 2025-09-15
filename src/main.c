@@ -10,7 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+<<<<<<< HEAD
 int main(int argc, char **argv)
 {
+=======
+#include "../inc/cub3d.h"
+
+int main(int argc, char **argv)
+{
+    parse_arguments(argc, argv);
+>>>>>>> 7180133d7949299579cd2106062f1768483e39aa
     return (0);
 }

@@ -18,8 +18,8 @@ NAME    = cub3d
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror
 MLX     = -lmlx -lXext -lX11 -lm
-SRC     = main.c
-OBJ     = $(SRC:.c=.o)
+SRCS    = main.c
+OBJ     = $(SRCS:.c=.o)
 
 LIB_DIR = libft/
 LIBFT = $(LIB_DIR)libft.a
