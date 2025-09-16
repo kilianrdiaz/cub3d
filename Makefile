@@ -14,11 +14,7 @@
 #                                 VARIABLES                                    #
 # **************************************************************************** #
 
-NAME    = cub3d
-CC      = cc
-CFLAGS = -Wall -Werror -Wextra -I inc -I $(LIB_DIR)
 MLX     = -lmlx -lXext -lX11 -lm
-
 SRCS    = src/parsing/error.c	\
 		  src/parsing/parser.c   \
 		  src/parsing/main.c
