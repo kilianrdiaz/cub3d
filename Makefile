@@ -14,7 +14,7 @@
 #                                 VARIABLES                                    #
 # **************************************************************************** #
 
-SRCS    = main.c
+SRCS    = src/main.c
 OBJ     = $(SRCS:.c=.o)
 
 LIB_DIR = libft/
