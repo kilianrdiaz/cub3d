@@ -14,4 +14,6 @@
 # define CUB3D_H
 
 # include "../libft/libft.h"
+void    error_handler(int code);
+void    parse_arguments(int argc, char **argv);
 #endif

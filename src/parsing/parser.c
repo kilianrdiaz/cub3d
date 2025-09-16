@@ -39,24 +39,14 @@ void    parse_arguments(int argc, char **argv)
 char	*read_file(int fd, char *ret)
 {
 	char	*line;
-	int		chars_read;
 
 	if (!ret)
-		ret = (char *)malloc(sizeof(char));
-	line = (char *)malloc((BUFFER_SIZE + 1) * sizeof(char));
-	chars_read = -1;
-	while (chars_read > 0)
+		ret = ft_strdup("");
+	while ((line = get_next_line(fd)) != NULL)
 	{
-		chars_read = read(fd, line, BUFFER_SIZE);
-		if (chars_read == -1)
-		{
-			free(line);
-			return (NULL);
-		}
-		line[chars_read] = '\0';
 		ret = join_line(ret, line);
+		free(line);
 	}
-	free(line);
 	return (ret);
 }
 
