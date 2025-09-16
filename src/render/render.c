@@ -49,6 +49,7 @@ typedef struct s_game {
     t_tex wall_south;
     t_tex wall_east;
     t_tex wall_west;
+    t_tex hand;
 } t_game;
 
 static inline int clamp_int(int v, int a, int b) {
@@ -77,6 +78,21 @@ void load_texture(t_game *g, t_tex *tex, char *path)
     if (tex->width <= 0 || tex->height <= 0) {
         fprintf(stderr, "Error: texture %s has invalid size\n", path);
         exit(1);
+    }
+}
+
+void draw_hand(t_game *g)
+{
+    int startX = WIDTH/2 - g->hand.width/2;
+    int startY = HEIGHT - g->hand.height; // mano abajo
+    for (int y = 0; y < g->hand.height; y++)
+    {
+        for (int x = 0; x < g->hand.width; x++)
+        {
+            int color = *(unsigned int *)(g->hand.addr + y * g->hand.line_len + x * (g->hand.bpp / 8));
+            if ((color & 0x00FFFFFF) != 0) // ignorar fondo transparente
+                put_pixel(g, startX + x, startY + y, color);
+        }
     }
 }
 
@@ -228,6 +244,7 @@ int render(t_game *g)
     }
 
     mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
+    draw_hand(g);
     return 0;
 }
 
@@ -272,6 +289,7 @@ int main(void)
     init_player(&g);
 
     /* Carga texturas: ajusta paths según tus archivos */
+    load_texture(&g, &g.hand, "./textures/spiderhand_01.xpm");
     load_texture(&g, &g.floor, "./textures/floor.xpm");
     load_texture(&g, &g.ceiling, "./textures/ceiling.xpm");
     load_texture(&g, &g.wall_north, "./textures/wall_inner_left.xpm");
