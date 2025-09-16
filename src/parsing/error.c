@@ -1,20 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cub3d.h                                            :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/09/12 18:13:03 by kroyo-di         ###   ########.fr       */
+/*   Created: 2025/09/12 17:30:01 by kroyo-di          #+#    #+#             */
+/*   Updated: 2025/09/12 18:09:20 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-# define CUB3D_H
+#include "../../inc/cub3d.h"
 
-# include "../libft/libft.h"
-void    error_handler(int code);
-void    parse_arguments(int argc, char **argv);
-
-#endif
+void    error_handler(int code)
+{
+    if (code == 0)
+        printf("Usage: ./cub3d <map_file>\n");
+    else if (code == 1)
+        printf("Wrong file type. Expected file: *.cub\n");
+    else if (code == 2)
+        printf("Could not open specified file\n");
+    else
+        printf("Unknown error code\n");
+    exit(0);
+}
