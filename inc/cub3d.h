@@ -13,15 +13,5 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include <stdio.h>
-# include <stdlib.h>
-# include <fcntl.h>
 # include "../libft/libft.h"
-# include <unistd.h>
-
-# define BUFFER_SIZE 10
-
-void    parse_arguments(int argc, char **argv);
-void    error_handler(int code);
-
 #endif
