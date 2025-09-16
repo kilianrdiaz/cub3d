@@ -18,7 +18,10 @@ NAME    = cub3d
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror
 MLX     = -lmlx -lXext -lX11 -lm
-SRCS    = src/render/render.c
+SRCS    = src/render/player.c \
+		src/render/utils.c \
+		src/render/map.c \
+		src/render/render.c 
 OBJ     = $(SRCS:.c=.o)
 
 LIB_DIR = libft/
