@@ -14,15 +14,16 @@
 #                                 VARIABLES                                    #
 # **************************************************************************** #
 
-NAME    = cub3d
-CC      = cc
-CFLAGS  = -Wall -Wextra -Werror
-MLX     = -lmlx -lXext -lX11 -lm
 SRCS    = main.c
 OBJ     = $(SRCS:.c=.o)
 
 LIB_DIR = libft/
 LIBFT = $(LIB_DIR)libft.a
+
+NAME    = cub3d
+CC      = cc
+CFLAGS  = -Wall -Wextra -Werror -I./inc -I$(LIB_DIR) -g
+MLX     = -lmlx -lXext -lX11 -lm
 
 # **************************************************************************** #
 #                                 RULES                                        #
@@ -30,8 +31,8 @@ LIBFT = $(LIB_DIR)libft.a
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT) libft Makefile
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(MLX)
+$(NAME): $(OBJ) $(LIBFT) Makefile
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
 
 $(LIBFT):
 	@if [ ! -d "$(LIB_DIR)" ]; then \
