@@ -80,6 +80,12 @@ typedef struct s_ray
 	double	stepY;
     int     hit; /* para evitar warnings */
     int     side;
+	int		lineHeight;
+	int		drawStart;
+	int		drawEnd;
+	int		color;
+	int		tx;
+	int		ty;	
 }			t_ray;
 
 int			clamp_int(int v, int a, int b);
@@ -89,5 +95,6 @@ void		load_texture(t_game *g, t_tex *tex, char *path);
 void		init_player(t_game *g);
 void		draw_hand(t_game *g);
 void		draw_floor_and_ceiling(t_game *g);
-
+void		draw_wall_stripe(t_game *g, t_ray *ray, t_tex *tex, int x);
+t_tex		*get_texture_wall(t_game *g, t_ray *ray);
 #endif

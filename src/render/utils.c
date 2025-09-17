@@ -60,3 +60,19 @@ void	load_texture(t_game *g, t_tex *tex, char *path)
 		exit(1);
 	}
 }
+
+t_tex	*get_texture_wall(t_game *g, t_ray *ray)
+{
+	if (ray->side == 0)
+	{
+		if (ray->dirX0 > 0)
+			return (&g->wall_west);
+		return (&g->wall_east);
+	}
+	else
+	{
+		if (ray->dirY0 > 0)
+			return (&g->wall_south);
+		return (&g->wall_north);
+	}
+}
