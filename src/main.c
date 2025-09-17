@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 13:28:50 by alejhern          #+#    #+#             */
-/*   Updated: 2025/09/16 13:28:54 by alejhern         ###   ########.fr       */
+/*   Created: 2025/09/12 17:03:30 by kroyo-di          #+#    #+#             */
+/*   Updated: 2025/09/17 21:10:21 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../inc/cub3d.h"
 
-int main(void)
+int main(int argc, char **argv)
 {
-    return 0;
+    parse_arguments(argc, argv);
+    return (0);
 }

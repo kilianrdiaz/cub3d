@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+         #
+#    By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/15 14:52:33 by alejhern          #+#    #+#              #
-#    Updated: 2025/09/15 14:52:40 by alejhern         ###   ########.fr        #
+#    Updated: 2025/09/17 21:22:58 by kroyo-di         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,9 @@ CFLAGS = -Wall -Werror -Wextra -I inc -I $(LIB_DIR)
 MLX     = -lmlx -lXext -lX11 -lm
 SRCS    = src/parsing/error.c	\
 		  src/parsing/parser.c   \
-		  src/parsing/main.c
+		  src/parsing/utils_parsing.c   \
+		  src/parsing/parse_elems.c   \
+		  src/main.c
 
 OBJ     = $(SRCS:.c=.o)
 
@@ -39,7 +41,7 @@ MLX     = -lmlx -lXext -lX11 -lm
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT) Makefile
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(LIBFT)
 
 $(LIBFT):
 	@if [ ! -d "$(LIB_DIR)" ]; then \

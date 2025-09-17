@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:30:01 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/09/12 18:09:20 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/09/17 21:28:55 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void    error_handler(int code)
         printf("Wrong file type. Expected file: *.cub\n");
     else if (code == 2)
         printf("Could not open specified file\n");
+    else if (code == 3)
+        printf("Wrong map file format\n"); // Añadir funcion de frees de posibles mallocs - TODO
     else
         printf("Unknown error code\n");
     exit(0);
