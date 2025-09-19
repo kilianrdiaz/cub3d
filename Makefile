@@ -21,7 +21,10 @@ MLX     = -lmlx -lXext -lX11 -lm
 SRCS    = src/render/player.c \
 		src/render/utils.c \
 		src/render/map.c \
-		src/render/render.c 
+		src/render/render.c \
+		src/key_handler.c \
+		src/main.c 
+
 OBJ     = $(SRCS:.c=.o)
 
 LIB_DIR = libft/

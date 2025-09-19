@@ -12,11 +12,6 @@
 
 #include "../../inc/cub3d.h"
 
-char		*map[] = {"11111111111111111111", "1E000000000000000001",
-			"11110111011111111001", "10000001000000001001",
-			"10111111101111111001", "10000000000000000001",
-			"10111111111111111111", "11111111111111111111"};
-
 static void	paint(t_game *g, t_ray *ray, int y)
 {
 	int	x;
@@ -32,8 +27,8 @@ static void	paint(t_game *g, t_ray *ray, int y)
 		/* clamp por si hay rounding negativo/extraño */
 		ray->tx = clamp_int(ray->tx, 0, g->floor.width - 1);
 		ray->ty = clamp_int(ray->ty, 0, g->floor.height - 1);
-		ray->color = *(unsigned int *)(g->floor.addr + ray->ty * g->floor.line_len + ray->tx
-				* (g->floor.bpp / 8));
+		ray->color = *(unsigned int *)(g->floor.addr + ray->ty
+				* g->floor.line_len + ray->tx * (g->floor.bpp / 8));
 		put_pixel(g, x, y, ray->color);
 		/* techo espejo */
 		ray->deltaDistX = clamp_int(ray->tx, 0, g->ceiling.width - 1);
@@ -56,24 +51,24 @@ void	draw_floor_and_ceiling(t_game *g)
 	y = HEIGHT / 2;
 	while (++y < HEIGHT)
 	{
-		ray.dirX0 = g->dirX - g->planeX;
-		ray.dirY0 = g->dirY - g->planeY;
-		ray.dirX1 = g->dirX + g->planeX;
-		ray.dirY1 = g->dirY + g->planeY;
+		ray.dirX0 = g->spider.dirX - g->spider.planeX;
+		ray.dirY0 = g->spider.dirY - g->spider.planeY;
+		ray.dirX1 = g->spider.dirX + g->spider.planeX;
+		ray.dirY1 = g->spider.dirY + g->spider.planeY;
 		p = y - HEIGHT / 2;
 		if (p == 0)
 			continue ; /* seguro, aunque no debería pasar */
 		ray.posZ = 0.5 * HEIGHT;
 		ray.rowDistance = ray.posZ / (double)p;
-		ray.sideDistX = g->posX + ray.rowDistance * ray.dirX0;
-		ray.sideDistY = g->posY + ray.rowDistance * ray.dirY0;
+		ray.sideDistX = g->spider.posX + ray.rowDistance * ray.dirX0;
+		ray.sideDistY = g->spider.posY + ray.rowDistance * ray.dirY0;
 		ray.stepX = ray.rowDistance * (ray.dirX1 - ray.dirX0) / (double)WIDTH;
 		ray.stepY = ray.rowDistance * (ray.dirY1 - ray.dirY0) / (double)WIDTH;
 		paint(g, &ray, y);
 	}
 }
 
-void calculate_wall_stripe(t_game *g, t_ray *ray, t_tex *tex)
+void	calculate_wall_stripe(t_game *g, t_ray *ray, t_tex *tex)
 {
 	double	wallX;
 
@@ -84,9 +79,9 @@ void calculate_wall_stripe(t_game *g, t_ray *ray, t_tex *tex)
 		ray->drawStart = 0;
 	if (ray->drawEnd >= HEIGHT)
 		ray->drawEnd = HEIGHT - 1;
-	wallX = g->posX + ray->perpWallDist * ray->dirX0;
+	wallX = g->spider.posX + ray->perpWallDist * ray->dirX0;
 	if (ray->side == 0)
-		wallX = g->posY + ray->perpWallDist * ray->dirY0;
+		wallX = g->spider.posY + ray->perpWallDist * ray->dirY0;
 	wallX -= floor(wallX);
 	ray->tx = (int)(wallX * tex->width);
 	ray->tx = clamp_int(ray->tx, 0, tex->width - 1);
@@ -97,8 +92,8 @@ void calculate_wall_stripe(t_game *g, t_ray *ray, t_tex *tex)
 
 void	draw_wall_stripe(t_game *g, t_ray *ray, t_tex *tex, int x)
 {
-	int d;
-	int y;
+	int	d;
+	int	y;
 
 	calculate_wall_stripe(g, ray, tex);
 	y = ray->drawStart - 1;
@@ -108,8 +103,26 @@ void	draw_wall_stripe(t_game *g, t_ray *ray, t_tex *tex, int x)
 		d = y * 256 - HEIGHT * 128 + ray->lineHeight * 128;
 		ray->ty = ((d * tex->height) / ray->lineHeight) / 256;
 		ray->ty = clamp_int(ray->ty, 0, tex->height - 1);
-		ray->color = *(unsigned int *)(tex->addr + ray->ty * tex->line_len + ray->tx
-				* (tex->bpp / 8));
+		ray->color = *(unsigned int *)(tex->addr + ray->ty * tex->line_len
+				+ ray->tx * (tex->bpp / 8));
 		put_pixel(g, x, y, ray->color);
 	}
+}
+
+void	print_map(t_game *g)
+{
+	t_pos p;
+
+	for (p.y = 0; p.y < MAP_H; p.y++)
+	{
+		for (p.x = 0; p.x < MAP_W; p.x++)
+		{
+			if (p.x == (int)g->spider.posX && p.y == (int)g->spider.posY)
+				printf("P"); // posición del jugador
+			else
+				printf("%c", map[p.y][p.x]);
+		}
+		printf("\n");
+	}
+	printf("\n");
 }
