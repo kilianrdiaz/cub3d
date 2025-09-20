@@ -14,7 +14,7 @@
 
 char		*map[] = {"11111111111111111111", "10000000000000000001",
 			"11110111011111111001", "10000001000000001001",
-			"10111111101111111001", "100000000N0000000001",
+			"10111111101111111001", "100000000NB000000001",
 			"10111111111111111111", "11111111111111111111"};
 
 static void	create_spiderman(t_game *g)
@@ -40,6 +40,34 @@ static void	create_spiderman(t_game *g)
 	}
 	ft_error_exit("Error: No player start position found in map\n");
 }
+
+static void create_bombs(t_game *g)
+{
+	t_pos p;
+	t_sprite *bomb;
+
+	g->bombs = NULL;
+	p.y = -1;
+	bomb = malloc(sizeof(t_sprite));
+	if (!bomb)
+		ft_error_exit("Error: Memory allocation failed for bomb\n");
+	ft_bzero(bomb, sizeof(t_sprite));
+	while (++p.y < MAP_H)
+	{
+		p.x = -1;
+		while (++p.x < MAP_W)
+		{
+			if (map[p.y][p.x] == 'B') // 'B' indica una bomba en el mapa
+			{
+				bomb->x = p.x + 0.5;
+				bomb->y = p.y + 0.5;
+				load_texture(g, &bomb->tex, "./textures/bomb.xpm");
+				ft_append_array((void ***)&g->bombs, bomb);
+			}
+		}
+	}
+}
+
 static void load_textures(t_game *g)
 {
     load_texture(g, &g->spider.hand, "./textures/spiderhand_01.xpm");
@@ -50,25 +78,6 @@ static void load_textures(t_game *g)
     load_texture(g, &g->wall_south, "./textures/wall_inner_right.xpm");
     load_texture(g, &g->wall_east, "./textures/wall_inner_right.xpm");
     load_texture(g, &g->wall_west, "./textures/wall_inner_left.xpm");
-}
-
-int key_press(int key, t_game *g)
-{
-    if (key == 119) g->keys.w = 1;
-    if (key == 97)  g->keys.a = 1;
-    if (key == 115)  g->keys.s = 1;
-    if (key == 100)  g->keys.d = 1;
-    if (key == 65307) mlx_destroy_window(g->mlx, g->win);
-    return 0;
-}
-
-int key_release(int key, t_game *g)
-{
-    if (key == 119) g->keys.w = 0;
-    if (key == 97)  g->keys.a = 0;
-    if (key == 115)  g->keys.s = 0;
-    if (key == 100)  g->keys.d = 0;
-    return 0;
 }
 
 int	main(void)
@@ -95,6 +104,7 @@ int	main(void)
 	}
 	g.addr = mlx_get_data_addr(g.img, &g.bpp, &g.line_len, &g.endian);
 	create_spiderman(&g);
+	create_bombs(&g);
     load_textures(&g);
     ft_bzero(&g.keys, sizeof(t_keys));
     mlx_hook(g.win, 2, 1L<<0, key_press, &g);   // tecla presionada

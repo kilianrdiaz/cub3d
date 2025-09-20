@@ -22,7 +22,8 @@ SRCS    = src/render/player.c \
 		src/render/utils.c \
 		src/render/map.c \
 		src/render/render.c \
-		src/key_handler.c \
+		src/move_spider.c \
+		src/key_hooks.c \
 		src/main.c 
 
 OBJ     = $(SRCS:.c=.o)

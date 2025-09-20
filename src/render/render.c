@@ -92,6 +92,32 @@ static void	render_wall(t_game *g, int x)
 	draw_wall_stripe(g, &ray, tex, x);
 }
 
+static void	render_floor_and_ceiling(t_game *g)
+{
+	t_ray	ray;
+	int		y;
+	int		p;
+
+	y = HEIGHT / 2;
+	while (++y < HEIGHT)
+	{
+		ray.dirX0 = g->spider.dirX - g->spider.planeX;
+		ray.dirY0 = g->spider.dirY - g->spider.planeY;
+		ray.dirX1 = g->spider.dirX + g->spider.planeX;
+		ray.dirY1 = g->spider.dirY + g->spider.planeY;
+		p = y - HEIGHT / 2;
+		if (p == 0)
+			continue ; /* seguro, aunque no debería pasar */
+		ray.posZ = 0.5 * HEIGHT;
+		ray.rowDistance = ray.posZ / (double)p;
+		ray.sideDistX = g->spider.posX + ray.rowDistance * ray.dirX0;
+		ray.sideDistY = g->spider.posY + ray.rowDistance * ray.dirY0;
+		ray.stepX = ray.rowDistance * (ray.dirX1 - ray.dirX0) / (double)WIDTH;
+		ray.stepY = ray.rowDistance * (ray.dirY1 - ray.dirY0) / (double)WIDTH;
+		draw_floor_and_ceiling(g, &ray, y);
+	}
+}
+
 int	render(t_game *g)
 {
 	int	x;
@@ -99,7 +125,7 @@ int	render(t_game *g)
 	usleep(200000);
 	update_player_position(g); // Actualiza posición según teclas
 	clean_screen(g);
-	draw_floor_and_ceiling(g);
+	render_floor_and_ceiling(g);
 	x = -1;
 	while (++x < WIDTH)
 		render_wall(g, x);

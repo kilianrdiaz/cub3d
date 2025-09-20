@@ -12,7 +12,7 @@
 
 #include "../../inc/cub3d.h"
 
-static void	paint(t_game *g, t_ray *ray, int y)
+void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 {
 	int	x;
 
@@ -39,32 +39,6 @@ static void	paint(t_game *g, t_ray *ray, int y)
 		put_pixel(g, x, HEIGHT - y - 1, ray->color);
 		ray->sideDistX += ray->stepX;
 		ray->sideDistY += ray->stepY;
-	}
-}
-
-void	draw_floor_and_ceiling(t_game *g)
-{
-	t_ray	ray;
-	int		y;
-	int		p;
-
-	y = HEIGHT / 2;
-	while (++y < HEIGHT)
-	{
-		ray.dirX0 = g->spider.dirX - g->spider.planeX;
-		ray.dirY0 = g->spider.dirY - g->spider.planeY;
-		ray.dirX1 = g->spider.dirX + g->spider.planeX;
-		ray.dirY1 = g->spider.dirY + g->spider.planeY;
-		p = y - HEIGHT / 2;
-		if (p == 0)
-			continue ; /* seguro, aunque no debería pasar */
-		ray.posZ = 0.5 * HEIGHT;
-		ray.rowDistance = ray.posZ / (double)p;
-		ray.sideDistX = g->spider.posX + ray.rowDistance * ray.dirX0;
-		ray.sideDistY = g->spider.posY + ray.rowDistance * ray.dirY0;
-		ray.stepX = ray.rowDistance * (ray.dirX1 - ray.dirX0) / (double)WIDTH;
-		ray.stepY = ray.rowDistance * (ray.dirY1 - ray.dirY0) / (double)WIDTH;
-		paint(g, &ray, y);
 	}
 }
 
