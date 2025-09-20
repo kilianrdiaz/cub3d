@@ -12,6 +12,23 @@
 
 #include "../inc/cub3d.h"
 
+int	close_program(t_game *g)
+{
+	if (g->img)
+		mlx_destroy_image(g->mlx, g->img);
+	if (g->win)
+		mlx_destroy_window(g->mlx, g->win);
+	if (g->mlx)
+	{
+		mlx_destroy_display(g->mlx);
+		free(g->mlx);
+	}
+	ft_free_array((void ***)&g->bombs);
+	exit(0);
+	return (0);
+}
+
+
 int	key_press(int key, t_game *g)
 {
 	if (key == 119)
@@ -23,7 +40,7 @@ int	key_press(int key, t_game *g)
 	if (key == 100)
 		g->keys.d = 1;
 	if (key == 65307)
-		mlx_destroy_window(g->mlx, g->win);
+		close_program(g);
 	return (0);
 }
 
