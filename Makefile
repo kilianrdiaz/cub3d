@@ -21,6 +21,7 @@ MLX     = -lmlx -lXext -lX11 -lm
 SRCS    = src/render/player.c \
 		src/render/utils.c \
 		src/render/map.c \
+		src/render/sprite.c \
 		src/render/render.c \
 		src/move_spider.c \
 		src/key_hooks.c \

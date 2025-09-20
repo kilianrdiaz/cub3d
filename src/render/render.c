@@ -90,6 +90,7 @@ static void	render_wall(t_game *g, int x)
 	calculate_distance_to_wall(g, &ray);
 	tex = get_texture_wall(g, &ray);
 	draw_wall_stripe(g, &ray, tex, x);
+	g->zbuffer[x] = ray.perpWallDist; // Guardamos la distancia del rayo
 }
 
 static void	render_floor_and_ceiling(t_game *g)
@@ -129,6 +130,7 @@ int	render(t_game *g)
 	x = -1;
 	while (++x < WIDTH)
 		render_wall(g, x);
+	render_sprites(g); // Dibuja las bombas
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	draw_hand(g);
 	// printf("Nueva pos: (%f, %f)\n", g->spider.posX, g->spider.posY);
