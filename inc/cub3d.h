@@ -23,6 +23,8 @@
 # define HEIGHT 480
 # define MAP_W 21
 # define MAP_H 8
+# define BOMB_W 64
+# define BOMB_H 64
 
 # define MOVE_SPEED 1
 # define ROT_SPEED 1
@@ -45,7 +47,14 @@ typedef struct s_sprite
 	double		x;
 	double		y;
 	t_tex		tex;
+	int			y_offset; // altura desde el suelo hasta la base del sprite (0 si toca el suelo)
 }				t_sprite;
+
+typedef struct s_sprite_order
+{
+    int index;
+    double dist;
+}   t_sprite_order;
 
 typedef struct s_keys
 {
@@ -85,7 +94,7 @@ typedef struct s_game
 	t_tex		wall_east;
 	t_tex		wall_west;
 	double zbuffer[WIDTH]; // 👈 guardamos la distancia de cada rayo
-	t_sprite	*bombs;
+	t_sprite	**bombs;
 	t_keys		keys;
 }				t_game;
 
@@ -107,12 +116,11 @@ typedef struct s_ray
 	double		perpWallDist;
 	double		stepX;
 	double		stepY;
-	int hit; /* para evitar warnings */
+	int 		hit; /* para evitar warnings */
 	int			side;
 	int			lineHeight;
 	int			drawStart;
 	int			drawEnd;
-	int			color;
 	int			tx;
 	int			ty;
 }				t_ray;
@@ -130,7 +138,7 @@ t_tex			*get_texture_wall(t_game *g, t_ray *ray);
 void			update_player_position(t_game *g);
 void			print_map(t_game *g);
 void			init_bombs(t_game *g);
-void			draw_sprite(t_game *g, t_sprite *sp);
+void			render_sprites(t_game *g);
 int				key_press(int key, t_game *g);
 int				key_release(int key, t_game *g);
 
