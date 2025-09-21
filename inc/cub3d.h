@@ -47,14 +47,21 @@ typedef struct s_sprite
 	double		x;
 	double		y;
 	t_tex		tex;
-	int			y_offset; // altura desde el suelo hasta la base del sprite (0 si toca el suelo)
+	double		spriteX;
+	double		spriteY;
+	double		invDet;
+	double		transformX;
+	double		transformY;
+	int 		width;
+	int 		height;
+	int 		screenX;
 }				t_sprite;
 
 typedef struct s_sprite_order
 {
-    int index;
-    double dist;
-}   t_sprite_order;
+	int			index;
+	double		dist;
+}				t_sprite_order;
 
 typedef struct s_keys
 {
@@ -82,6 +89,7 @@ typedef struct s_game
 	void		*mlx;
 	void		*win;
 	void		*img;
+	int			bomb_count;
 	char		*addr;
 	int			bpp;
 	int			line_len;
@@ -119,8 +127,10 @@ typedef struct s_ray
 	int 		hit; /* para evitar warnings */
 	int			side;
 	int			lineHeight;
-	int			drawStart;
-	int			drawEnd;
+	int			drawStartX;
+	int			drawEndX;
+	int			drawStartY;
+	int			drawEndY;
 	int			tx;
 	int			ty;
 }				t_ray;
