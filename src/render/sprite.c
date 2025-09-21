@@ -15,17 +15,19 @@
 static void	sort_sprites(t_sprite_order *order, int count)
 {
 	t_sprite_order	tmp;
+	t_pos			pos;
 
-	int i, j;
-	for (i = 0; i < count - 1; i++)
+	pos.x = -1;
+	while (++pos.x < count)
 	{
-		for (j = i + 1; j < count; j++)
+		pos.y = pos.x;
+		while (++pos.y < count)
 		{
-			if (order[i].dist < order[j].dist)
+			if (order[pos.x].dist < order[pos.y].dist)
 			{
-				tmp = order[i];
-				order[i] = order[j];
-				order[j] = tmp;
+				tmp = order[pos.x];
+				order[pos.x] = order[pos.y];
+				order[pos.y] = tmp;
 			}
 		}
 	}
@@ -37,12 +39,12 @@ void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe)
 	unsigned int	color;
 	int				y;
 
-	ray.tx = (int)(256 * (stripe - (-sp->width / 2 + sp->screenX))
+	ray.tx = (int)(256 * (stripe - (-sp->width / 2 + sp->screen_x))
 			* sp->tex.width / sp->width) / 256;
-	y = ray.drawStartY - 1;
-	while (++y < ray.drawEndY)
+	y = ray.draw_start_y - 1;
+	while (++y < ray.draw_end_y)
 	{
-		d = (y - ray.drawStartY) * 256;
+		d = (y - ray.draw_start_y) * 256;
 		ray.ty = ((d * sp->tex.height) / sp->height) / 256;
 		if (ray.tx < 0 || ray.tx >= sp->tex.width || ray.ty < 0
 			|| ray.ty >= sp->tex.height)
@@ -57,26 +59,26 @@ void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe)
 static void	ray_sprite(t_sprite *sp, t_ray *ray)
 {
 	// 1️⃣ Altura y ancho del sprite según la distancia (como las paredes)
-	sp->height = abs((int)(BOMB_H / sp->transformY));
+	sp->height = abs((int)(BOMB_H / sp->trans_y));
 	sp->width = abs((int)(sp->height * ((double)sp->tex.width
 					/ sp->tex.height)));
 	// 2️⃣ Offset vertical para apoyarlo en el suelo
-	ray->cameraX = (int)(HEIGHT / sp->transformY * 0.5);
+	ray->camera_x = (int)(HEIGHT / sp->trans_y * 0.5);
 	// 3️⃣ Límites verticales
-	ray->drawStartY = -sp->height / 2 + HEIGHT / 2 + ray->cameraX;
-	ray->drawEndY = sp->height / 2 + HEIGHT / 2 + ray->cameraX;
-	if (ray->drawStartY < 0)
-		ray->drawStartY = 0;
-	if (ray->drawEndY >= HEIGHT)
-		ray->drawEndY = HEIGHT - 1;
+	ray->draw_start_y = -sp->height / 2 + HEIGHT / 2 + ray->camera_x;
+	ray->draw_end_y = sp->height / 2 + HEIGHT / 2 + ray->camera_x;
+	if (ray->draw_start_y < 0)
+		ray->draw_start_y = 0;
+	if (ray->draw_end_y >= HEIGHT)
+		ray->draw_end_y = HEIGHT - 1;
 	// 4️⃣ Límites horizontales
-	sp->screenX = (int)((WIDTH / 2) * (1 + sp->transformX / sp->transformY));
-	ray->drawStartX = -sp->width / 2 + sp->screenX;
-	ray->drawEndX = ray->drawStartX + sp->width;
-	if (ray->drawStartX < 0)
-		ray->drawStartX = 0;
-	if (ray->drawEndX >= WIDTH)
-		ray->drawEndX = WIDTH - 1;
+	sp->screen_x = (int)((WIDTH / 2) * (1 + sp->trans_x / sp->trans_y));
+	ray->draw_start_x = -sp->width / 2 + sp->screen_x;
+	ray->draw_end_x = ray->draw_start_x + sp->width;
+	if (ray->draw_start_x < 0)
+		ray->draw_start_x = 0;
+	if (ray->draw_end_x >= WIDTH)
+		ray->draw_end_x = WIDTH - 1;
 }
 
 static void	position_sprite(t_game *g, t_sprite_order *order, int x)
@@ -86,23 +88,22 @@ static void	position_sprite(t_game *g, t_sprite_order *order, int x)
 	int			stripe;
 
 	sp = *g->bombs[order[x].index];
-	sp.spriteX = sp.x + 0.5 - g->spider.posX;
-	sp.spriteY = sp.y + 0.5 - g->spider.posY;
+	sp.x = sp.x + 0.5 - g->spider.x;
+	sp.y = sp.y + 0.5 - g->spider.y;
 	// Transformar a espacio de cámara
-	sp.invDet = 1.0 / (g->spider.planeX * g->spider.dirY - g->spider.dirX
-			* g->spider.planeY);
-	sp.transformX = sp.invDet * (g->spider.dirY * sp.spriteX - g->spider.dirX
-			* sp.spriteY);
-	sp.transformY = sp.invDet * (-g->spider.planeY * sp.spriteX
-			+ g->spider.planeX * sp.spriteY);
-	if (sp.transformY > 0.0)
+	sp.inv_det = 1.0 / (g->spider.plane_x * g->spider.dir_y - g->spider.dir_x
+			* g->spider.plane_y);
+	sp.trans_x = sp.inv_det * (g->spider.dir_y * sp.x - g->spider.dir_x * sp.y);
+	sp.trans_y = sp.inv_det * (-g->spider.plane_y * sp.x + g->spider.plane_x
+			* sp.y);
+	if (sp.trans_y > 0.0)
 	{
 		ray_sprite(&sp, &ray);
 		// Dibujar sprite con z-buffe
-		stripe = ray.drawStartX - 1;
-		while (++stripe < ray.drawEndX)
-			if (sp.transformY > 0 && stripe >= 0 && stripe < WIDTH
-				&& sp.transformY < g->zbuffer[stripe])
+		stripe = ray.draw_start_x - 1;
+		while (++stripe < ray.draw_end_x)
+			if (sp.trans_y > 0 && stripe >= 0 && stripe < WIDTH
+				&& sp.trans_y < g->zbuffer[stripe])
 				draw_sprite(g, &sp, ray, stripe);
 	}
 }
@@ -125,8 +126,8 @@ void	render_sprites(t_game *g)
 			if (g->bombs[idx] != NULL)
 			{
 				order[count].index = idx;
-				order[count].dist = pow(g->spider.posX - g->bombs[idx]->x, 2)
-					+ pow(g->spider.posY - g->bombs[idx]->y, 2);
+				order[count].dist = pow(g->spider.x - g->bombs[idx]->x, 2)
+					+ pow(g->spider.y - g->bombs[idx]->y, 2);
 				// distancia al jugador
 				count++;
 			}

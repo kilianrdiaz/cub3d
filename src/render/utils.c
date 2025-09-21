@@ -21,17 +21,17 @@ int	clamp_int(int v, int a, int b)
 	return (v);
 }
 
-void    clean_screen(t_game *g)
+void	clean_screen(t_game *g)
 {
-    t_pos   it;
+	t_pos	it;
 
-    it.y = -1;
-    while (++it.y < HEIGHT)
-    {
-        it.x = -1;
-        while (++it.x < WIDTH)
-            put_pixel(g, it.x, it.y, 0x000000);
-    }
+	it.y = -1;
+	while (++it.y < HEIGHT)
+	{
+		it.x = -1;
+		while (++it.x < WIDTH)
+			put_pixel(g, it.x, it.y, 0x000000);
+	}
 }
 
 void	put_pixel(t_game *g, int x, int y, int color)
@@ -56,7 +56,8 @@ void	load_texture(t_game *g, t_tex *tex, char *path)
 			&tex->endian);
 	if (tex->width <= 0 || tex->height <= 0)
 	{
-		ft_printf_fd(STDERR_FILENO, "Error: texture %s has invalid size\n", path);
+		ft_printf_fd(STDERR_FILENO, "Error: texture %s has invalid size\n",
+			path);
 		exit(1);
 	}
 }
@@ -65,13 +66,13 @@ t_tex	*get_texture_wall(t_game *g, t_ray *ray)
 {
 	if (ray->side == 0)
 	{
-		if (ray->dirX0 > 0)
+		if (ray->dir_x0 > 0)
 			return (&g->wall_west);
 		return (&g->wall_east);
 	}
 	else
 	{
-		if (ray->dirY0 > 0)
+		if (ray->dir_y0 > 0)
 			return (&g->wall_south);
 		return (&g->wall_north);
 	}

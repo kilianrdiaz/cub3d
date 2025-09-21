@@ -12,10 +12,10 @@
 
 #include "../inc/cub3d.h"
 
-char		*map[] = {"11111111111111111111", "100000000000000B0001",
-			"11110111011111111001", "10000001000000001001",
-			"10111111101111111001", "100000000EBB00000001",
-			"10111111111111111111", "11111111111111111111"};
+char	*map[] = {"11111111111111111111", "100000000000000B0001",
+	"11110111011111111001", "10000001000000001001",
+	"10111111101111111001", "100000000EBB00000001",
+	"10111111111111111111", "11111111111111111111"};
 
 static void	create_spiderman(t_game *g)
 {
@@ -31,8 +31,8 @@ static void	create_spiderman(t_game *g)
 			c = map[p.y][p.x];
 			if (c == 'N' || c == 'S' || c == 'E' || c == 'W' || c == 'P')
 			{
-				g->spider.posX = p.x + 0.5;
-				g->spider.posY = p.y + 0.5;
+				g->spider.x = p.x + 0.5;
+				g->spider.y = p.y + 0.5;
 				set_direction(g, c);
 				return ;
 			}
@@ -81,7 +81,7 @@ static void	load_textures(t_game *g)
 {
 	g->spider.hand = malloc(sizeof(t_tex) * 2);
 	if (!g->spider.hand)
-		ft_error_exit("Error: Memory allocation failed for spider hand textures\n");
+		ft_error_exit("Error: Memory allocation failed for spider textures\n");
 	load_texture(g, &g->spider.hand[0], "./textures/spiderhand_01.xpm");
 	load_texture(g, &g->spider.hand[1], "./textures/spiderhand_02.xpm");
 	/* Carga texturas: ajusta paths según tus archivos */
@@ -120,9 +120,9 @@ int	main(void)
 	create_bombs(&g);
 	load_textures(&g);
 	ft_bzero(&g.keys, sizeof(t_keys));
-	mlx_hook(g.win, 2, 1L << 0, key_press, &g);   // tecla presionada
-	mlx_hook(g.win, 3, 1L << 1, key_release, &g); // tecla liberada
-	mlx_loop_hook(g.mlx, render, &g);             // loop continuo
+	mlx_hook(g.win, 2, 1L << 0, key_press, &g);// tecla presionada
+	mlx_hook(g.win, 3, 1L << 1, key_release, &g);// tecla liberada
+	mlx_loop_hook(g.mlx, render, &g);// loop continuo
 	mlx_loop(g.mlx);
 	close_program(&g);
 	return (0);

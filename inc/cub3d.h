@@ -46,15 +46,13 @@ typedef struct s_sprite
 {
 	double		x;
 	double		y;
+	double		inv_det;
+	double		trans_x;
+	double		trans_y;
+	int			width;
+	int			height;
+	int			screen_x;
 	t_tex		tex;
-	double		spriteX;
-	double		spriteY;
-	double		invDet;
-	double		transformX;
-	double		transformY;
-	int 		width;
-	int 		height;
-	int 		screenX;
 }				t_sprite;
 
 typedef struct s_sprite_order
@@ -75,12 +73,12 @@ typedef struct s_keys
 
 typedef struct s_spidy
 {
-	double		posX;
-	double		posY;
-	double		dirX;
-	double		dirY;
-	double		planeX;
-	double		planeY;
+	double		x;
+	double		y;
+	double		dir_x;
+	double		dir_y;
+	double		plane_x;
+	double		plane_y;
 	t_tex		*hand;
 }				t_spidy;
 
@@ -101,36 +99,36 @@ typedef struct s_game
 	t_tex		wall_south;
 	t_tex		wall_east;
 	t_tex		wall_west;
-	double zbuffer[WIDTH]; // 👈 guardamos la distancia de cada rayo
+	double		zbuffer[WIDTH]; // 👈 guardamos la distancia de cada rayo
 	t_sprite	**bombs;
 	t_keys		keys;
 }				t_game;
 
 typedef struct s_ray
 {
-	double		cameraX;
-	double		dirX0;
-	double		dirY0;
-	double		dirX1;
-	double		dirY1;
-	double		posZ;
-	double		rowDistance;
-	int			mapX;
-	int			mapY;
-	double		sideDistX;
-	double		sideDistY;
-	double		deltaDistX;
-	double		deltaDistY;
-	double		perpWallDist;
-	double		stepX;
-	double		stepY;
-	int 		hit; /* para evitar warnings */
+	double		camera_x;
+	double		dir_x0;
+	double		dir_y0;
+	double		dir_x1;
+	double		dir_y1;
+	double		pos_z;
+	double		row_distance;
+	int			map_x;
+	int			map_y;
+	double		side_dist_x;
+	double		side_dist_y;
+	double		delta_dist_x;
+	double		delta_dist_y;
+	double		perp_wall_dist;
+	double		step_x;
+	double		step_y;
+	int			hit; /* para evitar warnings */
 	int			side;
-	int			lineHeight;
-	int			drawStartX;
-	int			drawEndX;
-	int			drawStartY;
-	int			drawEndY;
+	int			line_height;
+	int			draw_start_x;
+	int			draw_end_x;
+	int			draw_start_y;
+	int			draw_end_y;
 	int			tx;
 	int			ty;
 }				t_ray;

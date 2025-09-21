@@ -23,18 +23,18 @@ static int	is_walkable(int x, int y)
 
 static void	move_player_cell(t_game *g, int forward)
 {
-	int		newX;
-	int		newY;
+	int		new_x;
+	int		new_y;
 	t_tex	hand;
 
-	newX = (int)g->spider.posX + (int)g->spider.dirX * forward;
-	newY = (int)g->spider.posY + (int)g->spider.dirY * forward;
-	if (is_walkable(newX, newY))
+	new_x = (int)g->spider.x + (int)g->spider.dir_x * forward;
+	new_y = (int)g->spider.y + (int)g->spider.dir_y * forward;
+	if (is_walkable(new_x, new_y))
 	{
-		g->spider.posX = newX + 0.5; // centro de celda
-		g->spider.posY = newY + 0.5;
+		g->spider.x = new_x + 0.5; // centro de celda
+		g->spider.y = new_y + 0.5;
 		print_map(g); // depuración
-		ft_rotate_array((void ***) g->spider.hand);
+		ft_rotate_array((void ***)g->spider.hand);
 		hand = g->spider.hand[0];
 		g->spider.hand[0] = g->spider.hand[1];
 		g->spider.hand[1] = hand;
@@ -43,30 +43,30 @@ static void	move_player_cell(t_game *g, int forward)
 
 void	rotate_left(t_spidy *spidy)
 {
-	double	oldDirX;
-	double	oldPlaneX;
+	double	olddir_x;
+	double	oldplane_x;
 
-	oldDirX = spidy->dirX;
-	oldPlaneX = spidy->planeX;
+	olddir_x = spidy->dir_x;
+	oldplane_x = spidy->plane_x;
 	// Rotar 90° = aplicar matriz con cos(π/2), sin(π/2)
-	spidy->dirX = -spidy->dirY;
-	spidy->dirY = oldDirX;
-	spidy->planeX = -spidy->planeY;
-	spidy->planeY = oldPlaneX;
+	spidy->dir_x = -spidy->dir_y;
+	spidy->dir_y = olddir_x;
+	spidy->plane_x = -spidy->plane_y;
+	spidy->plane_y = oldplane_x;
 }
 
 void	rotate_right(t_spidy *spidy)
 {
-	double	oldDirX;
-	double	oldPlaneX;
+	double	olddir_x;
+	double	oldplane_x;
 
-	oldDirX = spidy->dirX;
-	oldPlaneX = spidy->planeX;
+	olddir_x = spidy->dir_x;
+	oldplane_x = spidy->plane_x;
 	// Rotar -90° = aplicar matriz con cos(-π/2), sin(-π/2)
-	spidy->dirX = spidy->dirY;
-	spidy->dirY = -oldDirX;
-	spidy->planeX = spidy->planeY;
-	spidy->planeY = -oldPlaneX;
+	spidy->dir_x = spidy->dir_y;
+	spidy->dir_y = -olddir_x;
+	spidy->plane_x = spidy->plane_y;
+	spidy->plane_y = -oldplane_x;
 }
 
 void	update_player_position(t_game *g)
