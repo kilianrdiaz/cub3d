@@ -43,7 +43,7 @@ MLX     = -lmlx -lXext -lX11 -lm
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT) Makefile
+$(NAME): $(OBJ) $(LIBFT) Makefile inc/cub3d.h
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
 
 $(LIBFT):
