@@ -39,16 +39,19 @@ void	draw_hand(t_game *g)
 	int		color;
 	t_pos	p;
 
-	startX = WIDTH / 2 - g->spider.hand.width / 2;
-	startY = HEIGHT - g->spider.hand.height; // mano abajo
+	if (!g->spider.hand || !g->spider.hand[0].addr || !g->spider.hand[1].addr)
+		return ;
+	startX = WIDTH / 2 - g->spider.hand[0].width / 2;
+	startY = HEIGHT - g->spider.hand[0].height;
 	p.y = -1;
-	while (++p.y < g->spider.hand.height)
+	while (++p.y < g->spider.hand[0].height)
 	{
 		p.x = -1;
-		while (++p.x < g->spider.hand.width)
+		while (++p.x < g->spider.hand[0].width)
 		{
-			color = *(unsigned int *)(g->spider.hand.addr + p.y
-					* g->spider.hand.line_len + p.x * (g->spider.hand.bpp / 8));
+			color = *(unsigned int *)(g->spider.hand[0].addr
+					+ p.y * g->spider.hand[0].line_len
+					+ p.x * (g->spider.hand[0].bpp / 8));
 			if ((color & 0x00FFFFFF) != 0) // ignorar fondo transparente
 				put_pixel(g, startX + p.x, startY + p.y, color);
 		}

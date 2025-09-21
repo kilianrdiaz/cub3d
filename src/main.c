@@ -79,7 +79,11 @@ static void	create_bombs(t_game *g)
 
 static void	load_textures(t_game *g)
 {
-	load_texture(g, &g->spider.hand, "./textures/spiderhand_01.xpm");
+	g->spider.hand = malloc(sizeof(t_tex) * 2);
+	if (!g->spider.hand)
+		ft_error_exit("Error: Memory allocation failed for spider hand textures\n");
+	load_texture(g, &g->spider.hand[0], "./textures/spiderhand_01.xpm");
+	load_texture(g, &g->spider.hand[1], "./textures/spiderhand_02.xpm");
 	/* Carga texturas: ajusta paths según tus archivos */
 	load_texture(g, &g->floor, "./textures/floor.xpm");
 	load_texture(g, &g->ceiling, "./textures/ceiling.xpm");
@@ -120,5 +124,6 @@ int	main(void)
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g); // tecla liberada
 	mlx_loop_hook(g.mlx, render, &g);             // loop continuo
 	mlx_loop(g.mlx);
+	close_program(&g);
 	return (0);
 }

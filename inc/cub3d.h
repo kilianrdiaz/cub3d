@@ -81,7 +81,7 @@ typedef struct s_spidy
 	double		dirY;
 	double		planeX;
 	double		planeY;
-	t_tex		hand;
+	t_tex		*hand;
 }				t_spidy;
 
 typedef struct s_game
@@ -151,5 +151,6 @@ void			init_bombs(t_game *g);
 void			render_sprites(t_game *g);
 int				key_press(int key, t_game *g);
 int				key_release(int key, t_game *g);
+int				close_program(t_game *g);
 
 #endif

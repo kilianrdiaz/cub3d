@@ -24,6 +24,7 @@ int	close_program(t_game *g)
 		free(g->mlx);
 	}
 	ft_free_array((void ***)&g->bombs);
+	free(g->spider.hand);
 	exit(0);
 	return (0);
 }

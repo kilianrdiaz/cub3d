@@ -23,8 +23,9 @@ static int	is_walkable(int x, int y)
 
 static void	move_player_cell(t_game *g, int forward)
 {
-	int	newX;
-	int	newY;
+	int		newX;
+	int		newY;
+	t_tex	hand;
 
 	newX = (int)g->spider.posX + (int)g->spider.dirX * forward;
 	newY = (int)g->spider.posY + (int)g->spider.dirY * forward;
@@ -33,6 +34,10 @@ static void	move_player_cell(t_game *g, int forward)
 		g->spider.posX = newX + 0.5; // centro de celda
 		g->spider.posY = newY + 0.5;
 		print_map(g); // depuración
+		ft_rotate_array((void ***) g->spider.hand);
+		hand = g->spider.hand[0];
+		g->spider.hand[0] = g->spider.hand[1];
+		g->spider.hand[1] = hand;
 	}
 }
 
