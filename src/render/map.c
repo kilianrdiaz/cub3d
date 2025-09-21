@@ -48,12 +48,12 @@ void	calculate_wall_stripe(t_game *g, t_ray *ray, t_tex *tex)
 	double	wallX;
 
 	ray->lineHeight = (int)(HEIGHT / ray->perpWallDist);
-	ray->drawStart = -ray->lineHeight / 2 + HEIGHT / 2;
-	ray->drawEnd = ray->lineHeight / 2 + HEIGHT / 2;
-	if (ray->drawStart < 0)
-		ray->drawStart = 0;
-	if (ray->drawEnd >= HEIGHT)
-		ray->drawEnd = HEIGHT - 1;
+	ray->drawStartY = -ray->lineHeight / 2 + HEIGHT / 2;
+	ray->drawEndY = ray->lineHeight / 2 + HEIGHT / 2;
+	if (ray->drawStartY < 0)
+		ray->drawStartY = 0;
+	if (ray->drawEndY >= HEIGHT)
+		ray->drawEndY = HEIGHT - 1;
 	wallX = g->spider.posX + ray->perpWallDist * ray->dirX0;
 	if (ray->side == 0)
 		wallX = g->spider.posY + ray->perpWallDist * ray->dirY0;
@@ -72,9 +72,9 @@ void	draw_wall_stripe(t_game *g, t_ray *ray, t_tex *tex, int x)
 	int	color;
 
 	calculate_wall_stripe(g, ray, tex);
-	y = ray->drawStart - 1;
+	y = ray->drawStartY - 1;
 	d = 0;
-	while (++y <= ray->drawEnd)
+	while (++y <= ray->drawEndY)
 	{
 		d = y * 256 - HEIGHT * 128 + ray->lineHeight * 128;
 		ray->ty = ((d * tex->height) / ray->lineHeight) / 256;
