@@ -31,6 +31,14 @@
 
 extern char		*map[];
 
+typedef enum e_state
+{
+	ACTIVE,
+	ATAKED,
+	ATTACKING,
+	DEFUSED
+}	t_state;
+
 typedef struct s_tex
 {
 	void		*img;
@@ -53,6 +61,7 @@ typedef struct s_sprite
 	int			height;
 	int			screen_x;
 	t_tex		tex;
+	t_state		state;
 }				t_sprite;
 
 typedef struct s_sprite_order
@@ -69,6 +78,7 @@ typedef struct s_keys
 	int			d;
 	int			left;
 	int			right;
+	int			space;
 }				t_keys;
 
 typedef struct s_spidy
@@ -80,6 +90,8 @@ typedef struct s_spidy
 	double		plane_x;
 	double		plane_y;
 	t_tex		*hand;
+	t_tex		hand_atack;
+	t_state		state;
 }				t_spidy;
 
 typedef struct s_game
@@ -139,6 +151,7 @@ void			clean_screen(t_game *g);
 void			load_texture(t_game *g, t_tex *tex, char *path);
 int				render(t_game *g);
 int				set_direction(t_game *g, char c);
+void			spider_attack(t_game *g);
 void			draw_hand(t_game *g);
 void			draw_floor_and_ceiling(t_game *g, t_ray *ray, int y);
 void			draw_wall_stripe(t_game *g, t_ray *ray, t_tex *tex, int x);

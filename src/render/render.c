@@ -135,6 +135,8 @@ int	render(t_game *g)
 	render_sprites(g); // Dibuja las bombas
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	draw_hand(g);
+	if (g->spider.state == ATTACKING)
+		spider_attack(g);
 	// printf("Nueva pos: (%f, %f)\n", g->spider.x, g->spider.y);
 	return (0);
 }

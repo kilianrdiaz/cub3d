@@ -41,42 +41,73 @@ static void	move_player_cell(t_game *g, int forward)
 	}
 }
 
-void	rotate_left(t_spidy *spidy)
+static void	rotate_spidy(t_spidy *spidy, int dir)
 {
 	double	olddir_x;
 	double	oldplane_x;
 
 	olddir_x = spidy->dir_x;
 	oldplane_x = spidy->plane_x;
-	// Rotar 90° = aplicar matriz con cos(π/2), sin(π/2)
-	spidy->dir_x = -spidy->dir_y;
-	spidy->dir_y = olddir_x;
-	spidy->plane_x = -spidy->plane_y;
-	spidy->plane_y = oldplane_x;
-}
-
-void	rotate_right(t_spidy *spidy)
-{
-	double	olddir_x;
-	double	oldplane_x;
-
-	olddir_x = spidy->dir_x;
-	oldplane_x = spidy->plane_x;
-	// Rotar -90° = aplicar matriz con cos(-π/2), sin(-π/2)
-	spidy->dir_x = spidy->dir_y;
-	spidy->dir_y = -olddir_x;
-	spidy->plane_x = spidy->plane_y;
-	spidy->plane_y = -oldplane_x;
+	if (dir > 0)
+	{
+		// Rotar 90°
+		spidy->dir_x = -spidy->dir_y;
+		spidy->dir_y = olddir_x;
+		spidy->plane_x = -spidy->plane_y;
+		spidy->plane_y = oldplane_x;
+	}
+	else if (dir < 0)
+	{
+		// Rotar -90°
+		spidy->dir_x = spidy->dir_y;
+		spidy->dir_y = -olddir_x;
+		spidy->plane_x = spidy->plane_y;
+		spidy->plane_y = -oldplane_x;
+	}
 }
 
 void	update_player_position(t_game *g)
 {
 	if (g->keys.a)
-		rotate_left(&g->spider);
+		rotate_spidy(&g->spider, -1);
 	if (g->keys.d)
-		rotate_right(&g->spider);
+		rotate_spidy(&g->spider, 1);
 	if (g->keys.s)
 		move_player_cell(g, -1);
 	if (g->keys.w)
 		move_player_cell(g, 1);
+	if (g->keys.space)
+	{
+		if (g->spider.state == ACTIVE)
+			g->spider.state = ATTACKING;
+		g->keys.space = 0; // evitar múltiples ataques
+	}
+	else if (g->spider.state == ATTACKING)
+		g->spider.state = ACTIVE;
+}
+
+void	spider_attack(t_game *g)
+{
+	int		i;
+	t_pos	t;
+	int		idx;
+
+	i = 0;
+	while (++i <= 3)
+	{
+		t.x = (int)g->spider.x + g->spider.dir_x * i;
+		t.y = (int)g->spider.y + g->spider.dir_y * i;
+		if (t.x < 0 || t.x >= MAP_W || t.y < 0 || t.y >= MAP_H)
+			break ;
+		idx = t.x + t.y * MAP_W;
+		if (g->bombs[idx] && g->bombs[idx]->state != DEFUSED)
+		{
+			g->bombs[idx]->state = DEFUSED;
+			g->bomb_count--;
+			printf("Bomb defused at (%d,%d)\n", t.x, t.y);
+			break ;
+		}
+		if (map[t.y][t.x] == '1')
+			break ;
+	}
 }

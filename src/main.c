@@ -41,41 +41,41 @@ static void	create_spiderman(t_game *g)
 	ft_error_exit("Error: No player start position found in map\n");
 }
 
-/* Llama a esto durante inicialización */
-static void	create_bombs(t_game *g)
-{
-	t_pos		p;
-	int			total;
-	int			idx;
-	t_sprite	*bomb;
-
-	total = MAP_W * MAP_H;
-	/* Reservamos un array de punteros, inicializado a NULL */
-	g->bombs = malloc(sizeof(t_sprite *) * total);
-	if (!g->bombs)
-		ft_error_exit("Error: Memory allocation failed for bombs array\n");
-	ft_bzero(g->bombs, sizeof(t_sprite *) * total);
-	p.y = -1;
-	while (++p.y < MAP_H)
+	/* Llama a esto durante inicialización */
+	static void	create_bombs(t_game *g)
 	{
-		p.x = -1;
-		while (++p.x < MAP_W)
+		t_pos		p;
+		int			total;
+		int			idx;
+		t_sprite	*bomb;
+
+		total = MAP_W * MAP_H;
+		/* Reservamos un array de punteros, inicializado a NULL */
+		g->bombs = malloc(sizeof(t_sprite *) * total);
+		if (!g->bombs)
+			ft_error_exit("Error: Memory allocation failed for bombs array\n");
+		ft_bzero(g->bombs, sizeof(t_sprite *) * total);
+		p.y = -1;
+		while (++p.y < MAP_H)
 		{
-			if (map[p.y][p.x] == 'B')
+			p.x = -1;
+			while (++p.x < MAP_W)
 			{
-				idx = p.x + p.y * MAP_W;
-				bomb = malloc(sizeof(t_sprite));
-				if (!bomb)
-					ft_error_exit("Error: Memory allocation failed for bomb\n");
-				ft_bzero(bomb, sizeof(t_sprite));
-				bomb->x = p.x;
-				bomb->y = p.y;
-				load_texture(g, &bomb->tex, "./textures/bomb.xpm");
-				g->bombs[idx] = bomb;
+				if (map[p.y][p.x] == 'B')
+				{
+					idx = p.x + p.y * MAP_W;
+					bomb = malloc(sizeof(t_sprite));
+					if (!bomb)
+						ft_error_exit("Error: Memory allocation failed for bomb\n");
+					ft_bzero(bomb, sizeof(t_sprite));
+					bomb->x = p.x;
+					bomb->y = p.y;
+					load_texture(g, &bomb->tex, "./textures/bomb.xpm");
+					g->bombs[idx] = bomb;
+				}
 			}
 		}
 	}
-}
 
 static void	load_textures(t_game *g)
 {
@@ -84,11 +84,12 @@ static void	load_textures(t_game *g)
 		ft_error_exit("Error: Memory allocation failed for spider textures\n");
 	load_texture(g, &g->spider.hand[0], "./textures/spiderhand_01.xpm");
 	load_texture(g, &g->spider.hand[1], "./textures/spiderhand_02.xpm");
+	load_texture(g, &g->spider.hand_atack, "./textures/spiderhand_atack.xpm");
 	/* Carga texturas: ajusta paths según tus archivos */
 	load_texture(g, &g->floor, "./textures/floor.xpm");
 	load_texture(g, &g->ceiling, "./textures/ceiling.xpm");
-	load_texture(g, &g->wall_north, "./textures/wall_inner_left.xpm");
-	load_texture(g, &g->wall_south, "./textures/wall_inner_right.xpm");
+	load_texture(g, &g->wall_north, "./textures/wall_outer_left.xpm");
+	load_texture(g, &g->wall_south, "./textures/wall_outer_right.xpm");
 	load_texture(g, &g->wall_east, "./textures/wall_inner_right.xpm");
 	load_texture(g, &g->wall_west, "./textures/wall_inner_left.xpm");
 }
@@ -122,6 +123,7 @@ int	main(void)
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);// tecla presionada
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g);// tecla liberada
+	g.spider.state = ACTIVE;
 	mlx_loop_hook(g.mlx, render, &g);// loop continuo
 	mlx_loop(g.mlx);
 	close_program(&g);

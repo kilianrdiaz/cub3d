@@ -39,6 +39,8 @@ void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe)
 	unsigned int	color;
 	int				y;
 
+	if (sp->state == DEFUSED)
+		return ;
 	ray.tx = (int)(256 * (stripe - (-sp->width / 2 + sp->screen_x))
 			* sp->tex.width / sp->width) / 256;
 	y = ray.draw_start_y - 1;
