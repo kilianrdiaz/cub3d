@@ -83,13 +83,11 @@ static void	ray_sprite(t_sprite *sp, t_ray *ray)
 		ray->draw_end_x = WIDTH - 1;
 }
 
-static void	position_sprite(t_game *g, t_sprite_order *order, int x)
+void	position_sprite(t_game *g, t_sprite sp)
 {
-	t_sprite	sp;
 	t_ray		ray;
 	int			stripe;
 
-	sp = *g->bombs[order[x].index];
 	sp.x = sp.x + 0.5 - g->spider.x;
 	sp.y = sp.y + 0.5 - g->spider.y;
 	// Transformar a espacio de cámara
@@ -138,5 +136,5 @@ void	render_sprites(t_game *g)
 	sort_sprites(order, count);
 	p.x = -1;
 	while (++p.x < count)
-		position_sprite(g, order, p.x);
+		position_sprite(g, *g->bombs[order[p.x].index]);
 }

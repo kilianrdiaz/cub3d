@@ -12,10 +12,10 @@
 
 #include "../inc/cub3d.h"
 
-char	*map[] = {"11111111111111111111", "100000000000000B0001",
-	"11110111011111111001", "10000001000000001001",
-	"10111111101111111001", "100000000EBB00000001",
-	"10111111111111111111", "11111111111111111111"};
+char		*map[] = {"11111111111111111111", "100000000000000B0001",
+			"11110111011111111001", "10000001000000001001",
+			"10111111101111111001", "100000000EBB00000001",
+			"10111111111111111111", "11111111111111111111"};
 
 static void	create_spiderman(t_game *g)
 {
@@ -41,41 +41,41 @@ static void	create_spiderman(t_game *g)
 	ft_error_exit("Error: No player start position found in map\n");
 }
 
-	/* Llama a esto durante inicialización */
-	static void	create_bombs(t_game *g)
-	{
-		t_pos		p;
-		int			total;
-		int			idx;
-		t_sprite	*bomb;
+/* Llama a esto durante inicialización */
+static void	create_bombs(t_game *g)
+{
+	t_pos		p;
+	int			total;
+	int			idx;
+	t_sprite	*bomb;
 
-		total = MAP_W * MAP_H;
-		/* Reservamos un array de punteros, inicializado a NULL */
-		g->bombs = malloc(sizeof(t_sprite *) * total);
-		if (!g->bombs)
-			ft_error_exit("Error: Memory allocation failed for bombs array\n");
-		ft_bzero(g->bombs, sizeof(t_sprite *) * total);
-		p.y = -1;
-		while (++p.y < MAP_H)
+	total = MAP_W * MAP_H;
+	/* Reservamos un array de punteros, inicializado a NULL */
+	g->bombs = malloc(sizeof(t_sprite *) * total);
+	if (!g->bombs)
+		ft_error_exit("Error: Memory allocation failed for bombs array\n");
+	ft_bzero(g->bombs, sizeof(t_sprite *) * total);
+	p.y = -1;
+	while (++p.y < MAP_H)
+	{
+		p.x = -1;
+		while (++p.x < MAP_W)
 		{
-			p.x = -1;
-			while (++p.x < MAP_W)
+			if (map[p.y][p.x] == 'B')
 			{
-				if (map[p.y][p.x] == 'B')
-				{
-					idx = p.x + p.y * MAP_W;
-					bomb = malloc(sizeof(t_sprite));
-					if (!bomb)
-						ft_error_exit("Error: Memory allocation failed for bomb\n");
-					ft_bzero(bomb, sizeof(t_sprite));
-					bomb->x = p.x;
-					bomb->y = p.y;
-					load_texture(g, &bomb->tex, "./textures/bomb.xpm");
-					g->bombs[idx] = bomb;
-				}
+				idx = p.x + p.y * MAP_W;
+				bomb = malloc(sizeof(t_sprite));
+				if (!bomb)
+					ft_error_exit("Error: Memory allocation failed for bomb\n");
+				ft_bzero(bomb, sizeof(t_sprite));
+				bomb->x = p.x;
+				bomb->y = p.y;
+				load_texture(g, &bomb->tex, "./textures/bomb.xpm");
+				g->bombs[idx] = bomb;
 			}
 		}
 	}
+}
 
 static void	load_textures(t_game *g)
 {
@@ -98,6 +98,7 @@ int	main(void)
 {
 	t_game	g;
 
+	ft_bzero(&g, sizeof(t_game));
 	g.mlx = mlx_init();
 	if (!g.mlx)
 	{
@@ -121,10 +122,10 @@ int	main(void)
 	create_bombs(&g);
 	load_textures(&g);
 	ft_bzero(&g.keys, sizeof(t_keys));
-	mlx_hook(g.win, 2, 1L << 0, key_press, &g);// tecla presionada
-	mlx_hook(g.win, 3, 1L << 1, key_release, &g);// tecla liberada
+	mlx_hook(g.win, 2, 1L << 0, key_press, &g);   // tecla presionada
+	mlx_hook(g.win, 3, 1L << 1, key_release, &g); // tecla liberada
 	g.spider.state = ACTIVE;
-	mlx_loop_hook(g.mlx, render, &g);// loop continuo
+	mlx_loop_hook(g.mlx, render, &g); // loop continuo
 	mlx_loop(g.mlx);
 	close_program(&g);
 	return (0);
