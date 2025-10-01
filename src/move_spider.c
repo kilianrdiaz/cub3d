@@ -102,9 +102,9 @@ void	spider_attack(t_game *g)
 		idx = t.x + t.y * MAP_W;
 		if (g->bombs[idx] && g->bombs[idx]->state != DEFUSED)
 		{
-			g->bombs[idx]->state = DEFUSED;
+			g->bombs[idx]->state = ATTACKED;
 			g->bomb_count--;
-			printf("Bomb defused at (%d,%d)\n", t.x, t.y);
+			printf("Bomb attacked at (%d,%d)\n", t.x, t.y);
 			break ;
 		}
 		if (map[t.y][t.x] == '1')

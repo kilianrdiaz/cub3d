@@ -24,6 +24,7 @@ SRCS    = src/render/player.c \
 		src/render/sprite.c \
 		src/render/render.c \
 		src/move_spider.c \
+		src/bomb.c \
 		src/key_hooks.c \
 		src/main.c 
 

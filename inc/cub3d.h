@@ -34,7 +34,7 @@ extern char		*map[];
 typedef enum e_state
 {
 	ACTIVE,
-	ATAKED,
+	ATTACKED,
 	ATTACKING,
 	DEFUSED
 }	t_state;
@@ -60,7 +60,7 @@ typedef struct s_sprite
 	int			width;
 	int			height;
 	int			screen_x;
-	t_tex		tex;
+	t_tex		*tex;
 	t_state		state;
 }				t_sprite;
 
@@ -90,7 +90,7 @@ typedef struct s_spidy
 	double		plane_x;
 	double		plane_y;
 	t_tex		*hand;
-	t_tex		hand_atack;
+	t_tex		hand_attack;
 	t_state		state;
 }				t_spidy;
 
@@ -146,6 +146,8 @@ typedef struct s_ray
 }				t_ray;
 
 int				clamp_int(int v, int a, int b);
+void			init_bombs(t_game *g);
+void			update_bombs(t_game *g);
 void			put_pixel(t_game *g, int x, int y, int color);
 void			clean_screen(t_game *g);
 void			load_texture(t_game *g, t_tex *tex, char *path);

@@ -42,17 +42,17 @@ void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe)
 	if (sp->state == DEFUSED)
 		return ;
 	ray.tx = (int)(256 * (stripe - (-sp->width / 2 + sp->screen_x))
-			* sp->tex.width / sp->width) / 256;
+			* sp->tex[sp->state].width / sp->width) / 256;
 	y = ray.draw_start_y - 1;
 	while (++y < ray.draw_end_y)
 	{
 		d = (y - ray.draw_start_y) * 256;
-		ray.ty = ((d * sp->tex.height) / sp->height) / 256;
-		if (ray.tx < 0 || ray.tx >= sp->tex.width || ray.ty < 0
-			|| ray.ty >= sp->tex.height)
+		ray.ty = ((d * sp->tex[sp->state].height) / sp->height) / 256;
+		if (ray.tx < 0 || ray.tx >= sp->tex[sp->state].width || ray.ty < 0
+			|| ray.ty >= sp->tex[sp->state].height)
 			continue ;
-		color = *(unsigned int *)(sp->tex.addr + ray.ty * sp->tex.line_len
-				+ ray.tx * (sp->tex.bpp / 8));
+		color = *(unsigned int *)(sp->tex[sp->state].addr + ray.ty * sp->tex[sp->state].line_len
+				+ ray.tx * (sp->tex[sp->state].bpp / 8));
 		if ((color & 0x00FFFFFF) != 0) // Transparencia
 			put_pixel(g, stripe, y, color);
 	}
@@ -62,8 +62,8 @@ static void	ray_sprite(t_sprite *sp, t_ray *ray)
 {
 	// 1️⃣ Altura y ancho del sprite según la distancia (como las paredes)
 	sp->height = abs((int)(BOMB_H / sp->trans_y));
-	sp->width = abs((int)(sp->height * ((double)sp->tex.width
-					/ sp->tex.height)));
+	sp->width = abs((int)(sp->height * ((double)sp->tex[sp->state].width
+					/ sp->tex[sp->state].height)));
 	// 2️⃣ Offset vertical para apoyarlo en el suelo
 	ray->camera_x = (int)(HEIGHT / sp->trans_y * 0.5);
 	// 3️⃣ Límites verticales

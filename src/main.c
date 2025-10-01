@@ -41,42 +41,6 @@ static void	create_spiderman(t_game *g)
 	ft_error_exit("Error: No player start position found in map\n");
 }
 
-/* Llama a esto durante inicialización */
-static void	create_bombs(t_game *g)
-{
-	t_pos		p;
-	int			total;
-	int			idx;
-	t_sprite	*bomb;
-
-	total = MAP_W * MAP_H;
-	/* Reservamos un array de punteros, inicializado a NULL */
-	g->bombs = malloc(sizeof(t_sprite *) * total);
-	if (!g->bombs)
-		ft_error_exit("Error: Memory allocation failed for bombs array\n");
-	ft_bzero(g->bombs, sizeof(t_sprite *) * total);
-	p.y = -1;
-	while (++p.y < MAP_H)
-	{
-		p.x = -1;
-		while (++p.x < MAP_W)
-		{
-			if (map[p.y][p.x] == 'B')
-			{
-				idx = p.x + p.y * MAP_W;
-				bomb = malloc(sizeof(t_sprite));
-				if (!bomb)
-					ft_error_exit("Error: Memory allocation failed for bomb\n");
-				ft_bzero(bomb, sizeof(t_sprite));
-				bomb->x = p.x;
-				bomb->y = p.y;
-				load_texture(g, &bomb->tex, "./textures/bomb.xpm");
-				g->bombs[idx] = bomb;
-			}
-		}
-	}
-}
-
 static void	load_textures(t_game *g)
 {
 	g->spider.hand = malloc(sizeof(t_tex) * 2);
@@ -84,7 +48,7 @@ static void	load_textures(t_game *g)
 		ft_error_exit("Error: Memory allocation failed for spider textures\n");
 	load_texture(g, &g->spider.hand[0], "./textures/spiderhand_01.xpm");
 	load_texture(g, &g->spider.hand[1], "./textures/spiderhand_02.xpm");
-	load_texture(g, &g->spider.hand_atack, "./textures/spiderhand_atack.xpm");
+	load_texture(g, &g->spider.hand_attack, "./textures/spiderhand_attack.xpm");
 	/* Carga texturas: ajusta paths según tus archivos */
 	load_texture(g, &g->floor, "./textures/floor.xpm");
 	load_texture(g, &g->ceiling, "./textures/ceiling.xpm");
@@ -119,7 +83,7 @@ int	main(void)
 	}
 	g.addr = mlx_get_data_addr(g.img, &g.bpp, &g.line_len, &g.endian);
 	create_spiderman(&g);
-	create_bombs(&g);
+	init_bombs(&g);
 	load_textures(&g);
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);   // tecla presionada

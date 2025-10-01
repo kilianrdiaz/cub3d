@@ -43,7 +43,7 @@ void	draw_hand(t_game *g)
 		return ;
 	hand = g->spider.hand[0];
 	if (g->spider.state == ATTACKING)
-		hand = g->spider.hand_atack;
+		hand = g->spider.hand_attack;
 	ray.draw_start_x = WIDTH / 2 - hand.width / 2;
 	ray.draw_start_y = HEIGHT - hand.height;
 	p.y = -1;
