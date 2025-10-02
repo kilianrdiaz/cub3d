@@ -54,10 +54,10 @@ static void	load_textures(t_game *g)
 	/* Carga texturas: ajusta paths según tus archivos */
 	load_texture(g, &g->floor, "./textures/floor.xpm");
 	load_texture(g, &g->ceiling, "./textures/ceiling.xpm");
-	load_texture(g, &g->wall_north, "./textures/wall_outer_left.xpm");
-	load_texture(g, &g->wall_south, "./textures/wall_outer_right.xpm");
-	load_texture(g, &g->wall_east, "./textures/wall_inner_right.xpm");
-	load_texture(g, &g->wall_west, "./textures/wall_inner_left.xpm");
+	load_texture(g, &g->wall_north, "./textures/wall.xpm");
+	load_texture(g, &g->wall_south, "./textures/wall.xpm");
+	load_texture(g, &g->wall_east, "./textures/wall.xpm");
+	load_texture(g, &g->wall_west, "./textures/wall.xpm");
 }
 
 int	main(void)
