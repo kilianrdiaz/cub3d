@@ -35,28 +35,37 @@ int	set_direction(t_game *g, char c)
 void	draw_hand(t_game *g)
 {
 	t_ray	ray;
-	int		color;
 	t_pos	p;
 	t_tex	hand;
 
 	if (!g->spider.hand || !g->spider.hand[0].addr || !g->spider.hand[1].addr)
 		return ;
-	hand = g->spider.hand[0];
-	if (g->spider.state == ATTACKING)
-		hand = g->spider.hand_attack;
-	ray.draw_start_x = WIDTH / 2 - hand.width / 2;
-	ray.draw_start_y = HEIGHT - hand.height;
+
+	hand = g->spider.hand[g->spider.state];
+
+	int draw_width = hand.width * SCALE_SPRITE;
+	int draw_height = hand.height * SCALE_SPRITE;
+
+	ray.draw_start_x = GAME_WIDTH / 2 - draw_width / 2;
+	ray.draw_start_y = HEIGHT - draw_height;
+
 	p.y = -1;
-	while (++p.y < hand.height)
+	while (++p.y < draw_height)
 	{
 		p.x = -1;
-		while (++p.x < hand.width)
+		while (++p.x < draw_width)
 		{
-			color = *(unsigned int *)(hand.addr + p.y * hand.line_len + p.x
-					* (hand.bpp / 8));
-			if ((color & 0x00FFFFFF) != 0) // ignorar fondo transparente
-				put_pixel(g, ray.draw_start_x + p.x, ray.draw_start_y + p.y,
-					color);
+			// mapeo inverso: de pantalla → textura
+			ray.tx = (int)(p.x / SCALE_SPRITE);
+			ray.ty = (int)(p.y / SCALE_SPRITE);
+
+			ray.color = *(unsigned int *)(hand.addr
+				+ ray.ty * hand.line_len
+				+ ray.tx * (hand.bpp / 8));
+
+			if ((ray.color & 0x00FFFFFF) != 0) // ignorar fondo transparente
+				put_pixel(g, ray.draw_start_x + p.x, ray.draw_start_y + p.y, ray.color);
 		}
 	}
 }
+

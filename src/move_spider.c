@@ -21,67 +21,60 @@ static int	is_walkable(int x, int y)
 	return (1);
 }
 
-static void	move_player_cell(t_game *g, int forward)
+static void	move_player(t_game *g, double dir)
 {
-	int		new_x;
-	int		new_y;
-	t_tex	hand;
+	double	new_x;
+	double	new_y;
+	double	distance;
 
-	new_x = (int)g->spider.x + (int)g->spider.dir_x * forward;
-	new_y = (int)g->spider.y + (int)g->spider.dir_y * forward;
-	if (is_walkable(new_x, new_y))
+	new_x = g->spider.x + g->spider.dir_x * dir * MOVE_SPEED;
+	new_y = g->spider.y + g->spider.dir_y * dir * MOVE_SPEED;
+	distance = sqrt(pow(new_x - g->spider.x, 2) + pow(new_y - g->spider.y, 2));
+	// distancia recorrida en este frame
+	// Comprobar colisiones
+	if (is_walkable((int)new_x, (int)g->spider.y))
+		g->spider.x = new_x;
+	if (is_walkable((int)g->spider.x, (int)new_y))
+		g->spider.y = new_y;
+	// Acumular distancia recorrida
+	g->spider.move_accum += distance;
+	// Si recorrió más de STEP_DISTANCE, cambiar sprite
+	if (g->spider.move_accum >= 0.40)
 	{
-		g->spider.x = new_x + 0.5; // centro de celda
-		g->spider.y = new_y + 0.5;
-		print_map(g); // depuración
-		ft_rotate_array((void ***)g->spider.hand);
-		hand = g->spider.hand[0];
-		g->spider.hand[0] = g->spider.hand[1];
-		g->spider.hand[1] = hand;
+		if (g->spider.state == ACTIVE)
+			g->spider.state = MOVING;
+		else if (g->spider.state == MOVING)
+			g->spider.state = ACTIVE;
+		g->spider.move_accum = 0.0; // reset
 	}
 }
 
-static void	rotate_spidy(t_spidy *spidy, int dir)
+static void	rotate_spidy(t_spidy *spidy, double angle)
 {
 	double	olddir_x;
 	double	oldplane_x;
 
 	olddir_x = spidy->dir_x;
 	oldplane_x = spidy->plane_x;
-	if (dir > 0)
-	{
-		// Rotar 90°
-		spidy->dir_x = -spidy->dir_y;
-		spidy->dir_y = olddir_x;
-		spidy->plane_x = -spidy->plane_y;
-		spidy->plane_y = oldplane_x;
-	}
-	else if (dir < 0)
-	{
-		// Rotar -90°
-		spidy->dir_x = spidy->dir_y;
-		spidy->dir_y = -olddir_x;
-		spidy->plane_x = spidy->plane_y;
-		spidy->plane_y = -oldplane_x;
-	}
+	// Rotación con ángulo pequeño (radianes)
+	spidy->dir_x = spidy->dir_x * cos(angle) - spidy->dir_y * sin(angle);
+	spidy->dir_y = olddir_x * sin(angle) + spidy->dir_y * cos(angle);
+	spidy->plane_x = spidy->plane_x * cos(angle) - spidy->plane_y * sin(angle);
+	spidy->plane_y = oldplane_x * sin(angle) + spidy->plane_y * cos(angle);
 }
 
 void	update_player_position(t_game *g)
 {
-	if (g->keys.a)
-		rotate_spidy(&g->spider, -1);
-	if (g->keys.d)
-		rotate_spidy(&g->spider, 1);
-	if (g->keys.s)
-		move_player_cell(g, -1);
-	if (g->keys.w)
-		move_player_cell(g, 1);
-	if (g->keys.space)
-	{
-		if (g->spider.state == ACTIVE)
-			g->spider.state = ATTACKING;
-		g->keys.space = 0; // evitar múltiples ataques
-	}
+	if (g->keys.a) // rotar izq
+		rotate_spidy(&g->spider, -ROT_SPEED);
+	if (g->keys.d) // rotar der
+		rotate_spidy(&g->spider, ROT_SPEED);
+	if (g->keys.w) // adelante
+		move_player(g, 1.0);
+	if (g->keys.s) // atrás
+		move_player(g, -1.0);
+	if (g->keys.space) // atacar
+		g->spider.state = ATTACKING;
 	else if (g->spider.state == ATTACKING)
 		g->spider.state = ACTIVE;
 }
@@ -93,10 +86,10 @@ void	spider_attack(t_game *g)
 	int		idx;
 
 	i = 0;
-	while (++i <= 3)
+	while (++i <= 4)
 	{
-		t.x = (int)g->spider.x + g->spider.dir_x * i;
-		t.y = (int)g->spider.y + g->spider.dir_y * i;
+		t.x = (int)g->spider.x + (int)(g->spider.dir_x * i);
+		t.y = (int)g->spider.y + (int)(g->spider.dir_y * i);
 		if (t.x < 0 || t.x >= MAP_W || t.y < 0 || t.y >= MAP_H)
 			break ;
 		idx = t.x + t.y * MAP_W;
@@ -104,6 +97,7 @@ void	spider_attack(t_game *g)
 		{
 			g->bombs[idx]->state = ATTACKED;
 			g->bomb_count--;
+			g->keys.space = 0; // Evita múltiples ataques
 			printf("Bomb attacked at (%d,%d)\n", t.x, t.y);
 			break ;
 		}

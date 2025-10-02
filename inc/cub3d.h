@@ -19,21 +19,23 @@
 # include <stdio.h>
 # include <stdlib.h>
 
-# define WIDTH 640
-# define HEIGHT 480
+# define WIDTH 1920
+# define HEIGHT 960
+# define GAME_WIDTH 1400
+# define GAME_HEIGHT 960
 # define MAP_W 21
 # define MAP_H 8
-# define BOMB_W 64
-# define BOMB_H 64
+# define SCALE_SPRITE 2.0
 
-# define MOVE_SPEED 1
-# define ROT_SPEED 1
+# define MOVE_SPEED 0.07
+# define ROT_SPEED 0.05
 
 extern char		*map[];
 
 typedef enum e_state
 {
 	ACTIVE,
+	MOVING,
 	ATTACKED,
 	ATTACKING,
 	DEFUSED
@@ -89,8 +91,8 @@ typedef struct s_spidy
 	double		dir_y;
 	double		plane_x;
 	double		plane_y;
+	double		move_accum;
 	t_tex		*hand;
-	t_tex		hand_attack;
 	t_state		state;
 }				t_spidy;
 
@@ -143,6 +145,7 @@ typedef struct s_ray
 	int			draw_end_y;
 	int			tx;
 	int			ty;
+	int			color;
 }				t_ray;
 
 int				clamp_int(int v, int a, int b);

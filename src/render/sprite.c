@@ -36,7 +36,6 @@ static void	sort_sprites(t_sprite_order *order, int count)
 void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe)
 {
 	int				d;
-	unsigned int	color;
 	int				y;
 
 	if (sp->state == DEFUSED)
@@ -51,19 +50,18 @@ void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe)
 		if (ray.tx < 0 || ray.tx >= sp->tex[sp->state].width || ray.ty < 0
 			|| ray.ty >= sp->tex[sp->state].height)
 			continue ;
-		color = *(unsigned int *)(sp->tex[sp->state].addr + ray.ty * sp->tex[sp->state].line_len
+		ray.color = *(unsigned int *)(sp->tex[sp->state].addr + ray.ty * sp->tex[sp->state].line_len
 				+ ray.tx * (sp->tex[sp->state].bpp / 8));
-		if ((color & 0x00FFFFFF) != 0) // Transparencia
-			put_pixel(g, stripe, y, color);
+		if ((ray.color & 0x00FFFFFF) != 0) // Transparencia
+			put_pixel(g, stripe, y, ray.color);
 	}
 }
 
 static void	ray_sprite(t_sprite *sp, t_ray *ray)
 {
 	// 1️⃣ Altura y ancho del sprite según la distancia (como las paredes)
-	sp->height = abs((int)(BOMB_H / sp->trans_y));
-	sp->width = abs((int)(sp->height * ((double)sp->tex[sp->state].width
-					/ sp->tex[sp->state].height)));
+	sp->height = (sp->tex[ACTIVE].height * SCALE_SPRITE) / sp->trans_y;
+	sp->width = (sp->tex[ACTIVE].width * SCALE_SPRITE) / sp->trans_y;
 	// 2️⃣ Offset vertical para apoyarlo en el suelo
 	ray->camera_x = (int)(HEIGHT / sp->trans_y * 0.5);
 	// 3️⃣ Límites verticales
@@ -74,13 +72,13 @@ static void	ray_sprite(t_sprite *sp, t_ray *ray)
 	if (ray->draw_end_y >= HEIGHT)
 		ray->draw_end_y = HEIGHT - 1;
 	// 4️⃣ Límites horizontales
-	sp->screen_x = (int)((WIDTH / 2) * (1 + sp->trans_x / sp->trans_y));
+	sp->screen_x = (int)((GAME_WIDTH / 2) * (1 + sp->trans_x / sp->trans_y));
 	ray->draw_start_x = -sp->width / 2 + sp->screen_x;
 	ray->draw_end_x = ray->draw_start_x + sp->width;
 	if (ray->draw_start_x < 0)
 		ray->draw_start_x = 0;
-	if (ray->draw_end_x >= WIDTH)
-		ray->draw_end_x = WIDTH - 1;
+	if (ray->draw_end_x >= GAME_WIDTH)
+		ray->draw_end_x = GAME_WIDTH - 1;
 }
 
 void	position_sprite(t_game *g, t_sprite sp)
@@ -102,7 +100,7 @@ void	position_sprite(t_game *g, t_sprite sp)
 		// Dibujar sprite con z-buffe
 		stripe = ray.draw_start_x - 1;
 		while (++stripe < ray.draw_end_x)
-			if (sp.trans_y > 0 && stripe >= 0 && stripe < WIDTH
+			if (sp.trans_y > 0 && stripe >= 0 && stripe < GAME_WIDTH
 				&& sp.trans_y < g->zbuffer[stripe])
 				draw_sprite(g, &sp, ray, stripe);
 	}

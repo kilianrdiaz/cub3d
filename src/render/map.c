@@ -15,10 +15,9 @@
 void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 {
 	int	x;
-	int	color;
 
 	x = -1;
-	while (++x < WIDTH)
+	while (++x < GAME_WIDTH)
 	{
 		ray->map_x = (int)ray->side_dist_x;
 		ray->map_y = (int)ray->side_dist_y;
@@ -28,16 +27,16 @@ void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 		/* clamp por si hay rounding negativo/extraño */
 		ray->tx = clamp_int(ray->tx, 0, g->floor.width - 1);
 		ray->ty = clamp_int(ray->ty, 0, g->floor.height - 1);
-		color = *(unsigned int *)(g->floor.addr + ray->ty * g->floor.line_len
+		ray->color = *(unsigned int *)(g->floor.addr + ray->ty * g->floor.line_len
 				+ ray->tx * (g->floor.bpp / 8));
-		put_pixel(g, x, y, color);
+		put_pixel(g, x, y, ray->color);
 		/* techo espejo */
 		ray->delta_dist_x = clamp_int(ray->tx, 0, g->ceiling.width - 1);
 		ray->delta_dist_y = clamp_int(ray->ty, 0, g->ceiling.height - 1);
-		color = *(unsigned int *)(g->ceiling.addr + (int)ray->delta_dist_y
+		ray->color = *(unsigned int *)(g->ceiling.addr + (int)ray->delta_dist_y
 				* g->ceiling.line_len + (int)ray->delta_dist_x * (g->ceiling.bpp
 					/ 8));
-		put_pixel(g, x, HEIGHT - y - 1, color);
+		put_pixel(g, x, HEIGHT - y - 1, ray->color);
 		ray->side_dist_x += ray->step_x;
 		ray->side_dist_y += ray->step_y;
 	}
@@ -69,7 +68,6 @@ void	draw_wall_stripe(t_game *g, t_ray *ray, t_tex *tex, int x)
 {
 	int	d;
 	int	y;
-	int	color;
 
 	calculate_wall_stripe(g, ray, tex);
 	y = ray->draw_start_y - 1;
@@ -79,9 +77,9 @@ void	draw_wall_stripe(t_game *g, t_ray *ray, t_tex *tex, int x)
 		d = y * 256 - HEIGHT * 128 + ray->line_height * 128;
 		ray->ty = ((d * tex->height) / ray->line_height) / 256;
 		ray->ty = clamp_int(ray->ty, 0, tex->height - 1);
-		color = *(unsigned int *)(tex->addr + ray->ty * tex->line_len + ray->tx
-				* (tex->bpp / 8));
-		put_pixel(g, x, y, color);
+		ray->color = *(unsigned int *)(tex->addr + ray->ty * tex->line_len + ray->tx
+			* (tex->bpp / 8));
+		put_pixel(g, x, y, ray->color);
 	}
 }
 

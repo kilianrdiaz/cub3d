@@ -48,7 +48,7 @@ static t_ray	initialize_ray(t_game *g, int x)
 {
 	t_ray	ray;
 
-	ray.camera_x = 2 * x / (double)WIDTH - 1;
+	ray.camera_x = 2 * x / (double)GAME_WIDTH - 1;
 	ray.dir_x0 = g->spider.dir_x + g->spider.plane_x * ray.camera_x;
 	ray.dir_y0 = g->spider.dir_y + g->spider.plane_y * ray.camera_x;
 	// Posición inicial en el mapa (celda del jugador)
@@ -114,9 +114,9 @@ static void	render_floor_and_ceiling(t_game *g)
 		ray.side_dist_x = g->spider.x + ray.row_distance * ray.dir_x0;
 		ray.side_dist_y = g->spider.y + ray.row_distance * ray.dir_y0;
 		ray.step_x = ray.row_distance * (ray.dir_x1 - ray.dir_x0)
-			/ (double)WIDTH;
+			/ (double)GAME_WIDTH;
 		ray.step_y = ray.row_distance * (ray.dir_y1 - ray.dir_y0)
-			/ (double)WIDTH;
+			/ (double)GAME_WIDTH;
 		draw_floor_and_ceiling(g, &ray, y);
 	}
 }
@@ -125,12 +125,11 @@ int	render(t_game *g)
 {
 	int	x;
 
-	usleep(200000);
 	update_player_position(g); // Actualiza posición según teclas
 	clean_screen(g);
 	render_floor_and_ceiling(g);
 	x = -1;
-	while (++x < WIDTH)
+	while (++x < GAME_WIDTH)
 		render_wall(g, x);
 	render_sprites(g); // Dibuja las bombas
 	update_bombs(g); // Actualiza estado de las bombas

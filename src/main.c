@@ -31,6 +31,7 @@ static void	create_spiderman(t_game *g)
 			c = map[p.y][p.x];
 			if (c == 'N' || c == 'S' || c == 'E' || c == 'W' || c == 'P')
 			{
+				ft_bzero(&g->spider, sizeof(t_spidy));
 				g->spider.x = p.x + 0.5;
 				g->spider.y = p.y + 0.5;
 				set_direction(g, c);
@@ -43,12 +44,13 @@ static void	create_spiderman(t_game *g)
 
 static void	load_textures(t_game *g)
 {
-	g->spider.hand = malloc(sizeof(t_tex) * 2);
+	g->spider.hand = malloc(sizeof(t_tex) * sizeof(t_state));
 	if (!g->spider.hand)
 		ft_error_exit("Error: Memory allocation failed for spider textures\n");
-	load_texture(g, &g->spider.hand[0], "./textures/spiderhand_01.xpm");
-	load_texture(g, &g->spider.hand[1], "./textures/spiderhand_02.xpm");
-	load_texture(g, &g->spider.hand_attack, "./textures/spiderhand_attack.xpm");
+	load_texture(g, &g->spider.hand[ACTIVE], "./textures/spiderhand_01.xpm");
+	load_texture(g, &g->spider.hand[MOVING], "./textures/spiderhand_02.xpm");
+	load_texture(g, &g->spider.hand[ATTACKING],
+		"./textures/spiderhand_attack.xpm");
 	/* Carga texturas: ajusta paths según tus archivos */
 	load_texture(g, &g->floor, "./textures/floor.xpm");
 	load_texture(g, &g->ceiling, "./textures/ceiling.xpm");
