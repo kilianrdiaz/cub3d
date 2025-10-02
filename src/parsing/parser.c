@@ -16,7 +16,6 @@
 char	*join_line(char *old_ret, char *line);
 char	*read_file(int fd, char *ret);
 
-
 void    parse_arguments(int argc, char **argv)
 {
     int fd;
@@ -37,6 +36,7 @@ void    parse_arguments(int argc, char **argv)
 	// TODO - Parseo del mapa
 	//parse_file(fd, game);
 }
+
 // Devuelve todo el contenido del archivo
 char	*read_file(int fd, char *ret)
 {
@@ -60,6 +60,7 @@ char	*join_line(char *old_ret, char *line)
 	free(old_ret);
 	return (ret);
 }
+
 // Comprueba si el fichero del mapa es válido
 void    parse_file(int fd)
 {
