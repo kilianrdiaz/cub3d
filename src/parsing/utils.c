@@ -10,9 +10,29 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../inc/cub3d.h"
+
 int ft_isspace(int c)
 {
     if (c == 9 || c == 10 || c == 11 || c == 12 || c == 13 || c == 32) 
         return (1);
     return (0);
 }
+
+/*void	load_texture(t_game *g, t_tex *tex, char *path)
+{
+	tex->img = mlx_xpm_file_to_image(g->mlx, path, &tex->width, &tex->height);
+	if (!tex->img)
+	{
+		ft_printf_fd(STDERR_FILENO, "Error: could not load texture %s\n", path);
+		exit(1);
+	}
+	tex->addr = mlx_get_data_addr(tex->img, &tex->bpp, &tex->line_len,
+			&tex->endian);
+	if (tex->width <= 0 || tex->height <= 0)
+	{
+		ft_printf_fd(STDERR_FILENO, "Error: texture %s has invalid size\n",
+			path);
+		exit(1);
+	}
+}*/

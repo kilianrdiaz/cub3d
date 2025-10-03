@@ -13,90 +13,117 @@
 #include "../../inc/cub3d.h"
 
 // Comprueba si los argumentos son válidos
-char	*join_line(char *old_ret, char *line);
-char	*read_file(int fd, char *ret);
+char	**read_file(int fd);
+
+#include "libft.h" // por ft_isspace y ft_strncmp
+
+int is_elem_str(char *s)
+{
+    int i;
+
+    if (!s)
+        return (0);
+    i = 0;
+    while (ft_isspace(s[i]))
+        i++;
+    if (!ft_strncmp(&s[i], "NO ", 2))
+        return (1);
+    else if (!ft_strncmp(&s[i], "SO ", 2))
+        return (1);
+    else if (!ft_strncmp(&s[i], "WE ", 2))
+        return (1);
+    else if (!ft_strncmp(&s[i], "EA ", 2))
+        return (1);
+    else if (!ft_strncmp(&s[i], "C ", 1))
+        return (1);
+    else if (!ft_strncmp(&s[i], "F ", 1))
+        return (1);
+    return (0);
+}
+
+int is_map_str(char *s)
+{
+    int i = 0;
+
+    if (!s)
+        return (0);
+    while (ft_isspace(s[i]))
+        i++;
+    if (s[i] == '\0') // línea vacía
+        return (0);
+    while (s[i])
+    {
+        if (!(s[i] == '0' || s[i] == '1' || s[i] == 'N' ||
+              s[i] == 'S' || s[i] == 'E' || s[i] == 'W' ||
+              ft_isspace(s[i])))
+            return (0);
+        i++;
+    }
+    return (1);
+}
 
 void    parse_arguments(int argc, char **argv)
 {
-    int fd;
-	int len;
-	char	*ptr;
-
     if (argc != 2)
         error_handler(0);
-    len = ft_strlen(argv[1]);
-	if (len < 4)
-		error_handler(2);
-	ptr = ft_strnstr(&argv[1][len - 4], ".cub", len);
-	if (!ptr)
+	else if (ft_strnstr(argv[1], ".cub", ft_strlen(argv[1])) == 0)
 		error_handler(1);
-    fd = open(argv[1], O_RDONLY);
-    if (fd == -1)
-        error_handler(2);
-	// TODO - Parseo del mapa
-	//parse_file(fd, game);
 }
 
 // Devuelve todo el contenido del archivo
-char	*read_file(int fd, char *ret)
+char	**read_file(int fd)
 {
+	char	**content;
 	char	*line;
 
-	if (!ret)
-		ret = ft_strdup("");
-	while ((line = get_next_line(fd)) != NULL)
+	content = NULL;
+	line = get_next_line(fd);
+	if (!line)
+		error_handler(3);
+	while (line)
 	{
-		ret = join_line(ret, line);
+		ft_clean_line(&line);
+		ft_append_array((void ***)&content, ft_strdup(line));
 		free(line);
+		line = get_next_line(fd);
 	}
-	return (ret);
-}
-
-char	*join_line(char *old_ret, char *line)
-{
-	char	*ret;
-
-	ret = ft_strjoin(old_ret, line);
-	free(old_ret);
-	return (ret);
+	return (content);
 }
 
 // Comprueba si el fichero del mapa es válido
-void    parse_file(int fd)
+void parse_file(t_game *game, char **content)
 {
-    char    *content;
-	int		i;
-	int		filled;
+    int i = 0;
+    int has_map = 0;
 
-    content = NULL;
-    content = read_file(fd, content);
-	i = 0;
-	filled = 0; //TODO
+    if (!content || !content[0])
+        error_handler(3);
 
-	while (content[i] && filled)
-	{
-		while (ft_isspace(content[i]))
-			i++;
-		if (!ft_strncmp(&content[i], "NO", 2))
-			parse_element(&content[i + 2], "NO");
-		else if (!ft_strncmp(&content[i], "SO", 2))
-			parse_element(&content[i + 2], "SO");
-		else if (!ft_strncmp(&content[i], "WE", 2))
-			parse_element(&content[i + 2], "WE");
-		else if (!ft_strncmp(&content[i], "EA", 2))
-			parse_element(&content[i + 2], "EA");
-		else if (!ft_strncmp(&content[i], "C", 1))
-			parse_element(&content[i + 1], "C");
-		else if (!ft_strncmp(&content[i], "F", 1))
-			parse_element(&content[i + 1], "F");
-		else
-			error_handler(3);
-		while (content[i] && content[i] != '\n')
-			i++;
-	}
-	
-    // TODO - Parseo de mapa
+    while (content[i])
+    {
+        if (is_elem_str(content[i]))
+        {
+			parse_element(game, content[i]);
+            // Aquí podrías guardar la textura/color correspondiente
+        }
+        else if (is_map_str(content[i]))
+        {
+            has_map = 1;
+        }
+        else if (ft_strlen(content[i]) == 0) // línea vacía permitida
+        {
+            // ok
+        }
+        else
+        {
+            error_handler(3); // Línea inválida
+        }
+        i++;
+    }
+    if (!has_map)
+        error_handler(3); // No hay mapa
 }
+
 
 
 

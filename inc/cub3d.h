@@ -17,42 +17,41 @@
 
 typedef struct s_tex
 {
-	void	*img;
-	char	*addr;
-	int		width;
+	void		*img;
+	char		*addr;
+	int			width;
+	int			height;
+	int			bpp;
+	int			line_len;
+	int			endian;
+}				t_tex;
+
+typedef struct s_map
+{
+	char	**map;
+	int		max_width;
 	int		height;
-	int		bpp;
-	int		line_len;
-	int		endian;
-}			t_tex;
+}				t_map;
+
+typedef struct s_elem
+{
+	t_tex	*texture;
+	char	*id;
+}				t_elem;
 
 typedef struct s_game
 {
-	void	*mlx;
-	void	*win;
-	void	*img;
-	char	*addr;
-	int		bpp;
-	int		line_len;
-	int		endian;
-
-	double posX, posY;
-	double dirX, dirY;
-	double planeX, planeY;
-
-	t_tex	floor;
-	t_tex	ceiling;
-	t_tex	wall_north;
-	t_tex	wall_south;
-	t_tex	wall_east;
-	t_tex	wall_west;
-	t_tex	hand;
-}			t_game;
+	t_map	map;
+	t_elem	*elems;
+}				t_game;
 
 void    error_handler(int code);
-void    parse_arguments(int argc, char **argv);
-void	parse_element(char *line, char *id);
+void    parse_arguments(t_game *game, int argc, char **argv);
+void	parse_element(t_game *game, char *line);
+void	load_texture(t_game *g, t_tex *tex, char *path);
+void	parse_file(t_game *game, char **content);
 
 int     ft_isspace(int c);
+char	**read_file(int fd);
 
 #endif
