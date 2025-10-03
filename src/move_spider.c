@@ -78,30 +78,3 @@ void	update_player_position(t_game *g)
 	else if (g->spider.state == ATTACKING)
 		g->spider.state = ACTIVE;
 }
-
-void	spider_attack(t_game *g)
-{
-	int		i;
-	t_pos	t;
-	int		idx;
-
-	i = 0;
-	while (++i <= 4)
-	{
-		t.x = (int)g->spider.x + (int)(g->spider.dir_x * i);
-		t.y = (int)g->spider.y + (int)(g->spider.dir_y * i);
-		if (t.x < 0 || t.x >= MAP_W || t.y < 0 || t.y >= MAP_H)
-			break ;
-		idx = t.x + t.y * MAP_W;
-		if (g->bombs[idx] && g->bombs[idx]->state != DEFUSED)
-		{
-			g->bombs[idx]->state = ATTACKED;
-			g->bomb_count--;
-			g->keys.space = 0; // Evita múltiples ataques
-			printf("Bomb attacked at (%d,%d)\n", t.x, t.y);
-			break ;
-		}
-		if (map[t.y][t.x] == '1')
-			break ;
-	}
-}
