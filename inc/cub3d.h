@@ -62,7 +62,6 @@ typedef struct s_sprite
 	int			width;
 	int			height;
 	int			screen_x;
-	t_tex		*tex;
 	t_state		state;
 }				t_sprite;
 
@@ -115,6 +114,9 @@ typedef struct s_game
 	t_tex		wall_west;
 	double		zbuffer[WIDTH]; // 👈 guardamos la distancia de cada rayo
 	t_sprite	**bombs;
+	t_sprite    **lizards;
+	t_tex		*bomb_tex;
+	t_tex		*lizard_tex;
 	t_keys		keys;
 }				t_game;
 
@@ -149,7 +151,6 @@ typedef struct s_ray
 }				t_ray;
 
 int				clamp_int(int v, int a, int b);
-void			init_bombs(t_game *g);
 void			update_bombs(t_game *g);
 void			put_pixel(t_game *g, int x, int y, int color);
 void			clean_screen(t_game *g);
@@ -163,8 +164,7 @@ void			draw_wall_stripe(t_game *g, t_ray *ray, t_tex *tex, int x);
 t_tex			*get_texture_wall(t_game *g, t_ray *ray);
 void			update_player_position(t_game *g);
 void			print_map(t_game *g);
-void			init_bombs(t_game *g);
-void			render_sprites(t_game *g);
+void			render_sprites(t_game *g, t_sprite **sprites, t_tex *tex);
 int				key_press(int key, t_game *g);
 int				key_release(int key, t_game *g);
 int				close_program(t_game *g);

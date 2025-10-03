@@ -33,7 +33,7 @@ static void	sort_sprites(t_sprite_order *order, int count)
 	}
 }
 
-void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe)
+void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe, t_tex *tex)
 {
 	int				d;
 	int				y;
@@ -41,27 +41,27 @@ void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe)
 	if (sp->state == DEFUSED)
 		return ;
 	ray.tx = (int)(256 * (stripe - (-sp->width / 2 + sp->screen_x))
-			* sp->tex[sp->state].width / sp->width) / 256;
+			* tex[sp->state].width / sp->width) / 256;
 	y = ray.draw_start_y - 1;
 	while (++y < ray.draw_end_y)
 	{
 		d = (y - ray.draw_start_y) * 256;
-		ray.ty = ((d * sp->tex[sp->state].height) / sp->height) / 256;
-		if (ray.tx < 0 || ray.tx >= sp->tex[sp->state].width || ray.ty < 0
-			|| ray.ty >= sp->tex[sp->state].height)
+		ray.ty = ((d * tex[sp->state].height) / sp->height) / 256;
+		if (ray.tx < 0 || ray.tx >= tex[sp->state].width || ray.ty < 0
+			|| ray.ty >= tex[sp->state].height)
 			continue ;
-		ray.color = *(unsigned int *)(sp->tex[sp->state].addr + ray.ty * sp->tex[sp->state].line_len
-				+ ray.tx * (sp->tex[sp->state].bpp / 8));
+		ray.color = *(unsigned int *)(tex[sp->state].addr + ray.ty * tex[sp->state].line_len
+				+ ray.tx * (tex[sp->state].bpp / 8));
 		if ((ray.color & 0x00FFFFFF) != 0) // Transparencia
 			put_pixel(g, stripe, y, ray.color);
 	}
 }
 
-static void	ray_sprite(t_sprite *sp, t_ray *ray)
+static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex *tex)
 {
 	// 1️⃣ Altura y ancho del sprite según la distancia (como las paredes)
-	sp->height = (sp->tex[ACTIVE].height * SCALE_SPRITE) / sp->trans_y;
-	sp->width = (sp->tex[ACTIVE].width * SCALE_SPRITE) / sp->trans_y;
+	sp->height = (tex[sp->state].height * SCALE_SPRITE) / sp->trans_y;
+	sp->width = (tex[sp->state].width * SCALE_SPRITE) / sp->trans_y;
 	// 2️⃣ Offset vertical para apoyarlo en el suelo
 	ray->camera_x = (int)(HEIGHT / sp->trans_y * 0.5);
 	// 3️⃣ Límites verticales
@@ -81,7 +81,7 @@ static void	ray_sprite(t_sprite *sp, t_ray *ray)
 		ray->draw_end_x = GAME_WIDTH - 1;
 }
 
-void	position_sprite(t_game *g, t_sprite sp)
+void	position_sprite(t_game *g, t_sprite sp, t_tex *tex)
 {
 	t_ray		ray;
 	int			stripe;
@@ -96,43 +96,38 @@ void	position_sprite(t_game *g, t_sprite sp)
 			* sp.y);
 	if (sp.trans_y > 0.0)
 	{
-		ray_sprite(&sp, &ray);
+		ray_sprite(&sp, &ray, tex);
 		// Dibujar sprite con z-buffe
 		stripe = ray.draw_start_x - 1;
 		while (++stripe < ray.draw_end_x)
 			if (sp.trans_y > 0 && stripe >= 0 && stripe < GAME_WIDTH
 				&& sp.trans_y < g->zbuffer[stripe])
-				draw_sprite(g, &sp, ray, stripe);
+				draw_sprite(g, &sp, ray, stripe, tex);
 	}
 }
 
-void	render_sprites(t_game *g)
+void render_sprites(t_game *g, t_sprite **sprites, t_tex *tex)
 {
-	t_sprite_order	order[MAP_W * MAP_H];
-	int				count;
-	int				idx;
-	t_pos			p;
+	t_sprite_order	*order;
+	int			i;
+	int			count;
 
-	count = 0;
-	p.y = -1;
-	while (++p.y < MAP_H)
+	if (!sprites)
+		return ;
+	i = -1;
+	count = ft_memlen((void **)sprites);
+	order = malloc(sizeof(t_sprite_order) * count);
+	if (!order)
+		ft_error_exit("Error: Memory allocation failed for sprite order\n");
+	while (sprites[++i])
 	{
-		p.x = -1;
-		while (++p.x < MAP_W)
-		{
-			idx = p.x + p.y * MAP_W;
-			if (g->bombs[idx] != NULL)
-			{
-				order[count].index = idx;
-				order[count].dist = pow(g->spider.x - g->bombs[idx]->x, 2)
-					+ pow(g->spider.y - g->bombs[idx]->y, 2);
-				// distancia al jugador
-				count++;
-			}
-		}
+		order[i].index = i;
+		order[i].dist = pow(g->spider.x - sprites[i]->x, 2)
+			+ pow(g->spider.y - sprites[i]->y, 2);
 	}
 	sort_sprites(order, count);
-	p.x = -1;
-	while (++p.x < count)
-		position_sprite(g, *g->bombs[order[p.x].index]);
+	i = -1;
+	while (++i < count)
+		position_sprite(g, *sprites[order[i].index], tex);
+	free(order);
 }

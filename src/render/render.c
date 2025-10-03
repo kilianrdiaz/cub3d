@@ -131,7 +131,8 @@ int	render(t_game *g)
 	x = -1;
 	while (++x < GAME_WIDTH)
 		render_wall(g, x);
-	render_sprites(g); // Dibuja las bombas
+	render_sprites(g, g->bombs, g->bomb_tex); // Dibuja las bombas
+	render_sprites(g, g->lizards, g->lizard_tex); // Dibuja los lagartos
 	update_bombs(g); // Actualiza estado de las bombas
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	draw_hand(g);
