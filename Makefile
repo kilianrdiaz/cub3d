@@ -20,7 +20,7 @@ SRCS    = src/render/player.c \
 		src/render/sprite.c \
 		src/render/render.c \
 		src/move_spider.c \
-		src/bomb.c \
+		src/spider_attack.c \
 		src/key_hooks.c \
 		src/main.c 
 
@@ -71,7 +71,7 @@ clean:
 	rm -f $(OBJ)
 
 fclean: clean
-	rm -rf $(LIBFT_DIR)
+	@make -C $(LIBFT_DIR) fclean
 	rm -rf $(MLX_DIR)
 	rm -f $(NAME)
 

@@ -14,6 +14,7 @@
 
 int	close_program(t_game *g)
 {
+	clean_screen(g);
 	if (g->img)
 		mlx_destroy_image(g->mlx, g->img);
 	if (g->win)
@@ -24,7 +25,10 @@ int	close_program(t_game *g)
 		free(g->mlx);
 	}
 	ft_free_array((void ***)&g->bombs);
+	ft_free_array((void ***)&g->lizards);
 	free(g->spider.hand);
+	free(g->bomb_tex);
+	free(g->lizard_tex);
 	exit(0);
 	return (0);
 }

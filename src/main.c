@@ -12,9 +12,9 @@
 
 #include "../inc/cub3d.h"
 
-char		*map[] = {"11111111111111111111", "100000000000000B0001",
+char		*map[] = {"11111111111111111111", "100000L00000L00B0001",
 			"11110111011111111001", "10000001000000001001",
-			"10111111101111111001", "100000000EBB00000001",
+			"10111111101111111001", "100000000EBB0000L001",
 			"10111111111111111111", "11111111111111111111"};
 
 static void	create_spiderman(t_game *g)
@@ -42,6 +42,34 @@ static void	create_spiderman(t_game *g)
 	ft_error_exit("Error: No player start position found in map\n");
 }
 
+static void create_sprites(t_game *g)
+{
+	t_pos		p;
+	t_sprite		*sprite;
+
+	p.y = -1;
+	while (++p.y < MAP_H)
+	{
+		p.x = -1;
+		while (++p.x < MAP_W)
+		{
+			if (map[p.y][p.x] == 'L' || map[p.y][p.x] == 'B')
+			{
+				sprite = malloc(sizeof(t_sprite));
+				if (!sprite)
+					ft_error_exit("Error: Memory allocation failed for lizard\n");
+				ft_bzero(sprite, sizeof(t_sprite));
+				sprite->x = p.x;
+				sprite->y = p.y;
+				if (map[p.y][p.x] == 'L')
+					ft_append_array((void ***)&g->lizards, sprite);
+				else
+					ft_append_array((void ***)&g->bombs, sprite);
+			}
+		}
+	}
+}
+
 static void	load_textures(t_game *g)
 {
 	g->spider.hand = malloc(sizeof(t_tex) * sizeof(t_state));
@@ -51,6 +79,16 @@ static void	load_textures(t_game *g)
 	load_texture(g, &g->spider.hand[MOVING], "./textures/spiderhand_02.xpm");
 	load_texture(g, &g->spider.hand[ATTACKING],
 		"./textures/spiderhand_attack.xpm");
+	g->bomb_tex = malloc(sizeof(t_tex) * sizeof(t_state));
+	if (!g->bomb_tex)
+		ft_error_exit("Error: Memory allocation failed for bomb textures\n");
+	load_texture(g, &g->bomb_tex[ACTIVE], "./textures/bomb.xpm");
+	load_texture(g, &g->bomb_tex[ATTACKED], "./textures/bomb_attacked.xpm");
+	g->lizard_tex = malloc(sizeof(t_tex) * sizeof(t_state));
+	if (!g->lizard_tex)
+		ft_error_exit("Error: Memory allocation failed for lizard textures\n");
+	load_texture(g, &g->lizard_tex[ACTIVE], "./textures/lizard.xpm");
+	load_texture(g, &g->lizard_tex[ATTACKED], "./textures/lizard_attacked.xpm");
 	/* Carga texturas: ajusta paths según tus archivos */
 	load_texture(g, &g->floor, "./textures/floor.xpm");
 	load_texture(g, &g->ceiling, "./textures/ceiling.xpm");
@@ -65,6 +103,8 @@ int	main(void)
 	t_game	g;
 
 	ft_bzero(&g, sizeof(t_game));
+	create_spiderman(&g);
+	create_sprites(&g);
 	g.mlx = mlx_init();
 	if (!g.mlx)
 	{
@@ -84,8 +124,6 @@ int	main(void)
 		return (1);
 	}
 	g.addr = mlx_get_data_addr(g.img, &g.bpp, &g.line_len, &g.endian);
-	create_spiderman(&g);
-	init_bombs(&g);
 	load_textures(&g);
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);   // tecla presionada
