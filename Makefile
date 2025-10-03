@@ -14,10 +14,6 @@
 #                                 VARIABLES                                    #
 # **************************************************************************** #
 
-NAME    = cub3d
-CC      = cc
-CFLAGS  = -Wall -Wextra -Werror
-MLX     = -lmlx -lXext -lX11 -lm
 SRCS    = src/render/player.c \
 		src/render/utils.c \
 		src/render/map.c \
@@ -30,35 +26,53 @@ SRCS    = src/render/player.c \
 
 OBJ     = $(SRCS:.c=.o)
 
-LIB_DIR = libft/
-LIBFT = $(LIB_DIR)libft.a
+LIBFT_DIR = libft/
+LIBFT = $(LIBFT_DIR)libft.a
+LIBFT_REPO = https://github.com/alejhern/libft.git
+
+MLX_DIR = minilibx-linux
+MLX_REPO = https://github.com/42Paris/minilibx-linux.git
+MLX_LIB = $(MLX_DIR)/libmlx.a
+MLX     = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 
 NAME    = cub3d
 CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -I./inc -I$(LIB_DIR) -g
+CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
 MLX     = -lmlx -lXext -lX11 -lm
 
 # **************************************************************************** #
 #                                 RULES                                        #
 # **************************************************************************** #
 
-all: $(NAME)
+all: $(LIBFT) $(MLX_LIB) $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT) Makefile inc/cub3d.h
+$(NAME): $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
 
+%.o: %.c ./inc/cub3d.h Makefile
+	$(CC) $(CFLAGS) -c $< -o $@
+
 $(LIBFT):
-	@if [ ! -d "$(LIB_DIR)" ]; then \
-		git clone https://github.com/alejhern/libft.git $(LIB_DIR); \
+	@if [ ! -d "$(LIBFT_DIR)" ]; then \
+		git clone $(LIBFT_REPO) $(LIBFT_DIR); \
 	fi
-	@make -C $(LIB_DIR)
+	@make -C $(LIBFT_DIR)
+
+$(MLX_LIB):
+	@if [ ! -d "$(MLX_DIR)" ]; then \
+		echo "📥 Clonando MiniLibX..."; \
+		git clone $(MLX_REPO) $(MLX_DIR); \
+	fi
+	$(MAKE) -C $(MLX_DIR)
+	@echo "✅ MiniLibX compilada."
 
 clean:
-	@make -C $(LIB_DIR) clean
+	@make -C $(LIBFT_DIR) clean
 	rm -f $(OBJ)
 
 fclean: clean
-	@make -C $(LIB_DIR) fclean
+	rm -rf $(LIBFT_DIR)
+	rm -rf $(MLX_DIR)
 	rm -f $(NAME)
 
 re: fclean all
