@@ -33,7 +33,6 @@ int	close_program(t_game *g)
 	return (0);
 }
 
-
 int	key_press(int key, t_game *g)
 {
 	if (key == 119)

@@ -42,10 +42,10 @@ static void	create_spiderman(t_game *g)
 	ft_error_exit("Error: No player start position found in map\n");
 }
 
-static void create_sprites(t_game *g)
+static void	create_sprites(t_game *g)
 {
 	t_pos		p;
-	t_sprite		*sprite;
+	t_sprite	*sprite;
 
 	p.y = -1;
 	while (++p.y < MAP_H)
@@ -128,7 +128,7 @@ int	main(void)
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);   // tecla presionada
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g); // tecla liberada
-	g.spider.state = ACTIVE;
+	g.show_intro = 1;
 	mlx_loop_hook(g.mlx, render, &g); // loop continuo
 	mlx_loop(g.mlx);
 	close_program(&g);
