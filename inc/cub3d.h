@@ -105,6 +105,7 @@ typedef struct s_game
 	int			bpp;
 	int			line_len;
 	int			endian;
+	int			show_intro;
 	t_spidy		spider;
 	t_tex		floor;
 	t_tex		ceiling;
@@ -150,6 +151,7 @@ typedef struct s_ray
 	int			color;
 }				t_ray;
 
+void			show_intro(t_game *g);
 int				clamp_int(int v, int a, int b);
 void			update_bombs(t_game *g);
 void			put_pixel(t_game *g, int x, int y, int color);

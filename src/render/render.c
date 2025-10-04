@@ -125,6 +125,11 @@ int	render(t_game *g)
 {
 	int	x;
 
+	if (g->show_intro)
+	{
+		show_intro(g);
+		return (0); // Si estamos en intro, no renderizamos nada más
+	}
 	update_player_position(g); // Actualiza posición según teclas
 	clean_screen(g);
 	render_floor_and_ceiling(g);
