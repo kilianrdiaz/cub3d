@@ -29,6 +29,8 @@
 
 # define MOVE_SPEED 0.07
 # define ROT_SPEED 0.05
+# define DETECT_RADIUS 10.0
+# define MOVE_SPEED_LIZARD 1
 
 extern char		*map[];
 
@@ -62,6 +64,7 @@ typedef struct s_sprite
 	int			width;
 	int			height;
 	int			screen_x;
+	double		delay;
 	t_state		state;
 }				t_sprite;
 
@@ -105,7 +108,9 @@ typedef struct s_game
 	int			bpp;
 	int			line_len;
 	int			endian;
+	double		timer;
 	int			show_intro;
+	char		**map;
 	t_spidy		spider;
 	t_tex		floor;
 	t_tex		ceiling;
@@ -170,5 +175,6 @@ void			render_sprites(t_game *g, t_sprite **sprites, t_tex *tex);
 int				key_press(int key, t_game *g);
 int				key_release(int key, t_game *g);
 int				close_program(t_game *g);
+void			move_lizards(t_game *g);
 
 #endif

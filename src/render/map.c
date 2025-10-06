@@ -91,10 +91,7 @@ void	print_map(t_game *g)
 	{
 		for (p.x = 0; p.x < MAP_W; p.x++)
 		{
-			if (p.x == (int)g->spider.x && p.y == (int)g->spider.y)
-				printf("P"); // posición del jugador
-			else
-				printf("%c", map[p.y][p.x]);
+			printf("%c", g->map[p.y][p.x]);
 		}
 		printf("\n");
 	}

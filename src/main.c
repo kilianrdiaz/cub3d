@@ -12,10 +12,11 @@
 
 #include "../inc/cub3d.h"
 
-char		*map[] = {"11111111111111111111", "100000L00000L00B0001",
+char		*map[] = {"11111111111111111111", "100000000000000B0001",
 			"11110111011111111001", "10000001000000001001",
 			"10111111101111111001", "100000000EBB0000L001",
 			"10111111111111111111", "11111111111111111111"};
+char        map_str[] = "11111111111111111111\n100000000000000B0001\n11110111011111111001\n10000001000000001001\n10111111101111111001\n100000000EBB0000L001\n10111111111111111111\n11111111111111111111\n";
 
 static void	create_spiderman(t_game *g)
 {
@@ -125,6 +126,7 @@ int	main(void)
 	}
 	g.addr = mlx_get_data_addr(g.img, &g.bpp, &g.line_len, &g.endian);
 	load_textures(&g);
+	g.map = ft_split(map_str, '\n');
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);   // tecla presionada
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g); // tecla liberada
