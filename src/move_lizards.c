@@ -25,7 +25,7 @@ static int	move_lizard_to(t_game *g, t_sprite *l, double new_x, double new_y)
 	gy = (int)new_y;
 	if (gx < 0 || gx >= MAP_W || gy < 0 || gy >= MAP_H)
 		return (0);
-	if (g->map[gy][gx] == '1' || g->map[gy][gx] == 'L' || g->map[gy][gx] == 'P')
+	if (g->map[gy][gx] == '1' || g->map[gy][gx] == 'L')
 		return (0);
 	if (gx != old_gx || gy != old_gy)
 	{
@@ -103,14 +103,17 @@ void	move_lizards(t_game *g)
 		l = g->lizards[i];
 		if (!l || g->timer < l->delay)
 			continue ;
-		else if (l->state == ATTACKED && g->timer < l->delay)
-			continue ;
-		else if (l->state == ATTACKED && g->timer >= l->delay)
+		if (l->state == ATTACKED && g->timer >= l->delay)
 			l->state = ACTIVE;
-		else
-			l->delay = g->timer + 1;
-		dist = fabs(l->x - g->spider.x) + fabs(l->y - g->spider.y);
-		if (dist <= DETECT_RADIUS)
+		l->delay = g->timer + 1;
+		if (l->state == ACTIVE)
+			l->state = MOVING;
+		else if (l->state == MOVING)
+			l->state = ACTIVE;
+		dist = (fabs(l->x - g->spider.x) + fabs(l->y - g->spider.y));
+		if (dist <= 2.1)
+			l->state = ATTACKING;
+		else if (dist <= DETECT_RADIUS)
 			chase_lizard(g, l, &g->spider);
 		else
 			patrol_lizard(g, l);
