@@ -30,8 +30,6 @@ static void	move_player(t_game *g, double dir)
 	new_x = g->spider.x + g->spider.dir_x * dir * MOVE_SPEED;
 	new_y = g->spider.y + g->spider.dir_y * dir * MOVE_SPEED;
 	distance = sqrt(pow(new_x - g->spider.x, 2) + pow(new_y - g->spider.y, 2));
-	// distancia recorrida en este frame
-	// Comprobar colisiones
 	if (is_walkable((int)new_x, (int)new_y))
 	{
 		g->map[(int)g->spider.y][(int)g->spider.x] = '0';
@@ -39,16 +37,14 @@ static void	move_player(t_game *g, double dir)
 		g->spider.y = new_y;
 		g->map[(int)g->spider.y][(int)g->spider.x] = 'P';
 	}
-	// Acumular distancia recorrida
 	g->spider.move_accum += distance;
-	// Si recorrió más de STEP_DISTANCE, cambiar sprite
 	if (g->spider.move_accum >= 0.40)
 	{
 		if (g->spider.state == ACTIVE)
 			g->spider.state = MOVING;
 		else if (g->spider.state == MOVING)
 			g->spider.state = ACTIVE;
-		g->spider.move_accum = 0.0; // reset
+		g->spider.move_accum = 0.0;
 	}
 	print_map(g);
 }
@@ -60,7 +56,6 @@ static void	rotate_spidy(t_spidy *spidy, double angle)
 
 	olddir_x = spidy->dir_x;
 	oldplane_x = spidy->plane_x;
-	// Rotación con ángulo pequeño (radianes)
 	spidy->dir_x = spidy->dir_x * cos(angle) - spidy->dir_y * sin(angle);
 	spidy->dir_y = olddir_x * sin(angle) + spidy->dir_y * cos(angle);
 	spidy->plane_x = spidy->plane_x * cos(angle) - spidy->plane_y * sin(angle);
@@ -69,15 +64,15 @@ static void	rotate_spidy(t_spidy *spidy, double angle)
 
 void	update_player_position(t_game *g)
 {
-	if (g->keys.a) // rotar izq
+	if (g->keys.a)
 		rotate_spidy(&g->spider, -ROT_SPEED);
-	if (g->keys.d) // rotar der
+	if (g->keys.d)
 		rotate_spidy(&g->spider, ROT_SPEED);
-	if (g->keys.w) // adelante
+	if (g->keys.w)
 		move_player(g, 1.0);
-	if (g->keys.s) // atrás
+	if (g->keys.s)
 		move_player(g, -1.0);
-	if (g->keys.space) // atacar
+	if (g->keys.space)
 		g->spider.state = ATTACKING;
 	else if (g->spider.state == ATTACKING)
 		g->spider.state = ACTIVE;

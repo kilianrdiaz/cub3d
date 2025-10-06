@@ -21,17 +21,15 @@ void	update_bombs(t_game *g)
 	{
 		if (g->bombs[i] && g->bombs[i]->state == ATTACKED)
 		{
-			// Aquí puedes añadir lógica adicional, como un temporizador
-			// para cambiar el estado a DEFUSED después de un tiempo.
 			g->bombs[i]->state = DEFUSED;
 			printf("Bomb at (%.1f, %.1f) has been defused.\n", g->bombs[i]->x,
 				g->bombs[i]->y);
-            return ;
+			return ;
 		}
 	}
 }
 
-static int check_if_is_lizard(t_game *g, int x, int y)
+static int	check_if_is_lizard(t_game *g, int x, int y)
 {
 	int		i;
 	t_pos	t;
@@ -45,7 +43,7 @@ static int check_if_is_lizard(t_game *g, int x, int y)
 		{
 			g->lizards[i]->state = ATTACKED;
 			g->lizards[i]->delay = g->timer + 20;
-			g->keys.space = 0; // Evita múltiples ataques
+			g->keys.space = 0;
 			ft_printf("Lizard attacked at (%d,%d)\n", t.x, t.y);
 			return (1);
 		}
@@ -53,7 +51,7 @@ static int check_if_is_lizard(t_game *g, int x, int y)
 	return (0);
 }
 
-static int check_if_is_bomb(t_game *g, int x, int y)
+static int	check_if_is_bomb(t_game *g, int x, int y)
 {
 	int		i;
 	t_pos	t;
@@ -67,7 +65,7 @@ static int check_if_is_bomb(t_game *g, int x, int y)
 		{
 			g->bombs[i]->state = ATTACKED;
 			g->bomb_count--;
-			g->keys.space = 0; // Evita múltiples ataques
+			g->keys.space = 0;
 			ft_printf("Bomb attacked at (%d,%d)\n", t.x, t.y);
 			return (1);
 		}
@@ -88,11 +86,7 @@ void	spider_attack(t_game *g)
 		if (t.x < 0 || t.x >= MAP_W || t.y < 0 || t.y >= MAP_H)
 			break ;
 		if (check_if_is_lizard(g, t.x, t.y) || check_if_is_bomb(g, t.x, t.y))
-		{
-			g->keys.space = 0; // Evita múltiples ataques
 			break ;
-		}
-		// Si choca con pared, se detiene
 		if (map[t.y][t.x] == '1')
 			break ;
 	}

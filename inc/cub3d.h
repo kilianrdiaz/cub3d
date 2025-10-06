@@ -136,8 +136,7 @@ typedef struct s_ray
 	double		dir_y1;
 	double		pos_z;
 	double		row_distance;
-	int			map_x;
-	int			map_y;
+	t_pos		map;
 	double		side_dist_x;
 	double		side_dist_y;
 	double		delta_dist_x;
@@ -157,7 +156,7 @@ typedef struct s_ray
 	int			color;
 }				t_ray;
 
-void			show_intro(t_game *g);
+int				show_intro(t_game *g);
 int				clamp_int(int v, int a, int b);
 void			update_bombs(t_game *g);
 void			put_pixel(t_game *g, int x, int y, int color);
@@ -168,8 +167,8 @@ int				set_direction(t_game *g, char c);
 void			spider_attack(t_game *g);
 void			draw_hand(t_game *g);
 void			draw_floor_and_ceiling(t_game *g, t_ray *ray, int y);
-void			draw_wall_stripe(t_game *g, t_ray *ray, t_tex *tex, int x);
-t_tex			*get_texture_wall(t_game *g, t_ray *ray);
+void			draw_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int x);
+t_tex			get_texture_wall(t_game g, t_ray ray);
 void			update_player_position(t_game *g);
 void			print_map(t_game *g);
 void			render_sprites(t_game *g, t_sprite **sprites, t_tex *tex);

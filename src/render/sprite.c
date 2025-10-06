@@ -33,14 +33,14 @@ static void	sort_sprites(t_sprite_order *order, int count)
 	}
 }
 
-void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe, t_tex *tex)
+static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex *tex)
 {
-	int				d;
-	int				y;
+	int	d;
+	int	y;
 
 	if (sp->state == DEFUSED)
 		return ;
-	ray.tx = (int)(256 * (stripe - (-sp->width / 2 + sp->screen_x))
+	ray.tx = (int)(256 * (ray.line_height - (-sp->width / 2 + sp->screen_x))
 			* tex[sp->state].width / sp->width) / 256;
 	y = ray.draw_start_y - 1;
 	while (++y < ray.draw_end_y)
@@ -50,18 +50,20 @@ void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe, t_tex *tex)
 		if (ray.tx < 0 || ray.tx >= tex[sp->state].width || ray.ty < 0
 			|| ray.ty >= tex[sp->state].height)
 			continue ;
-		ray.color = *(unsigned int *)(tex[sp->state].addr + ray.ty * tex[sp->state].line_len
-				+ ray.tx * (tex[sp->state].bpp / 8));
+		ray.color = *(unsigned int *)(tex[sp->state].addr + ray.ty
+				* tex[sp->state].line_len + ray.tx * (tex[sp->state].bpp / 8));
 		if ((ray.color & 0x00FFFFFF) != 0) // Transparencia
-			put_pixel(g, stripe, y, ray.color);
+			put_pixel(g, ray.line_height, y, ray.color);
 	}
 }
 
 static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex *tex)
 {
 	// 1️⃣ Altura y ancho del sprite según la distancia (como las paredes)
-	sp->height = (tex[sp->state].height * (SCALE_SPRITE + sp->over_scale) / sp->trans_y);
-	sp->width = (tex[sp->state].width * (SCALE_SPRITE + sp->over_scale) / sp->trans_y);
+	sp->height = (tex[sp->state].height * (SCALE_SPRITE + sp->over_scale)
+			/ sp->trans_y);
+	sp->width = (tex[sp->state].width * (SCALE_SPRITE + sp->over_scale)
+			/ sp->trans_y);
 	// 2️⃣ Offset vertical para apoyarlo en el suelo
 	ray->camera_x = (int)(HEIGHT / sp->trans_y * 0.5);
 	// 3️⃣ Límites verticales
@@ -83,8 +85,7 @@ static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex *tex)
 
 void	position_sprite(t_game *g, t_sprite sp, t_tex *tex)
 {
-	t_ray		ray;
-	int			stripe;
+	t_ray	ray;
 
 	sp.x = sp.x + 0.5 - g->spider.x;
 	sp.y = sp.y + 0.5 - g->spider.y;
@@ -98,19 +99,20 @@ void	position_sprite(t_game *g, t_sprite sp, t_tex *tex)
 	{
 		ray_sprite(&sp, &ray, tex);
 		// Dibujar sprite con z-buffe
-		stripe = ray.draw_start_x - 1;
-		while (++stripe < ray.draw_end_x)
-			if (sp.trans_y > 0 && stripe >= 0 && stripe < GAME_WIDTH
-				&& sp.trans_y < g->zbuffer[stripe])
-				draw_sprite(g, &sp, ray, stripe, tex);
+		ray.line_height = ray.draw_start_x - 1;
+		while (++ray.line_height < ray.draw_end_x)
+			if (sp.trans_y > 0 && ray.line_height >= 0
+				&& ray.line_height < GAME_WIDTH
+				&& sp.trans_y < g->zbuffer[ray.line_height])
+				draw_sprite(g, &sp, ray, tex);
 	}
 }
 
-void render_sprites(t_game *g, t_sprite **sprites, t_tex *tex)
+void	render_sprites(t_game *g, t_sprite **sprites, t_tex *tex)
 {
 	t_sprite_order	*order;
-	int			i;
-	int			count;
+	int				i;
+	int				count;
 
 	if (!sprites)
 		return ;
@@ -122,8 +124,8 @@ void render_sprites(t_game *g, t_sprite **sprites, t_tex *tex)
 	while (sprites[++i])
 	{
 		order[i].index = i;
-		order[i].dist = pow(g->spider.x - sprites[i]->x, 2)
-			+ pow(g->spider.y - sprites[i]->y, 2);
+		order[i].dist = pow(g->spider.x - sprites[i]->x, 2) + pow(g->spider.y
+				- sprites[i]->y, 2);
 	}
 	sort_sprites(order, count);
 	i = -1;

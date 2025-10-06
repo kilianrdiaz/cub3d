@@ -18,8 +18,8 @@ int	set_direction(t_game *g, char c)
 		return (g->spider.dir_x = 0, g->spider.dir_y = -1,
 			g->spider.plane_x = 0.66, g->spider.plane_y = 0, 0);
 	if (c == 'S')
-		return (g->spider.dir_x = 0, g->spider.dir_y = 1, g->spider.plane_x =
-			-0.66, g->spider.plane_y = 0, 0);
+		return (g->spider.dir_x = 0, g->spider.dir_y = 1, g->spider.plane_x
+			= -0.66, g->spider.plane_y = 0, 0);
 	if (c == 'E')
 		return (g->spider.dir_x = 1, g->spider.dir_y = 0, g->spider.plane_x = 0,
 			g->spider.plane_y = 0.66, 0);
@@ -32,6 +32,17 @@ int	set_direction(t_game *g, char c)
 	return (-1);
 }
 
+static t_ray	ray_hand(t_tex hand)
+{
+	t_ray	ray;
+
+	ray.draw_end_x = hand.width * SCALE_SPRITE;
+	ray.draw_end_y = hand.height * SCALE_SPRITE;
+	ray.draw_start_x = GAME_WIDTH / 2 - ray.draw_end_x / 2;
+	ray.draw_start_y = HEIGHT - ray.draw_end_y;
+	return (ray);
+}
+
 void	draw_hand(t_game *g)
 {
 	t_ray	ray;
@@ -40,32 +51,22 @@ void	draw_hand(t_game *g)
 
 	if (!g->spider.hand || !g->spider.hand[0].addr || !g->spider.hand[1].addr)
 		return ;
-
 	hand = g->spider.hand[g->spider.state];
-
-	int draw_width = hand.width * SCALE_SPRITE;
-	int draw_height = hand.height * SCALE_SPRITE;
-
-	ray.draw_start_x = GAME_WIDTH / 2 - draw_width / 2;
-	ray.draw_start_y = HEIGHT - draw_height;
-
+	ray = ray_hand(hand);
 	p.y = -1;
-	while (++p.y < draw_height)
+	while (++p.y < ray.draw_end_y)
 	{
 		p.x = -1;
-		while (++p.x < draw_width)
+		while (++p.x < ray.draw_end_x)
 		{
 			// mapeo inverso: de pantalla → textura
 			ray.tx = (int)(p.x / SCALE_SPRITE);
 			ray.ty = (int)(p.y / SCALE_SPRITE);
-
-			ray.color = *(unsigned int *)(hand.addr
-				+ ray.ty * hand.line_len
-				+ ray.tx * (hand.bpp / 8));
-
+			ray.color = *(unsigned int *)(hand.addr + ray.ty * hand.line_len
+					+ ray.tx * (hand.bpp / 8));
 			if ((ray.color & 0x00FFFFFF) != 0) // ignorar fondo transparente
-				put_pixel(g, ray.draw_start_x + p.x, ray.draw_start_y + p.y, ray.color);
+				put_pixel(g, ray.draw_start_x + p.x, ray.draw_start_y + p.y,
+					ray.color);
 		}
 	}
 }
-

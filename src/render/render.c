@@ -12,7 +12,7 @@
 
 #include "../../inc/cub3d.h"
 
-static void	calculate_distance_to_wall(t_game *g, t_ray *ray)
+static void	calculate_distance_to_wall(t_game g, t_ray *ray)
 {
 	// 3. Algoritmo DDA para avanzar en el mapa hasta encontrar pared
 	while (ray->hit == 0)
@@ -20,25 +20,25 @@ static void	calculate_distance_to_wall(t_game *g, t_ray *ray)
 		if (ray->side_dist_x < ray->side_dist_y)
 		{
 			ray->side_dist_x += ray->delta_dist_x;
-			ray->map_x += ray->step_x;
+			ray->map.x += ray->step_x;
 			ray->side = 0;
 		}
 		else
 		{
 			ray->side_dist_y += ray->delta_dist_y;
-			ray->map_y += ray->step_y;
+			ray->map.y += ray->step_y;
 			ray->side = 1;
 		}
 		// Protección: si se sale del mapa, forzamos colisión
-		if (ray->map_x < 0 || ray->map_x >= MAP_W || ray->map_y < 0
-			|| ray->map_y >= MAP_H || map[ray->map_y][ray->map_x] == '1')
+		if (ray->map.x < 0 || ray->map.x >= MAP_W || ray->map.y < 0
+			|| ray->map.y >= MAP_H || map[ray->map.y][ray->map.x] == '1')
 			ray->hit = 1;
 	}
 	// 4. Cálculo de la distancia perpendicular a la pared
-	ray->perp_wall_dist = (ray->map_y - g->spider.y + (1 - ray->step_y) / 2.0)
+	ray->perp_wall_dist = (ray->map.y - g.spider.y + (1 - ray->step_y) / 2.0)
 		/ ray->dir_y0;
 	if (ray->side == 0)
-		ray->perp_wall_dist = (ray->map_x - g->spider.x + (1 - ray->step_x)
+		ray->perp_wall_dist = (ray->map.x - g.spider.x + (1 - ray->step_x)
 				/ 2.0) / ray->dir_x0;
 	if (ray->perp_wall_dist <= 0.0)
 		ray->perp_wall_dist = 1e-6; // Evita divisiones por 0
@@ -52,8 +52,8 @@ static t_ray	initialize_ray(t_game *g, int x)
 	ray.dir_x0 = g->spider.dir_x + g->spider.plane_x * ray.camera_x;
 	ray.dir_y0 = g->spider.dir_y + g->spider.plane_y * ray.camera_x;
 	// Posición inicial en el mapa (celda del jugador)
-	ray.map_x = (int)g->spider.x;
-	ray.map_y = (int)g->spider.y;
+	ray.map.x = (int)g->spider.x;
+	ray.map.y = (int)g->spider.y;
 	// Distancias que recorrerá el rayo para cruzar una celda en X e Y
 	ray.delta_dist_x = fabs(1.0 / ray.dir_x0);
 	if (ray.dir_x0 == 0.0)
@@ -65,30 +65,30 @@ static t_ray	initialize_ray(t_game *g, int x)
 	ray.hit = 0;// Flag: aún no ha golpeado pared
 	ray.side = 0; // Flag: 0 = golpe en eje X, 1 = golpe en eje Y
 	ray.step_x = 1;
-	ray.side_dist_x = (ray.map_x + 1.0 - g->spider.x) * ray.delta_dist_x;
+	ray.side_dist_x = (ray.map.x + 1.0 - g->spider.x) * ray.delta_dist_x;
 	ray.step_y = 1;
-	ray.side_dist_y = (ray.map_y + 1.0 - g->spider.y) * ray.delta_dist_y;
+	ray.side_dist_y = (ray.map.y + 1.0 - g->spider.y) * ray.delta_dist_y;
 	return (ray);
 }
 
 static void	render_wall(t_game *g, int x)
 {
 	t_ray	ray;
-	t_tex	*tex;
+	t_tex	tex;
 
 	ray = initialize_ray(g, x);
 	if (ray.dir_x0 < 0)
 	{
 		ray.step_x = -1;
-		ray.side_dist_x = (g->spider.x - ray.map_x) * ray.delta_dist_x;
+		ray.side_dist_x = (g->spider.x - ray.map.x) * ray.delta_dist_x;
 	}
 	if (ray.dir_y0 < 0)
 	{
 		ray.step_y = -1;
-		ray.side_dist_y = (g->spider.y - ray.map_y) * ray.delta_dist_y;
+		ray.side_dist_y = (g->spider.y - ray.map.y) * ray.delta_dist_y;
 	}
-	calculate_distance_to_wall(g, &ray);
-	tex = get_texture_wall(g, &ray);
+	calculate_distance_to_wall(*g, &ray);
+	tex = get_texture_wall(*g, ray);
 	draw_wall_stripe(g, &ray, tex, x);
 	g->zbuffer[x] = ray.perp_wall_dist; // Guardamos la distancia del rayo
 }
@@ -126,10 +126,7 @@ int	render(t_game *g)
 	int	x;
 
 	if (g->show_intro)
-	{
-		show_intro(g);
-		return (0); // Si estamos en intro, no renderizamos nada más
-	}
+		return (show_intro(g));
 	update_player_position(g); // Actualiza posición según teclas
 	clean_screen(g);
 	render_floor_and_ceiling(g);
