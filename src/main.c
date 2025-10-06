@@ -56,14 +56,14 @@ static void	create_sprites(t_game *g)
 		{
 			if (map[p.y][p.x] == 'L' || map[p.y][p.x] == 'B')
 			{
-				sprite = malloc(sizeof(t_sprite));
-				if (!sprite)
-					ft_error_exit("Error: Memory allocation failed for lizard\n");
-				ft_bzero(sprite, sizeof(t_sprite));
+				sprite = ft_safe_calloc(1, sizeof(t_sprite));
 				sprite->x = p.x;
 				sprite->y = p.y;
 				if (map[p.y][p.x] == 'L')
+				{
+					sprite->over_scale = 1.5;
 					ft_append_array((void ***)&g->lizards, sprite);
+				}
 				else
 					ft_append_array((void ***)&g->bombs, sprite);
 			}
@@ -90,6 +90,10 @@ static void	load_textures(t_game *g)
 		ft_error_exit("Error: Memory allocation failed for lizard textures\n");
 	load_texture(g, &g->lizard_tex[ACTIVE], "./textures/lizard.xpm");
 	load_texture(g, &g->lizard_tex[ATTACKED], "./textures/lizard_attacked.xpm");
+	load_texture(g, &g->lizard_tex[ATTACKING],
+		"./textures/lizard_attack.xpm");
+	load_texture(g, &g->lizard_tex[MOVING],
+		"./textures/lizard_step.xpm");
 	/* Carga texturas: ajusta paths según tus archivos */
 	load_texture(g, &g->floor, "./textures/floor.xpm");
 	load_texture(g, &g->ceiling, "./textures/ceiling.xpm");
