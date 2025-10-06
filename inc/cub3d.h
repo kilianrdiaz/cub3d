@@ -136,7 +136,6 @@ typedef struct s_ray
 	double		dir_y1;
 	double		pos_z;
 	double		row_distance;
-	t_pos		map;
 	double		side_dist_x;
 	double		side_dist_y;
 	double		delta_dist_x;

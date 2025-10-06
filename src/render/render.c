@@ -14,32 +14,30 @@
 
 static void	calculate_distance_to_wall(t_game g, t_ray *ray)
 {
-	// 3. Algoritmo DDA para avanzar en el mapa hasta encontrar pared
 	while (ray->hit == 0)
 	{
 		if (ray->side_dist_x < ray->side_dist_y)
 		{
 			ray->side_dist_x += ray->delta_dist_x;
-			ray->map.x += ray->step_x;
+			ray->tx += ray->step_x;
 			ray->side = 0;
 		}
 		else
 		{
 			ray->side_dist_y += ray->delta_dist_y;
-			ray->map.y += ray->step_y;
+			ray->ty += ray->step_y;
 			ray->side = 1;
 		}
-		// Protección: si se sale del mapa, forzamos colisión
-		if (ray->map.x < 0 || ray->map.x >= MAP_W || ray->map.y < 0
-			|| ray->map.y >= MAP_H || map[ray->map.y][ray->map.x] == '1')
+		if (ray->tx < 0 || ray->tx >= MAP_W || ray->ty < 0 || ray->ty >= MAP_H
+			|| map[ray->ty][ray->tx] == '1')
 			ray->hit = 1;
 	}
 	// 4. Cálculo de la distancia perpendicular a la pared
-	ray->perp_wall_dist = (ray->map.y - g.spider.y + (1 - ray->step_y) / 2.0)
+	ray->perp_wall_dist = (ray->ty - g.spider.y + (1 - ray->step_y) / 2.0)
 		/ ray->dir_y0;
 	if (ray->side == 0)
-		ray->perp_wall_dist = (ray->map.x - g.spider.x + (1 - ray->step_x)
-				/ 2.0) / ray->dir_x0;
+		ray->perp_wall_dist = (ray->tx - g.spider.x + (1 - ray->step_x) / 2.0)
+			/ ray->dir_x0;
 	if (ray->perp_wall_dist <= 0.0)
 		ray->perp_wall_dist = 1e-6; // Evita divisiones por 0
 }
@@ -48,12 +46,13 @@ static t_ray	initialize_ray(t_game *g, int x)
 {
 	t_ray	ray;
 
+	ft_bzero(&ray, sizeof(t_ray));
 	ray.camera_x = 2 * x / (double)GAME_WIDTH - 1;
 	ray.dir_x0 = g->spider.dir_x + g->spider.plane_x * ray.camera_x;
 	ray.dir_y0 = g->spider.dir_y + g->spider.plane_y * ray.camera_x;
 	// Posición inicial en el mapa (celda del jugador)
-	ray.map.x = (int)g->spider.x;
-	ray.map.y = (int)g->spider.y;
+	ray.tx = (int)g->spider.x;
+	ray.ty = (int)g->spider.y;
 	// Distancias que recorrerá el rayo para cruzar una celda en X e Y
 	ray.delta_dist_x = fabs(1.0 / ray.dir_x0);
 	if (ray.dir_x0 == 0.0)
@@ -62,35 +61,38 @@ static t_ray	initialize_ray(t_game *g, int x)
 	if (ray.dir_y0 == 0.0)
 		ray.delta_dist_y = 1e30;
 	ray.perp_wall_dist = 0.0;
-	ray.hit = 0;// Flag: aún no ha golpeado pared
-	ray.side = 0; // Flag: 0 = golpe en eje X, 1 = golpe en eje Y
 	ray.step_x = 1;
-	ray.side_dist_x = (ray.map.x + 1.0 - g->spider.x) * ray.delta_dist_x;
+	ray.side_dist_x = (ray.tx + 1.0 - g->spider.x) * ray.delta_dist_x;
 	ray.step_y = 1;
-	ray.side_dist_y = (ray.map.y + 1.0 - g->spider.y) * ray.delta_dist_y;
+	ray.side_dist_y = (ray.ty + 1.0 - g->spider.y) * ray.delta_dist_y;
 	return (ray);
 }
 
-static void	render_wall(t_game *g, int x)
+static void	render_wall(t_game *g)
 {
 	t_ray	ray;
 	t_tex	tex;
+	int		x;
 
-	ray = initialize_ray(g, x);
-	if (ray.dir_x0 < 0)
+	x = -1;
+	while (++x < GAME_WIDTH)
 	{
-		ray.step_x = -1;
-		ray.side_dist_x = (g->spider.x - ray.map.x) * ray.delta_dist_x;
+		ray = initialize_ray(g, x);
+		if (ray.dir_x0 < 0)
+		{
+			ray.step_x = -1;
+			ray.side_dist_x = (g->spider.x - ray.tx) * ray.delta_dist_x;
+		}
+		if (ray.dir_y0 < 0)
+		{
+			ray.step_y = -1;
+			ray.side_dist_y = (g->spider.y - ray.ty) * ray.delta_dist_y;
+		}
+		calculate_distance_to_wall(*g, &ray);
+		tex = get_texture_wall(*g, ray);
+		draw_wall_stripe(g, &ray, tex, x);
+		g->zbuffer[x] = ray.perp_wall_dist; // Guardamos la distancia del rayo
 	}
-	if (ray.dir_y0 < 0)
-	{
-		ray.step_y = -1;
-		ray.side_dist_y = (g->spider.y - ray.map.y) * ray.delta_dist_y;
-	}
-	calculate_distance_to_wall(*g, &ray);
-	tex = get_texture_wall(*g, ray);
-	draw_wall_stripe(g, &ray, tex, x);
-	g->zbuffer[x] = ray.perp_wall_dist; // Guardamos la distancia del rayo
 }
 
 static void	render_floor_and_ceiling(t_game *g)
@@ -123,19 +125,15 @@ static void	render_floor_and_ceiling(t_game *g)
 
 int	render(t_game *g)
 {
-	int	x;
-
 	if (g->show_intro)
 		return (show_intro(g));
-	update_player_position(g); // Actualiza posición según teclas
+	update_player_position(g);
 	clean_screen(g);
 	render_floor_and_ceiling(g);
-	x = -1;
-	while (++x < GAME_WIDTH)
-		render_wall(g, x);
-	render_sprites(g, g->bombs, g->bomb_tex); // Dibuja las bombas
-	render_sprites(g, g->lizards, g->lizard_tex); // Dibuja los lagartos
-	update_bombs(g); // Actualiza estado de las bombas
+	render_wall(g);
+	render_sprites(g, g->bombs, g->bomb_tex);
+	render_sprites(g, g->lizards, g->lizard_tex);
+	update_bombs(g);
 	move_lizards(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	draw_hand(g);
