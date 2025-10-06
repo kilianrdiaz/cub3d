@@ -65,6 +65,7 @@ typedef struct s_sprite
 	int			height;
 	int			screen_x;
 	double		delay;
+	double		over_scale;
 	t_state		state;
 }				t_sprite;
 

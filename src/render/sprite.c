@@ -60,8 +60,8 @@ void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, int stripe, t_tex *tex)
 static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex *tex)
 {
 	// 1️⃣ Altura y ancho del sprite según la distancia (como las paredes)
-	sp->height = (tex[sp->state].height * SCALE_SPRITE) / sp->trans_y;
-	sp->width = (tex[sp->state].width * SCALE_SPRITE) / sp->trans_y;
+	sp->height = (tex[sp->state].height * (SCALE_SPRITE + sp->over_scale) / sp->trans_y);
+	sp->width = (tex[sp->state].width * (SCALE_SPRITE + sp->over_scale) / sp->trans_y);
 	// 2️⃣ Offset vertical para apoyarlo en el suelo
 	ray->camera_x = (int)(HEIGHT / sp->trans_y * 0.5);
 	// 3️⃣ Límites verticales
