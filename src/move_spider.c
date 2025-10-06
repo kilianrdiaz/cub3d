@@ -32,10 +32,13 @@ static void	move_player(t_game *g, double dir)
 	distance = sqrt(pow(new_x - g->spider.x, 2) + pow(new_y - g->spider.y, 2));
 	// distancia recorrida en este frame
 	// Comprobar colisiones
-	if (is_walkable((int)new_x, (int)g->spider.y))
+	if (is_walkable((int)new_x, (int)new_y))
+	{
+		g->map[(int)g->spider.y][(int)g->spider.x] = '0';
 		g->spider.x = new_x;
-	if (is_walkable((int)g->spider.x, (int)new_y))
 		g->spider.y = new_y;
+		g->map[(int)g->spider.y][(int)g->spider.x] = 'P';
+	}
 	// Acumular distancia recorrida
 	g->spider.move_accum += distance;
 	// Si recorrió más de STEP_DISTANCE, cambiar sprite
@@ -47,6 +50,7 @@ static void	move_player(t_game *g, double dir)
 			g->spider.state = ACTIVE;
 		g->spider.move_accum = 0.0; // reset
 	}
+	print_map(g);
 }
 
 static void	rotate_spidy(t_spidy *spidy, double angle)

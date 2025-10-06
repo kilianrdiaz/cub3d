@@ -139,9 +139,11 @@ int	render(t_game *g)
 	render_sprites(g, g->bombs, g->bomb_tex); // Dibuja las bombas
 	render_sprites(g, g->lizards, g->lizard_tex); // Dibuja los lagartos
 	update_bombs(g); // Actualiza estado de las bombas
+	move_lizards(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	draw_hand(g);
 	if (g->spider.state == ATTACKING)
 		spider_attack(g);
+	g->timer += 0.1;
 	return (0);
 }

@@ -44,6 +44,7 @@ static int check_if_is_lizard(t_game *g, int x, int y)
 		if (t.x == x && t.y == y)
 		{
 			g->lizards[i]->state = ATTACKED;
+			g->lizards[i]->delay = g->timer + 20;
 			g->keys.space = 0; // Evita múltiples ataques
 			ft_printf("Lizard attacked at (%d,%d)\n", t.x, t.y);
 			return (1);
