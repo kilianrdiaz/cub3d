@@ -6,9 +6,10 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:03:30 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/09/17 21:10:21 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/10/07 11:13:52 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../inc/cub3d.h"
 
 int main(int argc, char **argv)
@@ -34,12 +35,13 @@ int main(int argc, char **argv)
     content = read_file(fd);
 
     int i = 0;
-
+    printf("\n- - - - FICHERO .CUB - - - -\n");
     while (content[i])
     {
         printf("%s\n",content[i]);
         i++;
     }
+    printf("- - - - - - - - - - - - - - - -\n\n");
 
 
     parse_file(game, content);
@@ -49,7 +51,7 @@ int main(int argc, char **argv)
     {
         printf("ID: %s\n", game->elems[i]->id);
         if (game->elems[i]->texture)
-            printf("Texture loaded\n");
+            printf("Texture loaded (TO DO)\n");
         else
             printf("Color: %u\n", game->elems[i]->color);
         i++;

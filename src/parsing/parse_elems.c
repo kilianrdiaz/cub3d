@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 21:22:21 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/09/17 21:34:11 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/10/07 11:11:35 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,11 @@ int	check_path(char *data)
 {
 	int fd;
 
+	printf("Archivo de textura\n");
 	fd = open(data, O_RDONLY);
 	if (fd == -1)
 	{
+		printf("%s", data);
 		return (-1);
 	}
 	close(fd);
@@ -61,17 +63,13 @@ int check_id(t_elem **elems, char *id)
         return (-1);
     if (!elems)
     {
-        printf("elems es NULL\n");
         return (1);
     }
     i = 0;
     while (elems[i])
     {
         if (ft_strncmp(elems[i]->id, id, ft_strlen(id)) == 0)
-		{
-			printf("ID repetida detectada: %s\n", id);
 			return (-1);
-		}
         i++;
     }
     return (0);
@@ -84,8 +82,7 @@ void	parse_element(t_game *game, char *line)
 	unsigned int color;
 
 	splited = ft_split(line, ' ');
-	
-    printf("estoy aqui\n");
+
 	if (!splited[0] || !splited[1])
 		error_handler(3);
 
@@ -110,7 +107,7 @@ void	parse_element(t_game *game, char *line)
 	}
 	else
 		error_handler(3);
-
+	
 	i = 0;
 	while (splited[i])
 		free(splited[i++]);

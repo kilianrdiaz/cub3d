@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_map.c                                        :+:      :+:    :+:   */
+/*   map_checking.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 17:00:00 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/10/07 17:00:00 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/10/07 11:06:04 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int is_map_str(char *s)
 		return (0);
 	while (s[i])
 	{
-        printf("%c\n", s[i]);
 		if (!(s[i] == '0' || s[i] == '1' || s[i] == 'N' ||
 			  s[i] == 'S' || s[i] == 'E' || s[i] == 'W' ||
 			  s[i] == ' ') )
@@ -104,11 +103,10 @@ void	get_map(t_game *game, char **content, int start_index)
         printf("%s\n", game->map.map[i]);
         i++;
     }
-
 	check_map_validity(game);
 }
 
-void	check_map_validity(t_game *game)
+/*void	check_map_validity(t_game *game)
 {
 	int i;
 	int j;
@@ -138,6 +136,75 @@ void	check_map_validity(t_game *game)
 				if (up == ' ' || down == ' ' || left == ' ' || right == ' ')
 					error_handler(3);
 			}
+			j++;
+		}
+		i++;
+	}
+	if (player_count != 1)
+		error_handler(3);
+}*/
+#include "../../inc/cub3d.h"
+#include "libft.h"
+
+static int	is_border_valid(t_game *game, int i)
+{
+	int	j;
+
+	j = 0;
+	while (j < (int)ft_strlen(game->map.map[i]))
+	{
+		if (i == 0 || i == game->map.height - 1)
+		{
+			if (game->map.map[i][j] != '1')
+				return (0);
+		}
+		else if (j == 0 || j == (int)ft_strlen(game->map.map[i]) - 1)
+		{
+			if (game->map.map[i][j] != '1')
+				return (0);
+		}
+		j++;
+	}
+	return (1);
+}
+
+static int	check_length_conditions(t_game *game, int i, int j)
+{
+	int	curr_len;
+	int	top_len;
+	int	bot_len;
+
+	curr_len = ft_strlen(game->map.map[i]);
+	top_len = (i > 0) ? ft_strlen(game->map.map[i - 1]) : curr_len;
+	bot_len = (i < game->map.height - 1)
+		? ft_strlen(game->map.map[i + 1]) : curr_len;
+
+	if (curr_len > top_len && j >= top_len && game->map.map[i][j] != '1')
+		return (0);
+	if (curr_len > bot_len && j >= bot_len && game->map.map[i][j] != '1')
+		return (0);
+	return (1);
+}
+
+void	check_map_validity(t_game *game)
+{
+	int	i;
+	int	j;
+	int	player_count;
+
+	player_count = 0;
+	i = 0;
+	while (i < game->map.height)
+	{
+		if (!is_border_valid(game, i))
+			error_handler(3);
+		j = 0;
+		while (j < (int)ft_strlen(game->map.map[i]))
+		{
+			if (!check_length_conditions(game, i, j))
+				error_handler(3);
+			if (ft_strchr("NSEW", game->map.map[i][j]))
+				player_count++;
 			j++;
 		}
 		i++;
