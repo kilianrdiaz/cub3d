@@ -22,6 +22,8 @@ SRCS    = src/parsing/error.c	\
 		  src/parsing/parser.c   \
 		  src/parsing/utils.c   \
 		  src/parsing/parse_elems.c   \
+		  src/parsing/map.c   \
+		  src/parsing/map_checking.c   \
 		  src/main.c
 
 OBJ     = $(SRCS:.c=.o)

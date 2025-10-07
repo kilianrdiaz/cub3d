@@ -17,49 +17,23 @@ char	**read_file(int fd);
 
 #include "libft.h" // por ft_isspace y ft_strncmp
 
-int is_elem_str(char *s)
+int is_elem_str(char *line)
 {
-    int i;
-
-    if (!s)
-        return (0);
-    i = 0;
-    while (ft_isspace(s[i]))
-        i++;
-    if (!ft_strncmp(&s[i], "NO ", 2))
+    /*if (!line)
+        return (0);*/
+    if (!ft_strncmp(line, "NO ", 2))
         return (1);
-    else if (!ft_strncmp(&s[i], "SO ", 2))
+    else if (!ft_strncmp(line, "SO ", 2))
         return (1);
-    else if (!ft_strncmp(&s[i], "WE ", 2))
+    else if (!ft_strncmp(line, "WE ", 2))
+	return (1);
+    else if (!ft_strncmp(line, "EA ", 2))
         return (1);
-    else if (!ft_strncmp(&s[i], "EA ", 2))
+    else if (!ft_strncmp(line, "C ", 1))
         return (1);
-    else if (!ft_strncmp(&s[i], "C ", 1))
-        return (1);
-    else if (!ft_strncmp(&s[i], "F ", 1))
+    else if (!ft_strncmp(line, "F ", 1))
         return (1);
     return (0);
-}
-
-int is_map_str(char *s)
-{
-    int i = 0;
-
-    if (!s)
-        return (0);
-    while (ft_isspace(s[i]))
-        i++;
-    if (s[i] == '\0') // línea vacía
-        return (0);
-    while (s[i])
-    {
-        if (!(s[i] == '0' || s[i] == '1' || s[i] == 'N' ||
-              s[i] == 'S' || s[i] == 'E' || s[i] == 'W' ||
-              ft_isspace(s[i])))
-            return (0);
-        i++;
-    }
-    return (1);
 }
 
 void    parse_arguments(int argc, char **argv)
@@ -97,25 +71,30 @@ void parse_file(t_game *game, char **content)
     int has_map = 0;
 
     if (!content || !content[0])
-        error_handler(3);
-
-    while (content[i])
+	{
+    	error_handler(3);
+	}
+	while (content[i])
     {
-        if (is_elem_str(content[i]))
+		if (is_elem_str(content[i]))
         {
 			parse_element(game, content[i]);
             // Aquí podrías guardar la textura/color correspondiente
         }
         else if (is_map_str(content[i]))
-        {
-            has_map = 1;
-        }
-        else if (ft_strlen(content[i]) == 0) // línea vacía permitida
+		{
+			has_map = 1;
+			get_map(game, content, i);
+			check_map_validity(game);
+			break; // el mapa es lo último, ya no seguimos parseando
+		}
+        else if (is_empty_line(content[i])) // línea vacía permitida
         {
             // ok
         }
         else
         {
+			printf("linea invalida: %s, Len: %ld\n", content[i], ft_strlen(content[i]));
             error_handler(3); // Línea inválida
         }
         i++;
@@ -123,9 +102,6 @@ void parse_file(t_game *game, char **content)
     if (!has_map)
         error_handler(3); // No hay mapa
 }
-
-
-
 
 /* TODO
 *	- Parseo del path de los elementos

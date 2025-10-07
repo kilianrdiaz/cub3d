@@ -12,124 +12,161 @@
 
 #include "../../inc/cub3d.h"
 
-int	parse_rgb(char *r, char *g, char *b);
+unsigned int	get_rgb(char *r, char *g, char *b);
 void	parse_path(char *data);
+char	**parse_rgb(char *r, char *g, char *b);
 
-void	save_element(t_elem *elems, char **splited)
+void	save_element(t_game *game, char *id, char *path, unsigned int color)
 {
 	t_elem	*new_elem;
 
 	new_elem = malloc(sizeof(t_elem));
 	if (!new_elem)
 		error_handler(3);
-	if (!elems)
-		elems = new_elem;
+	new_elem->id = ft_strdup(id);
+	if (!path)
+	{
+		new_elem->texture = NULL;
+		new_elem->color = color;
+	}
 	else
 	{
-		new_elem->id = ft_strdup(splited[0]);
-		// Guardar path o color en new_elem TODO
-		//ft_append_array((void ***)&elems, new_elem);
+		//load_texture(game, new_elem->texture, path);
+		new_elem->color = COLOR_NONE;
+		// Textura guardada en estructura
 	}
+
+	ft_append_array((void ***)&game->elems, new_elem);
+
 }
 
 int	check_path(char *data)
 {
-	// OPEN() PARA PROBAR SI EXISTE
-	/*if (!open())
+	int fd;
+
+	fd = open(data, O_RDONLY);
+	if (fd == -1)
 	{
-		return (-1)
-	}*/
-	// Si no existe, es rgb
-	//close()
-	//load_texture(data);
-	data = NULL; // evitar warning
-	(void)data;
+		return (-1);
+	}
+	close(fd);
 	return (1);
-	
 }
 
-int	check_id(t_elem *elems, char *id)
+int check_id(t_elem **elems, char *id)
 {
-	int	i;
+    int i;
 
-	i = 0;
-	if (!id)
-		return (-1);
-	if (!elems)
-		return (1);
-	while (elems[i].id)
-	{
-		if (!ft_strncmp(elems[i].id, id, ft_strlen(id)))
+    if (!id)
+        return (-1);
+    if (!elems)
+    {
+        printf("elems es NULL\n");
+        return (1);
+    }
+    i = 0;
+    while (elems[i])
+    {
+        if (ft_strncmp(elems[i]->id, id, ft_strlen(id)) == 0)
+		{
+			printf("ID repetida detectada: %s\n", id);
 			return (-1);
-		i++;
-	}
-	return (0);
+		}
+        i++;
+    }
+    return (0);
 }
 
 void	parse_element(t_game *game, char *line)
 {
 	int		i;
 	char	**splited;
-
-	i = 0;
+	unsigned int color;
 
 	splited = ft_split(line, ' ');
+	
+    printf("estoy aqui\n");
 	if (!splited[0] || !splited[1])
 		error_handler(3);
+
 	if (check_id(game->elems, splited[0]) == -1)
+	{
+		printf("ID repetida: %s\n", splited[0]);
 		error_handler(3);
+	}
 	if (!splited[2])
-		check_path(splited[1]);
+	{
+		if (check_path(splited[1]) == -1)
+			error_handler(3);
+		// Guardar en struct
+		save_element(game, splited[0], splited[1], COLOR_NONE);
+	}
 	else if (splited[2] && splited[3] && !splited[4])
 	{
-		if (parse_rgb(splited[1], splited[2], splited[3]) == 0)
+		color = get_rgb(splited[1], splited[2], splited[3]);
+		if (color == COLOR_NONE)
 			error_handler(3);
+		save_element(game, splited[0], NULL, color);
 	}
 	else
 		error_handler(3);
-	// Guardar en struct
-	save_element(game->elems, splited);
+
+	i = 0;
 	while (splited[i])
 		free(splited[i++]);
 	free(splited);	
 }
 
-int	parse_rgb(char *r, char *g, char *b)
+unsigned int get_rgb(char *r, char *g, char *b)
+{
+	int i;
+	char **rgb_str;
+	unsigned int *rgb;
+
+	rgb_str = parse_rgb(r, g, b);
+	if (!rgb_str)
+	{
+		printf("rgb_str es NULL\n");
+		return (COLOR_NONE);
+	}
+
+	rgb = malloc(3 * sizeof(unsigned int));
+	if (!rgb)
+		return (COLOR_NONE);
+
+	i = 0;
+	while (i < 3 && rgb_str[i])
+	{
+		rgb[i] = (unsigned int)ft_atoi(rgb_str[i]);
+		if (rgb[i++] > 255)
+		{
+			//free rgb_str
+			//free rgb_value
+			return (COLOR_NONE);
+		}
+	}
+	return ((rgb[0] << 16) | (rgb[1] << 8) | rgb[2]);
+}
+
+char	**parse_rgb(char *r, char *g, char *b)
 {
 	int		i;
-	int		j;
 	char	**rgb;
 	
 	rgb = NULL;
 	i = 0;
-	j = 0;
 	
-	ft_append_array((void ***)&rgb, ft_strdup(ft_strtrim(r, ",")));
-	ft_append_array((void ***)&rgb, ft_strdup(ft_strtrim(g, ",")));
-	ft_append_array((void ***)&rgb, ft_strdup(ft_strtrim(b, ",")));
+	ft_append_array((void ***)&rgb, ft_strdup(ft_strtrim(r,  ",\n\r\t ")));
+	ft_append_array((void ***)&rgb, ft_strdup(ft_strtrim(g,  ",\n\r\t ")));
+	ft_append_array((void ***)&rgb, ft_strdup(ft_strtrim(b,  ",\n\r\t ")));
+	ft_append_array((void ***)&rgb, NULL);
 
-	while (rgb[i])
+	while (rgb[i] != NULL)
 	{
-		j = 0;
-		while (rgb[i][j])
-		{
-			if (!ft_isnum(&rgb[i][j]) || j > 2)
-				return (0);
-			j++;
-		}
+		if (!ft_isnum(rgb[i]))
+			return (NULL); // free rgb and return NULL	
 		i++;
 	}
-	if (i != 4)
-		error_handler(3);
-	i = 0;
-	while (i < 3)
-	{
-		if (ft_atoi(rgb[i++]) > 255)
-			return (0);
-	}
-	return (1);
+
+	return (rgb);
 }
-
-
-/*
-*/

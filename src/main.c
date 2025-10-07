@@ -11,38 +11,58 @@
 /* ************************************************************************** */
 #include "../inc/cub3d.h"
 
-void get_map(t_game *g, char **content)
-{
-    //check map 
-    while (*content)
-    {
-        if (ft_strlen(*content) == 0)
-            break ;
-        ft_append_array((void ***)&g->map.map, ft_strdup(*content));
-        content++;
-    }
-}
-
 int main(int argc, char **argv)
 {
     t_game *game;
     char **content;
     int fd;
 
-    game = malloc(sizeof(t_game));
+    game = ft_calloc(1, sizeof(t_game));
+
     if (!game)
         return (1);
+
+    game->elems = NULL;
     
-    parse_arguments(game, argc, argv);
+    parse_arguments(argc, argv);
 
     fd = open(argv[1], O_RDONLY);
     if (fd == -1)
-    error_handler(2);
+        error_handler(2);
 
     content = NULL;
-    content = read_file(fd); 
+    content = read_file(fd);
+
+    int i = 0;
+
+    while (content[i])
+    {
+        printf("%s\n",content[i]);
+        i++;
+    }
+
+
     parse_file(game, content);
 
+    i = 0;
+    while (game->elems && game->elems[i])
+    {
+        printf("ID: %s\n", game->elems[i]->id);
+        if (game->elems[i]->texture)
+            printf("Texture loaded\n");
+        else
+            printf("Color: %u\n", game->elems[i]->color);
+        i++;
+    }
+
+    printf("\n--- MAPA GUARDADO ---\n");
+    i = 0;
+    while (game->map.map && game->map.map[i])
+    {
+        printf("%s\n", game->map.map[i]);
+        i++;
+    }
+    printf("Altura: %d, Ancho máximo: %d\n", game->map.height, game->map.width);
     //load map textures, colors...
     return (0);
 }
