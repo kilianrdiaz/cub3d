@@ -32,15 +32,15 @@ LIBFT_DIR = libft/
 LIBFT = $(LIBFT_DIR)libft.a
 LIBFT_REPO = https://github.com/alejhern/libft.git
 
-MLX_DIR = minilibx-linux
 MLX_REPO = https://github.com/42Paris/minilibx-linux.git
+MLX_DIR = minilibx-linux
 MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX     = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 
 NAME    = cub3d
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
-MLX     = -lmlx -lXext -lX11 -lm
+
 
 # **************************************************************************** #
 #                                 RULES                                        #
@@ -48,8 +48,8 @@ MLX     = -lmlx -lXext -lX11 -lm
 
 all: $(LIBFT) $(MLX_LIB) $(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
+$(NAME): $(OBJ) $(MLX_LIB)
+	$(CC) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
 
 %.o: %.c ./inc/cub3d.h Makefile
 	$(CC) $(CFLAGS) -c $< -o $@

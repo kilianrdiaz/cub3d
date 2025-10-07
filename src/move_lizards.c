@@ -76,6 +76,8 @@ static void	chase_lizard(t_game *g, t_sprite *l, t_spidy *p)
 
 	diff_x = p->x - l->x;
 	diff_y = p->y - l->y;
+	dx = 0;
+	dy = 0;
 	if (fabs(diff_x) > fabs(diff_y))
 		dx = get_move_speed(diff_x);
 	else
