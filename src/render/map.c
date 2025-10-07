@@ -103,12 +103,12 @@ void	print_map(t_game *g)
 {
 	t_pos	p;
 
-	for (p.y = 0; p.y < MAP_H; p.y++)
+	p.y = -1;
+	while (g->map[++p.y])
 	{
-		for (p.x = 0; p.x < MAP_W; p.x++)
-		{
+		p.x = -1;
+		while (g->map[p.y][++p.x])
 			printf("%c", g->map[p.y][p.x]);
-		}
 		printf("\n");
 	}
 	printf("\n");

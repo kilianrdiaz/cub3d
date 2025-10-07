@@ -24,10 +24,10 @@ static void	create_spiderman(t_game *g)
 	char	c;
 
 	p.y = -1;
-	while (++p.y < (int)ft_memlen(map))
+	while (g->map[++p.y])
 	{
 		p.x = -1;
-		while (++p.x < (int)ft_strlen(map[p.y]))
+		while (g->map[p.y][++p.x])
 		{
 			c = map[p.y][p.x];
 			if (c == 'N' || c == 'S' || c == 'E' || c == 'W' || c == 'P')
@@ -49,10 +49,10 @@ static void	create_sprites(t_game *g)
 	t_sprite	*sprite;
 
 	p.y = -1;
-	while (++p.y < MAP_H)
+	while (g->map[++p.y])
 	{
 		p.x = -1;
-		while (++p.x < MAP_W)
+		while (g->map[p.y][++p.x])
 		{
 			if (map[p.y][p.x] == 'L' || map[p.y][p.x] == 'B')
 			{
@@ -108,6 +108,7 @@ int	main(void)
 	t_game	g;
 
 	ft_bzero(&g, sizeof(t_game));
+	g.map = ft_split(map_str, '\n');
 	create_spiderman(&g);
 	create_sprites(&g);
 	g.mlx = mlx_init();
@@ -130,7 +131,6 @@ int	main(void)
 	}
 	g.addr = mlx_get_data_addr(g.img, &g.bpp, &g.line_len, &g.endian);
 	load_textures(&g);
-	g.map = ft_split(map_str, '\n');
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);   // tecla presionada
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g); // tecla liberada

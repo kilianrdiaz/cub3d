@@ -23,7 +23,7 @@ static int	move_lizard_to(t_game *g, t_sprite *l, double new_x, double new_y)
 	old_gy = (int)l->y;
 	gx = (int)new_x;
 	gy = (int)new_y;
-	if (gx < 0 || gx >= MAP_W || gy < 0 || gy >= MAP_H)
+	if (gx < 0 || gy < 0)
 		return (0);
 	if (g->map[gy][gx] == '1' || g->map[gy][gx] == 'L')
 		return (0);

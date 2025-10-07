@@ -83,7 +83,7 @@ void	spider_attack(t_game *g)
 	{
 		t.x = (int)g->spider.x + (int)(g->spider.dir_x * i);
 		t.y = (int)g->spider.y + (int)(g->spider.dir_y * i);
-		if (t.x < 0 || t.x >= MAP_W || t.y < 0 || t.y >= MAP_H)
+		if (t.x < 0 || t.y < 0)
 			break ;
 		if (check_if_is_lizard(g, t.x, t.y) || check_if_is_bomb(g, t.x, t.y))
 			break ;

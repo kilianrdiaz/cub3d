@@ -23,8 +23,6 @@
 # define HEIGHT 960
 # define GAME_WIDTH 1400
 # define GAME_HEIGHT 960
-# define MAP_W 21
-# define MAP_H 8
 # define SCALE_SPRITE 2.0
 
 # define MOVE_SPEED 0.07

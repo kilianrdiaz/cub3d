@@ -28,8 +28,7 @@ static void	calculate_distance_to_wall(t_game g, t_ray *ray)
 			ray->ty += ray->step_y;
 			ray->side = 1;
 		}
-		if (ray->tx < 0 || ray->tx >= MAP_W || ray->ty < 0 || ray->ty >= MAP_H
-			|| map[ray->ty][ray->tx] == '1')
+		if (ray->tx < 0 || ray->ty < 0 || map[ray->ty][ray->tx] == '1')
 			ray->hit = 1;
 	}
 	// 4. Cálculo de la distancia perpendicular a la pared
