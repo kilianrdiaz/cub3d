@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/07 17:00:00 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/10/07 11:06:04 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/10/07 11:39:30 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,22 +143,27 @@ void	get_map(t_game *game, char **content, int start_index)
 	if (player_count != 1)
 		error_handler(3);
 }*/
-#include "../../inc/cub3d.h"
-#include "libft.h"
-
 static int	is_border_valid(t_game *game, int i)
 {
 	int	j;
+	int	len;
 
 	j = 0;
-	while (j < (int)ft_strlen(game->map.map[i]))
+	len = ft_strlen(game->map.map[i]);
+	while (j < len)
 	{
+		// Ignorar espacios fuera del perímetro
+		if (game->map.map[i][j] == ' ')
+		{
+			j++;
+			continue;
+		}
 		if (i == 0 || i == game->map.height - 1)
 		{
 			if (game->map.map[i][j] != '1')
 				return (0);
 		}
-		else if (j == 0 || j == (int)ft_strlen(game->map.map[i]) - 1)
+		else if (j == 0 || j == len - 1)
 		{
 			if (game->map.map[i][j] != '1')
 				return (0);
@@ -179,10 +184,26 @@ static int	check_length_conditions(t_game *game, int i, int j)
 	bot_len = (i < game->map.height - 1)
 		? ft_strlen(game->map.map[i + 1]) : curr_len;
 
+	// Si esta fila es más larga que la de arriba, el exceso debe ser '1'
 	if (curr_len > top_len && j >= top_len && game->map.map[i][j] != '1')
 		return (0);
+	// Si esta fila es más larga que la de abajo, el exceso debe ser '1'
 	if (curr_len > bot_len && j >= bot_len && game->map.map[i][j] != '1')
 		return (0);
+
+	// ⚠️ NUEVO: si esta fila es más corta que la de abajo o arriba,
+	// y hay un '0' (o jugador) en una zona donde arriba/abajo hay ' ',
+	// también debe considerarse error (hueco abierto)
+	if (j < top_len && game->map.map[i][j] != '1')
+	{
+		if (i > 0 && game->map.map[i - 1][j] == ' ')
+			return (0);
+	}
+	if (j < bot_len && game->map.map[i][j] != '1')
+	{
+		if (i < game->map.height - 1 && game->map.map[i + 1][j] == ' ')
+			return (0);
+	}
 	return (1);
 }
 
@@ -191,6 +212,7 @@ void	check_map_validity(t_game *game)
 	int	i;
 	int	j;
 	int	player_count;
+	char	curr;
 
 	player_count = 0;
 	i = 0;
@@ -201,10 +223,15 @@ void	check_map_validity(t_game *game)
 		j = 0;
 		while (j < (int)ft_strlen(game->map.map[i]))
 		{
-			if (!check_length_conditions(game, i, j))
-				error_handler(3);
-			if (ft_strchr("NSEW", game->map.map[i][j]))
+			curr = game->map.map[i][j];
+			if (ft_strchr("NSEW", curr))
 				player_count++;
+			// Si hay algo que no sea '1' o espacio fuera del perímetro, verificar cierre
+			if (curr != '1' && curr != ' ')
+			{
+				if (!check_length_conditions(game, i, j))
+					error_handler(3);
+			}
 			j++;
 		}
 		i++;
