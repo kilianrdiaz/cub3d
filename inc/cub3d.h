@@ -15,6 +15,7 @@
 
 # include "../libft/libft.h"
 # include "../minilibx-linux/mlx.h"
+# include <math.h>
 
 # define COLOR_NONE 0xFF000000
 # define WIDTH 1920
@@ -159,46 +160,42 @@ typedef struct s_ray
 	int			color;
 }				t_ray;
 
+// parsing
+
+void			get_info_file(t_game *g, int argc, char **argv);
+void			load_texture(t_game *g, t_tex *tex, char *path);
+void			load_map_textures(t_game *g, char **content);
+char			**get_map(char **content);
+void			create_spiderman(t_game *g);
+void			create_sprites(t_game *g);
+int				check_loaded_textures(t_game *game);
+int				validate_line(char *line);
+int				ft_isspace(int c);
+
+// rendering
+
+int				render(t_game *g);
 int				show_intro(t_game *g);
+void			draw_floor_and_ceiling(t_game *g, t_ray *ray, int y);
+void			draw_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int x);
 int				clamp_int(int v, int a, int b);
 void			update_bombs(t_game *g);
 void			put_pixel(t_game *g, int x, int y, int color);
 void			clean_screen(t_game *g);
-void			load_texture(t_game *g, t_tex *tex, char *path);
-int				render(t_game *g);
-int				set_direction(t_game *g, char c);
-void			spider_attack(t_game *g);
 void			draw_hand(t_game *g);
-void			draw_floor_and_ceiling(t_game *g, t_ray *ray, int y);
-void			draw_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int x);
 t_tex			get_texture_wall(t_game g, t_ray ray);
-void			update_player_position(t_game *g);
 void			print_map(t_game *g);
 void			render_sprites(t_game *g, t_sprite **sprites, t_tex *tex);
+
+// input
 int				key_press(int key, t_game *g);
 int				key_release(int key, t_game *g);
+
+// moves
+void			update_player_position(t_game *g);
 int				close_program(t_game *g);
+void			spider_attack(t_game *g);
 void			move_lizards(t_game *g);
-
-void    error_handler(int code);
-void    parse_arguments(int argc, char **argv);
-void	parse_element(t_game *game, char *line);
-void	load_texture(t_game *g, t_tex *tex, char *path);
-void	parse_file(t_game *game, char **content);
-void	get_map(t_game *game, char **content, int start_index);
-
-int     ft_isspace(int c);
-int is_map_str(char *s);
-int is_empty_line(char *s);
-char	**read_file(int fd);
-
-int     is_map_str(char *s);
-int     is_empty_line(char *s);
-void    get_map(t_game *game, char **content, int start_index);
-void	check_map_validity(t_game *game);
-int     is_valid_map_char(char c);
-int     cell_is_outside_or_space(t_game *game, int r, int c);
-void    validate_cell_closed(t_game *game, int r, int c);
 
 
 #endif

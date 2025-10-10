@@ -19,22 +19,21 @@ NAME    = cub3d
 CC      = cc
 CFLAGS = -Wall -Werror -Wextra -I inc -I $(LIB_DIR)
 MLX     = -lmlx -lXext -lX11 -lm
-SRCS    = src/parsing/error.c	\
-		  src/parsing/parser.c   \
-		  src/parsing/utils.c   \
-		  src/parsing/parse_elems.c   \
+SRCS    = src/parsing/utils.c   \
+		  src/parsing/map_textures.c   \
 		  src/parsing/map.c   \
-		  src/parsing/map_checking.c   \
+		  src/parsing/sprites.c   \
+		  src/parsing/file.c   \
 		  src/render/player.c \
 		  src/render/utils.c \
 		  src/render/map.c \
 		  src/render/sprite.c \
 		  src/render/render.c \
-		  src/move_spider.c \
-		  src/spider_attack.c \
-		  src/move_lizards.c \
-		  src/intro.c \
-		  src/key_hooks.c \
+		  src/animation/move_spider.c \
+		  src/animation/spider_attack.c \
+		  src/animation/move_lizards.c \
+		  src/animation/intro.c \
+		  src/animation/key_hooks.c \
 		src/main.c 
 OBJ     = $(SRCS:.c=.o)
 
