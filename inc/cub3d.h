@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/09/12 18:13:03 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/09/17 21:24:36 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,8 @@
 
 # include "../libft/libft.h"
 # include "../minilibx-linux/mlx.h"
-# include <math.h>
-# include <stdio.h>
-# include <stdlib.h>
 
+# define COLOR_NONE 0xFF000000
 # define WIDTH 1920
 # define HEIGHT 960
 # define GAME_WIDTH 1400
@@ -173,5 +171,26 @@ int				key_press(int key, t_game *g);
 int				key_release(int key, t_game *g);
 int				close_program(t_game *g);
 void			move_lizards(t_game *g);
+
+void    error_handler(int code);
+void    parse_arguments(int argc, char **argv);
+void	parse_element(t_game *game, char *line);
+void	load_texture(t_game *g, t_tex *tex, char *path);
+void	parse_file(t_game *game, char **content);
+void	get_map(t_game *game, char **content, int start_index);
+
+int     ft_isspace(int c);
+int is_map_str(char *s);
+int is_empty_line(char *s);
+char	**read_file(int fd);
+
+int     is_map_str(char *s);
+int     is_empty_line(char *s);
+void    get_map(t_game *game, char **content, int start_index);
+void	check_map_validity(t_game *game);
+int     is_valid_map_char(char c);
+int     cell_is_outside_or_space(t_game *game, int r, int c);
+void    validate_cell_closed(t_game *game, int r, int c);
+
 
 #endif

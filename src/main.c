@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 13:28:50 by alejhern          #+#    #+#             */
-/*   Updated: 2025/09/16 13:28:54 by alejhern         ###   ########.fr       */
+/*   Created: 2025/09/12 17:03:30 by kroyo-di          #+#    #+#             */
+/*   Updated: 2025/10/07 11:13:52 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,11 +103,25 @@ static void	load_textures(t_game *g)
 	load_texture(g, &g->wall_west, "./textures/wall.xpm");
 }
 
-int	main(void)
+int	main(int argc, char **argv)
 {
+	int		fd;
+	char	**content;
 	t_game	g;
 
 	ft_bzero(&g, sizeof(t_game));
+	parse_arguments(argc, argv);
+
+    fd = open(argv[1], O_RDONLY);
+    if (fd == -1)
+        error_handler(2);
+    content = read_file(fd);
+	if (!content)
+		error_handler(3);
+
+
+
+    parse_file(&g, content);
 	g.map = ft_split(map_str, '\n');
 	create_spiderman(&g);
 	create_sprites(&g);

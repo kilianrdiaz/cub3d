@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+         #
+#    By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/15 14:52:33 by alejhern          #+#    #+#              #
-#    Updated: 2025/09/15 14:52:40 by alejhern         ###   ########.fr        #
+#    Updated: 2025/09/17 21:22:58 by kroyo-di         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,18 +14,28 @@
 #                                 VARIABLES                                    #
 # **************************************************************************** #
 
-SRCS    = src/render/player.c \
-		src/render/utils.c \
-		src/render/map.c \
-		src/render/sprite.c \
-		src/render/render.c \
-		src/move_spider.c \
-		src/spider_attack.c \
-		src/move_lizards.c \
-		src/intro.c \
-		src/key_hooks.c \
-		src/main.c 
 
+NAME    = cub3d
+CC      = cc
+CFLAGS = -Wall -Werror -Wextra -I inc -I $(LIB_DIR)
+MLX     = -lmlx -lXext -lX11 -lm
+SRCS    = src/parsing/error.c	\
+		  src/parsing/parser.c   \
+		  src/parsing/utils.c   \
+		  src/parsing/parse_elems.c   \
+		  src/parsing/map.c   \
+		  src/parsing/map_checking.c   \
+		  src/render/player.c \
+		  src/render/utils.c \
+		  src/render/map.c \
+		  src/render/sprite.c \
+		  src/render/render.c \
+		  src/move_spider.c \
+		  src/spider_attack.c \
+		  src/move_lizards.c \
+		  src/intro.c \
+		  src/key_hooks.c \
+		src/main.c 
 OBJ     = $(SRCS:.c=.o)
 
 LIBFT_DIR = libft/
@@ -46,9 +56,9 @@ CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
 #                                 RULES                                        #
 # **************************************************************************** #
 
-all: $(LIBFT) $(MLX_LIB) $(NAME)
+all: $(NAME)
 
-$(NAME): $(OBJ) $(MLX_LIB)
+$(NAME): $(OBJ) $(LIBFT) $(MLX_LIB)
 	$(CC) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
 
 %.o: %.c ./inc/cub3d.h Makefile
