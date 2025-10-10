@@ -56,9 +56,9 @@ CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
 #                                 RULES                                        #
 # **************************************************************************** #
 
-all: $(NAME)
+all: $(LIBFT) $(MLX_LIB) $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT) $(MLX_LIB)
+$(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
 
 %.o: %.c ./inc/cub3d.h Makefile
