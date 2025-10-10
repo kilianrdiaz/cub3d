@@ -12,26 +12,6 @@
 
 #include "../../inc/cub3d.h"
 
-int	set_direction(t_game *g, char c)
-{
-	if (c == 'N')
-		return (g->spider.dir_x = 0, g->spider.dir_y = -1,
-			g->spider.plane_x = 0.66, g->spider.plane_y = 0, 0);
-	if (c == 'S')
-		return (g->spider.dir_x = 0, g->spider.dir_y = 1, g->spider.plane_x
-			= -0.66, g->spider.plane_y = 0, 0);
-	if (c == 'E')
-		return (g->spider.dir_x = 1, g->spider.dir_y = 0, g->spider.plane_x = 0,
-			g->spider.plane_y = 0.66, 0);
-	if (c == 'W')
-		return (g->spider.dir_x = -1, g->spider.dir_y = 0,
-			g->spider.plane_x = 0, g->spider.plane_y = -0.66, 0);
-	if (c == 'P')
-		return (g->spider.dir_x = -1, g->spider.dir_y = 0,
-			g->spider.plane_x = 0, g->spider.plane_y = 0.66, 0);
-	return (-1);
-}
-
 static t_ray	ray_hand(t_tex hand)
 {
 	t_ray	ray;

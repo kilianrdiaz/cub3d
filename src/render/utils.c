@@ -43,21 +43,3 @@ void	put_pixel(t_game *g, int x, int y, int color)
 	dst = g->addr + (y * g->line_len + x * (g->bpp / 8));
 	*(unsigned int *)dst = (unsigned int)color;
 }
-
-void	load_texture(t_game *g, t_tex *tex, char *path)
-{
-	tex->img = mlx_xpm_file_to_image(g->mlx, path, &tex->width, &tex->height);
-	if (!tex->img)
-	{
-		ft_printf_fd(STDERR_FILENO, "Error: could not load texture %s\n", path);
-		exit(1);
-	}
-	tex->addr = mlx_get_data_addr(tex->img, &tex->bpp, &tex->line_len,
-			&tex->endian);
-	if (tex->width <= 0 || tex->height <= 0)
-	{
-		ft_printf_fd(STDERR_FILENO, "Error: texture %s has invalid size\n",
-			path);
-		exit(1);
-	}
-}
