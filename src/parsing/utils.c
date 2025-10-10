@@ -12,14 +12,38 @@
 
 #include "../../inc/cub3d.h"
 
-int ft_isspace(int c)
+int	ft_isspace(int c)
 {
-    if (c == 9 || c == 10 || c == 11 || c == 12 || c == 13 || c == 32) 
-        return (1);
-    return (0);
+	if (c == 9 || c == 10 || c == 11 || c == 12 || c == 13 || c == 32)
+		return (1);
+	return (0);
 }
 
-/*void	load_texture(t_game *g, t_tex *tex, char *path)
+int	check_loaded_textures(t_game *game)
+{
+	if (!game->wall_north.img || !game->wall_south.img || !game->wall_west.img
+		|| !game->wall_east.img || !game->floor.img || !game->ceiling.img)
+		return (0);
+	return (1);
+}
+
+int	validate_line(char *line)
+{
+	int	i;
+
+	i = -1;
+	while (line[++i])
+	{
+		if (!(line[i] == '0' || line[i] == '1' || line[i] == 'N'
+				|| line[i] == 'S' || line[i] == 'E' || line[i] == 'W'
+				|| line[i] == ' ' || line[i] == 'B' || line[i] == 'L'
+				|| line[i] == 'P'))
+			return (0);
+	}
+	return (1);
+}
+
+void	load_texture(t_game *g, t_tex *tex, char *path)
 {
 	tex->img = mlx_xpm_file_to_image(g->mlx, path, &tex->width, &tex->height);
 	if (!tex->img)
@@ -35,4 +59,5 @@ int ft_isspace(int c)
 			path);
 		exit(1);
 	}
-}*/
+	tex->color = COLOR_NONE;
+}
