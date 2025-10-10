@@ -12,7 +12,7 @@
 
 #include "../inc/cub3d.h"
 
-static int	is_walkable(int x, int y)
+static int	is_walkable(int x, int y, char **map)
 {
 	if (x < 0 || y < 0)
 		return (0);
@@ -30,7 +30,7 @@ static void	move_player(t_game *g, double dir)
 	new_x = g->spider.x + g->spider.dir_x * dir * MOVE_SPEED;
 	new_y = g->spider.y + g->spider.dir_y * dir * MOVE_SPEED;
 	distance = sqrt(pow(new_x - g->spider.x, 2) + pow(new_y - g->spider.y, 2));
-	if (is_walkable((int)new_x, (int)new_y))
+	if (is_walkable((int)new_x, (int)new_y, g->map))
 	{
 		g->map[(int)g->spider.y][(int)g->spider.x] = '0';
 		g->spider.x = new_x;

@@ -87,7 +87,7 @@ void	spider_attack(t_game *g)
 			break ;
 		if (check_if_is_lizard(g, t.x, t.y) || check_if_is_bomb(g, t.x, t.y))
 			break ;
-		if (map[t.y][t.x] == '1')
+		if (g->map[t.y][t.x] == '1')
 			break ;
 	}
 }
