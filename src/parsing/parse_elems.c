@@ -16,30 +16,6 @@ unsigned int	get_rgb(char *r, char *g, char *b);
 void	parse_path(char *data);
 char	**parse_rgb(char *r, char *g, char *b);
 
-void	save_element(t_game *game, char *id, char *path, unsigned int color)
-{
-	t_elem	*new_elem;
-
-	new_elem = malloc(sizeof(t_elem));
-	if (!new_elem)
-		error_handler(3);
-	new_elem->id = ft_strdup(id);
-	if (!path)
-	{
-		new_elem->texture = NULL;
-		new_elem->color = color;
-	}
-	else
-	{
-		//load_texture(game, new_elem->texture, path);
-		new_elem->color = COLOR_NONE;
-		// Textura guardada en estructura
-	}
-
-	ft_append_array((void ***)&game->elems, new_elem);
-
-}
-
 int	check_path(char *data)
 {
 	int fd;
@@ -55,63 +31,54 @@ int	check_path(char *data)
 	return (1);
 }
 
-int check_id(t_elem **elems, char *id)
+t_tex *check_id(t_game *g, char *id)
 {
-    int i;
-
-    if (!id)
-        return (-1);
-    if (!elems)
-    {
-        return (1);
-    }
-    i = 0;
-    while (elems[i])
-    {
-        if (ft_strncmp(elems[i]->id, id, ft_strlen(id)) == 0)
-			return (-1);
-        i++;
-    }
-    return (0);
+    if (ft_strncmp(id, "NO", 2)	!= 0)
+		return (&g->wall_north);
+	else if (ft_strncmp(id, "SO", 2) != 0)
+		return (&g->wall_south);
+	else if (ft_strncmp(id, "WE", 2) != 0)
+		return (&g->wall_west);
+	else if (ft_strncmp(id, "EA", 2) != 0)
+		return (&g->wall_east);
+	else if (ft_strncmp(id, "F", 1) != 0)
+		return (&g->floor);
+	else if (ft_strncmp(id, "C", 1) != 0)
+		return (&g->ceiling);
+	else
+		ft_error_exit("ID no válida");
+	return (NULL);
 }
 
 void	parse_element(t_game *game, char *line)
 {
-	int		i;
 	char	**splited;
 	unsigned int color;
+	t_tex	*tex;
 
 	splited = ft_split(line, ' ');
 
 	if (!splited[0] || !splited[1])
 		error_handler(3);
 
-	if (check_id(game->elems, splited[0]) == -1)
-	{
-		printf("ID repetida: %s\n", splited[0]);
-		error_handler(3);
-	}
+	tex = check_id(game, splited[0]);
+	if (tex)
+		ft_error_exit("Elemento ya definido");
 	if (!splited[2])
 	{
-		if (check_path(splited[1]) == -1)
-			error_handler(3);
-		// Guardar en struct
-		save_element(game, splited[0], splited[1], COLOR_NONE);
+		load_texture(game, tex, splited[1]);
 	}
 	else if (splited[2] && splited[3] && !splited[4])
 	{
 		color = get_rgb(splited[1], splited[2], splited[3]);
 		if (color == COLOR_NONE)
-			error_handler(3);
-		save_element(game, splited[0], NULL, color);
+			ft_error_exit("Color RGB no válido");
+		tex->color = color;
 	}
 	else
-		error_handler(3);
+		ft_error_exit("Error en la línea de elemento");
 	
-	i = 0;
-	while (splited[i])
-		free(splited[i++]);
-	free(splited);	
+	ft_free_array((void ***)&splited);
 }
 
 unsigned int get_rgb(char *r, char *g, char *b)
@@ -123,10 +90,8 @@ unsigned int get_rgb(char *r, char *g, char *b)
 	rgb_str = parse_rgb(r, g, b);
 	if (!rgb_str)
 	{
-		printf("rgb_str es NULL\n");
 		return (COLOR_NONE);
 	}
-
 	rgb = malloc(3 * sizeof(unsigned int));
 	if (!rgb)
 		return (COLOR_NONE);
@@ -156,7 +121,6 @@ char	**parse_rgb(char *r, char *g, char *b)
 	ft_append_array((void ***)&rgb, ft_strdup(ft_strtrim(r,  ",\n\r\t ")));
 	ft_append_array((void ***)&rgb, ft_strdup(ft_strtrim(g,  ",\n\r\t ")));
 	ft_append_array((void ***)&rgb, ft_strdup(ft_strtrim(b,  ",\n\r\t ")));
-	ft_append_array((void ***)&rgb, NULL);
 
 	while (rgb[i] != NULL)
 	{

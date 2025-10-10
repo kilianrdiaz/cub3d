@@ -41,13 +41,14 @@ typedef enum e_state
 
 typedef struct s_tex
 {
-	void		*img;
-	char		*addr;
-	int			width;
-	int			height;
-	int			bpp;
-	int			line_len;
-	int			endian;
+	void			*img;
+	char			*addr;
+	int				width;
+	int				height;
+	int				bpp;
+	int				line_len;
+	int				endian;
+	unsigned int	color;
 }				t_tex;
 
 typedef struct s_sprite
@@ -94,6 +95,13 @@ typedef struct s_spidy
 	t_tex		*hand;
 	t_state		state;
 }				t_spidy;
+
+typedef struct s_map
+{
+	char	**map;
+	int 	height;
+	int		width;
+}				t_map;
 
 typedef struct s_game
 {

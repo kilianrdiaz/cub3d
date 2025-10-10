@@ -41,7 +41,9 @@ void    parse_arguments(int argc, char **argv)
     int i;
 
     if (argc != 2)
+    {
         error_handler(0);
+    }
 	i = -1;
     while (argv[1][++i] && argv[1][i] != '.')
         continue ;
