@@ -31,13 +31,11 @@ static void	load_sprite_textures(t_game *g)
 		ft_error_exit("Error: Memory allocation failed for lizard textures\n");
 	load_texture(g, &g->lizard_tex[ACTIVE], "./textures/lizard.xpm");
 	load_texture(g, &g->lizard_tex[ATTACKED], "./textures/lizard_attacked.xpm");
-	load_texture(g, &g->lizard_tex[ATTACKING],
-		"./textures/lizard_attack.xpm");
-	load_texture(g, &g->lizard_tex[MOVING],
-		"./textures/lizard_step.xpm");
+	load_texture(g, &g->lizard_tex[ATTACKING], "./textures/lizard_attack.xpm");
+	load_texture(g, &g->lizard_tex[MOVING], "./textures/lizard_step.xpm");
 }
 
-static void create_mlx_window(t_game *g)
+static void	create_mlx_window(t_game *g)
 {
 	g->mlx = mlx_init();
 	if (!g->mlx)
@@ -69,10 +67,10 @@ int	main(int argc, char **argv)
 	get_info_file(&g, argc, argv);
 	load_sprite_textures(&g);
 	ft_bzero(&g.keys, sizeof(t_keys));
-	mlx_hook(g.win, 2, 1L << 0, key_press, &g);   // tecla presionada
-	mlx_hook(g.win, 3, 1L << 1, key_release, &g); // tecla liberada
+	mlx_hook(g.win, 2, 1L << 0, key_press, &g);
+	mlx_hook(g.win, 3, 1L << 1, key_release, &g);
 	g.show_intro = 1;
-	mlx_loop_hook(g.mlx, render, &g); // loop continuo
+	mlx_loop_hook(g.mlx, render, &g);
 	mlx_loop(g.mlx);
 	close_program(&g);
 	return (0);
