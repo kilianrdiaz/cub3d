@@ -36,6 +36,7 @@ static int	move_lizard_to(t_game *g, t_sprite *l, double new_x, double new_y)
 	}
 	l->x = new_x;
 	l->y = new_y;
+	l->delay = g->timer + 0.5;
 	return (1);
 }
 
@@ -99,18 +100,18 @@ void	move_lizards(t_game *g)
 	double		dist;
 	int			i;
 
+	if (!g->lizards)
+		return ;
 	i = -1;
 	while (g->lizards[++i])
 	{
 		l = g->lizards[i];
 		if (!l || g->timer < l->delay)
 			continue ;
-		if (l->state == ATTACKED && g->timer >= l->delay)
-			l->state = ACTIVE;
-		l->delay = g->timer + 1;
 		if (l->state == ACTIVE)
 			l->state = MOVING;
-		else if (l->state == MOVING)
+		else if (l->state == MOVING || (l->state == ATTACKED
+				&& g->timer >= l->delay))
 			l->state = ACTIVE;
 		dist = (fabs(l->x - g->spider.x) + fabs(l->y - g->spider.y));
 		if (dist <= 2.1)

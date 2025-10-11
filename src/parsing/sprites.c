@@ -14,7 +14,7 @@
 
 static int	set_direction(t_game *g, char c)
 {
-	if (c == 'N')
+	if (c == 'N' || c == 'P')
 		return (g->spider.dir_x = 0, g->spider.dir_y = -1,
 			g->spider.plane_x = 0.66, g->spider.plane_y = 0, 0);
 	if (c == 'S')
@@ -26,9 +26,6 @@ static int	set_direction(t_game *g, char c)
 	if (c == 'W')
 		return (g->spider.dir_x = -1, g->spider.dir_y = 0,
 			g->spider.plane_x = 0, g->spider.plane_y = -0.66, 0);
-	if (c == 'P')
-		return (g->spider.dir_x = -1, g->spider.dir_y = 0,
-			g->spider.plane_x = 0, g->spider.plane_y = 0.66, 0);
 	return (-1);
 }
 
