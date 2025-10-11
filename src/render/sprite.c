@@ -83,13 +83,18 @@ static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex *tex)
 		ray->draw_end_x = GAME_WIDTH - 1;
 }
 
-void	position_sprite(t_game *g, t_sprite sp, t_tex *tex)
+static void	position_sprite(t_game *g, t_sprite sp)
 {
 	t_ray	ray;
+	t_tex	*tex;
 
+	if (sp.state == DEFUSED)
+		return ;
+	tex = g->bomb_tex;
+	if (sp.type != BOMB)
+		tex = g->lizard_tex;
 	sp.x = sp.x + 0.5 - g->spider.x;
 	sp.y = sp.y + 0.5 - g->spider.y;
-	// Transformar a espacio de cámara
 	sp.inv_det = 1.0 / (g->spider.plane_x * g->spider.dir_y - g->spider.dir_x
 			* g->spider.plane_y);
 	sp.trans_x = sp.inv_det * (g->spider.dir_y * sp.x - g->spider.dir_x * sp.y);
@@ -98,7 +103,6 @@ void	position_sprite(t_game *g, t_sprite sp, t_tex *tex)
 	if (sp.trans_y > 0.0)
 	{
 		ray_sprite(&sp, &ray, tex);
-		// Dibujar sprite con z-buffe
 		ray.line_height = ray.draw_start_x - 1;
 		while (++ray.line_height < ray.draw_end_x)
 			if (sp.trans_y > 0 && ray.line_height >= 0
@@ -108,12 +112,14 @@ void	position_sprite(t_game *g, t_sprite sp, t_tex *tex)
 	}
 }
 
-void	render_sprites(t_game *g, t_sprite **sprites, t_tex *tex)
+void	render_sprites(t_game *g)
 {
 	t_sprite_order	*order;
 	int				i;
 	int				count;
+	t_sprite		**sprites;
 
+	sprites = get_sprites(g);
 	if (!sprites)
 		return ;
 	i = -1;
@@ -130,6 +136,7 @@ void	render_sprites(t_game *g, t_sprite **sprites, t_tex *tex)
 	sort_sprites(order, count);
 	i = -1;
 	while (++i < count)
-		position_sprite(g, *sprites[order[i].index], tex);
+		position_sprite(g, *sprites[order[i].index]);
 	free(order);
+	free(sprites);
 }

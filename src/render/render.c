@@ -130,8 +130,7 @@ int	render(t_game *g)
 	clean_screen(g);
 	render_floor_and_ceiling(g);
 	render_wall(g);
-	render_sprites(g, g->bombs, g->bomb_tex);
-	render_sprites(g, g->lizards, g->lizard_tex);
+	render_sprites(g);
 	update_bombs(g);
 	move_lizards(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);

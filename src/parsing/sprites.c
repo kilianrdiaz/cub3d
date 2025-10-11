@@ -64,6 +64,7 @@ static void	create_sprite(t_game *g, t_pos p, char type)
 	if (type == 'L')
 	{
 		sprite->over_scale = 1.5;
+		sprite->type = LIZARD;
 		ft_append_array((void ***)&g->lizards, sprite);
 	}
 	else

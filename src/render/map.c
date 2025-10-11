@@ -44,8 +44,6 @@ void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 
 void	calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex)
 {
-	double	wallX;
-
 	ray->line_height = (int)(HEIGHT / ray->perp_wall_dist);
 	ray->draw_start_y = -ray->line_height / 2 + HEIGHT / 2;
 	ray->draw_end_y = ray->line_height / 2 + HEIGHT / 2;
@@ -53,11 +51,11 @@ void	calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex)
 		ray->draw_start_y = 0;
 	if (ray->draw_end_y >= HEIGHT)
 		ray->draw_end_y = HEIGHT - 1;
-	wallX = g->spider.x + ray->perp_wall_dist * ray->dir_x0;
+	ray->camera_x = g->spider.x + ray->perp_wall_dist * ray->dir_x0;
 	if (ray->side == 0)
-		wallX = g->spider.y + ray->perp_wall_dist * ray->dir_y0;
-	wallX -= floor(wallX);
-	ray->tx = (int)(wallX * tex.width);
+		ray->camera_x = g->spider.y + ray->perp_wall_dist * ray->dir_y0;
+	ray->camera_x -= floor(ray->camera_x);
+	ray->tx = (int)(ray->camera_x * tex.width);
 	ray->tx = clamp_int(ray->tx, 0, tex.width - 1);
 	if ((ray->side == 0 && ray->dir_x0 > 0) || (ray->side == 1
 			&& ray->dir_y0 < 0))
