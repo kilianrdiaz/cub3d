@@ -60,10 +60,8 @@ static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex *tex)
 static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex *tex)
 {
 	// 1️⃣ Altura y ancho del sprite según la distancia (como las paredes)
-	sp->height = (tex[sp->state].height * (SCALE_SPRITE + sp->over_scale)
-			/ sp->trans_y);
-	sp->width = (tex[sp->state].width * (SCALE_SPRITE + sp->over_scale)
-			/ sp->trans_y);
+	sp->height = (tex[sp->state].height * sp->scale / sp->trans_y);
+	sp->width = (tex[sp->state].width * sp->scale / sp->trans_y);
 	// 2️⃣ Offset vertical para apoyarlo en el suelo
 	ray->camera_x = (int)(HEIGHT / sp->trans_y * 0.5);
 	// 3️⃣ Límites verticales
@@ -115,28 +113,28 @@ static void	position_sprite(t_game *g, t_sprite sp)
 void	render_sprites(t_game *g)
 {
 	t_sprite_order	*order;
-	int				i;
-	int				count;
+	t_pos			count;
 	t_sprite		**sprites;
 
 	sprites = get_sprites(g);
 	if (!sprites)
 		return ;
-	i = -1;
-	count = ft_memlen((void **)sprites);
-	order = malloc(sizeof(t_sprite_order) * count);
+	count.x = ft_memlen((void **)sprites);
+	order = malloc(sizeof(t_sprite_order) * count.x);
 	if (!order)
 		ft_error_exit("Error: Memory allocation failed for sprite order\n");
-	while (sprites[++i])
+	count.y = -1;
+	while (sprites[++count.y])
 	{
-		order[i].index = i;
-		order[i].dist = pow(g->spider.x - sprites[i]->x, 2) + pow(g->spider.y
-				- sprites[i]->y, 2);
+		order[count.y].index = count.y;
+		order[count.y].dist = pow(g->spider.x - sprites[count.y]->x, 2)
+			+ pow(g->spider.y - sprites[count.y]->y, 2);
+		recalc_sprite_scale(g, sprites[count.y], sqrt(order[count.y].dist));
 	}
-	sort_sprites(order, count);
-	i = -1;
-	while (++i < count)
-		position_sprite(g, *sprites[order[i].index]);
+	sort_sprites(order, count.x);
+	count.y = -1;
+	while (++count.y < count.x)
+		position_sprite(g, *sprites[order[count.y].index]);
 	free(order);
 	free(sprites);
 }

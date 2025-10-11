@@ -29,6 +29,8 @@
 # define DETECT_RADIUS 10.0
 # define MOVE_SPEED_LIZARD 1
 
+# define LERP_SPEED 1
+
 extern char			*map[];
 
 typedef enum e_state
@@ -69,7 +71,7 @@ typedef struct s_sprite
 	int				height;
 	int				screen_x;
 	double			delay;
-	double			over_scale;
+	double			scale;
 	t_state			state;
 	t_sprite_type	type;
 }					t_sprite;
@@ -194,6 +196,7 @@ t_tex				get_texture_wall(t_game g, t_ray ray);
 void				print_map(t_game *g);
 void				render_sprites(t_game *g);
 t_sprite			**get_sprites(t_game *g);
+void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
 
 // input
 int					key_press(int key, t_game *g);

@@ -72,3 +72,31 @@ t_sprite	**get_sprites(t_game *g)
 		sprites[count++] = g->lizards[x];
 	return (sprites);
 }
+
+void	recalc_sprite_scale(t_game *g, t_sprite *sp, double dist)
+{
+	int		base_scale;
+	double	target_scale;
+	int		max_dist;
+	int		int_dist;
+
+	max_dist = 8;
+	if (sp->type == LIZARD)
+		max_dist = 10;
+	dist = sqrt(pow(g->spider.x - sp->x, 2) + pow(g->spider.y - sp->y, 2));
+	if (dist > max_dist)
+	{
+		sp->scale += (0.0 - sp->scale) * LERP_SPEED;
+		if (sp->scale < 0.01)
+			sp->scale = 0.0;
+		return ;
+	}
+	base_scale = 1;
+	if (sp->type == LIZARD)
+		base_scale = 2;
+	int_dist = (int)(dist + 0.5);
+	target_scale = base_scale + (max_dist - int_dist) * 0.2;
+	if (target_scale < base_scale)
+		target_scale = base_scale;
+	sp->scale += (target_scale - sp->scale) * LERP_SPEED;
+}

@@ -63,12 +63,13 @@ static void	create_sprite(t_game *g, t_pos p, char type)
 	sprite->y = p.y;
 	if (type == 'L')
 	{
-		sprite->over_scale = 1.5;
+		sprite->scale = 2;
 		sprite->type = LIZARD;
 		ft_append_array((void ***)&g->lizards, sprite);
 	}
 	else
 	{
+		sprite->scale = 1;
 		ft_append_array((void ***)&g->bombs, sprite);
 		g->bomb_count++;
 	}
