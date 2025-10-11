@@ -17,14 +17,16 @@ void	update_bombs(t_game *g)
 	int	i;
 
 	i = -1;
-	while (g->bombs && g->bombs[++i])
+	if (g->bomb_count <= 0)
+		return ;
+	while (g->bombs[++i])
 	{
-		if (g->bombs[i] && g->bombs[i]->state == ATTACKED)
+		if (g->bombs[i]->state == ATTACKED)
 		{
 			g->bombs[i]->state = DEFUSED;
 			printf("Bomb at (%.1f, %.1f) has been defused.\n", g->bombs[i]->x,
 				g->bombs[i]->y);
-			return ;
+			g->bomb_count--;
 		}
 	}
 }
@@ -64,7 +66,6 @@ static int	check_if_is_bomb(t_game *g, int x, int y)
 		if (t.x == x && t.y == y && g->bombs[i]->state != DEFUSED)
 		{
 			g->bombs[i]->state = ATTACKED;
-			g->bomb_count--;
 			g->keys.space = 0;
 			ft_printf("Bomb attacked at (%d,%d)\n", t.x, t.y);
 			return (1);
