@@ -83,19 +83,17 @@ static int	is_map_closed(char **map)
 
 	rows = ft_memlen((const void **)map);
 	result = 1;
-	visited = get_visited_map(map);
 	p.y = -1;
-	while (map[++p.y])
+	visited = get_visited_map(map);
+	while (map[++p.y] && result)
 	{
 		p.x = -1;
-		while (map[p.y][++p.x])
+		while (map[p.y][++p.x] && result)
 		{
 			if (map[p.y][p.x] != '1' && map[p.y][p.x] != ' ')
 			{
 				if (!flood_fill(map, p, rows, visited))
 					result = 0;
-				ft_free_array((void ***)&visited);
-				return (result);
 			}
 		}
 	}
