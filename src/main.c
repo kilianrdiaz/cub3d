@@ -66,6 +66,7 @@ int	main(int argc, char **argv)
 	create_mlx_window(&g);
 	get_info_file(&g, argc, argv);
 	load_sprite_textures(&g);
+	load_font(&g, &g.font, "./textures/font.xpm");
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g);

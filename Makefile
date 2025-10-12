@@ -28,6 +28,7 @@ SRCS    = src/parsing/utils.c   \
 		  src/render/utils.c \
 		  src/render/map.c \
 		  src/render/sprite.c \
+		  src/render/font.c \
 		  src/render/render.c \
 		  src/animation/move_spider.c \
 		  src/animation/spider_attack.c \

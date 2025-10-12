@@ -27,6 +27,7 @@ int	close_program(t_game *g)
 	ft_free_array((void ***)&g->bombs);
 	ft_free_array((void ***)&g->lizards);
 	ft_free_array((void ***)&g->map);
+	ft_free_array((void ***)&g->font.chars);
 	free(g->spider.hand);
 	free(g->bomb_tex);
 	free(g->lizard_tex);

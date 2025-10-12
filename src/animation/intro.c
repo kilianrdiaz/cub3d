@@ -49,6 +49,30 @@ static int	close_intro(int keycode, t_game *g)
 	return (0);
 }
 
+static int	read_intro(t_game *g)
+{
+	int		fd;
+	char	*line;
+	t_pos	p;
+
+	fd = open("./textures/intro.txt", O_RDONLY);
+	if (fd < 0)
+		return (0);
+	p.x = 250;
+	p.y = 60;
+	line = get_next_line(fd);
+	g->font.scale = 0.6;
+	while (line)
+	{
+		render_text(g, line, p);
+		p.y += g->font.char_h * 0.4 + 10;
+		free(line);
+		line = get_next_line(fd);
+	}
+	close(fd);
+	return (1);
+}
+
 int	show_intro(t_game *g)
 {
 	t_tex	intro;
@@ -56,6 +80,7 @@ int	show_intro(t_game *g)
 	g->show_intro = 1;
 	load_texture(g, &intro, "./textures/intro.xpm");
 	draw_fullscreen_image(g, &intro);
+	read_intro(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	mlx_key_hook(g->win, close_intro, g);
 	mlx_destroy_image(g->mlx, intro.img);

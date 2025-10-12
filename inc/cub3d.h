@@ -24,14 +24,12 @@
 # define GAME_HEIGHT 960
 # define SCALE_SPRITE 2.0
 
-# define MOVE_SPEED 0.07
-# define ROT_SPEED 0.05
+# define MOVE_SPEED 0.1
+# define ROT_SPEED 0.1
 # define DETECT_RADIUS 10.0
 # define MOVE_SPEED_LIZARD 1
 
 # define LERP_SPEED 1
-
-extern char			*map[];
 
 typedef enum e_state
 {
@@ -76,6 +74,26 @@ typedef struct s_sprite
 	t_sprite_type	type;
 }					t_sprite;
 
+typedef struct s_char_bitmap
+{
+	unsigned int	*pixels;
+	int				width;
+	int				height;
+}					t_char_bitmap;
+
+typedef struct s_font
+{
+	void			*img;
+	char			*addr;
+	int				bpp;
+	int				line_len;
+	int				endian;
+	int				char_w;
+	int				char_h;
+	double			scale;
+	t_char_bitmap	chars[128];
+}					t_font;
+
 typedef struct s_sprite_order
 {
 	int				index;
@@ -106,13 +124,6 @@ typedef struct s_spidy
 	t_state			state;
 }					t_spidy;
 
-typedef struct s_map
-{
-	char			**map;
-	int				height;
-	int				width;
-}					t_map;
-
 typedef struct s_game
 {
 	void			*mlx;
@@ -129,6 +140,7 @@ typedef struct s_game
 	t_spidy			spider;
 	t_tex			floor;
 	t_tex			ceiling;
+	t_font			font;
 	t_tex			wall_north;
 	t_tex			wall_south;
 	t_tex			wall_east;
@@ -184,7 +196,6 @@ int					ft_isspace(int c);
 // rendering
 
 int					render(t_game *g);
-int					show_intro(t_game *g);
 void				draw_floor_and_ceiling(t_game *g, t_ray *ray, int y);
 void				draw_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int x);
 int					clamp_int(int v, int a, int b);
@@ -197,12 +208,14 @@ void				print_map(t_game *g);
 void				render_sprites(t_game *g);
 t_sprite			**get_sprites(t_game *g);
 void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
-
+void				render_text(t_game *g, char *str, t_pos pos);
+void				load_font(t_game *g, t_font *f, char *path);
 // input
 int					key_press(int key, t_game *g);
 int					key_release(int key, t_game *g);
 
-// moves
+// animation
+int					show_intro(t_game *g);
 void				update_player_position(t_game *g);
 void				spider_attack(t_game *g);
 void				move_lizards(t_game *g);
