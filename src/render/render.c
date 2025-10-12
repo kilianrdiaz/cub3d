@@ -133,8 +133,9 @@ int	render(t_game *g)
 	render_sprites(g);
 	update_bombs(g);
 	move_lizards(g);
+	draw_minimap(g); //Minimapa
+	//draw_hand(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	draw_hand(g);
 	if (g->spider.state == ATTACKING)
 		spider_attack(g);
 	g->timer += 0.1;

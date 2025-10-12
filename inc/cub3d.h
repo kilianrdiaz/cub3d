@@ -18,10 +18,23 @@
 # include <math.h>
 
 # define COLOR_NONE 0xFF000000
-# define WIDTH 1920
+
+/*# define WIDTH 1920
 # define HEIGHT 960
 # define GAME_WIDTH 1400
-# define GAME_HEIGHT 960
+# define GAME_HEIGHT 960*/
+
+# define WIDTH 768      // 1920 * 0.4 ≈ 768
+# define HEIGHT 384     // 960 * 0.4 ≈ 384
+# define GAME_WIDTH 560 // 1400 * 0.4 ≈ 560
+# define GAME_HEIGHT 384// 960 * 0.4 ≈ 384
+
+# define MINIMAP_SCALE       6     // 🔹 cada celda del mapa ocupa 6 píxeles (ajusta a gusto)
+# define MINIMAP_SIZE_LIMIT  200   // 🔹 tamaño máximo del minimapa (en píxeles)
+# define MINIMAP_OFFSET_X    (WIDTH - MINIMAP_SIZE_LIMIT - 20) // 🔹 lado derecho
+# define MINIMAP_OFFSET_Y    20    // 🔹 margen superior
+# define MINIMAP_PLAYER_SIZE 3     // 🔹 radio del punto del jugador
+
 # define SCALE_SPRITE 2.0
 
 # define MOVE_SPEED 0.07
@@ -197,6 +210,8 @@ void				print_map(t_game *g);
 void				render_sprites(t_game *g);
 t_sprite			**get_sprites(t_game *g);
 void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
+
+void				draw_minimap(t_game *g);
 
 // input
 int					key_press(int key, t_game *g);
