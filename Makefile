@@ -29,7 +29,11 @@ SRCS    = src/parsing/utils.c   \
 		  src/render/map.c \
 		  src/render/sprite.c \
 		  src/render/render.c \
-		  src/render/minimap.c \
+		  src/render/minimap_render/minimap.c \
+		  src/render/minimap_render/draw_minimap.c \
+		  src/render/minimap_render/minimap_sprites.c \
+		  src/render/minimap_render/fog.c \
+		  src/render/minimap_render/player.c \
 		  src/animation/move_spider.c \
 		  src/animation/spider_attack.c \
 		  src/animation/move_lizards.c \

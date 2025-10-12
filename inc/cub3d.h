@@ -24,15 +24,12 @@
 # define GAME_WIDTH 1400
 # define GAME_HEIGHT 960*/
 
-# define WIDTH 768      // 1920 * 0.4 ≈ 768
-# define HEIGHT 384     // 960 * 0.4 ≈ 384
-# define GAME_WIDTH 560 // 1400 * 0.4 ≈ 560
-# define GAME_HEIGHT 384// 960 * 0.4 ≈ 384
+// 
+# define WIDTH 1152      // 1920 * 0.4 ≈ 768
+# define HEIGHT 576      // 960 * 0.4 ≈ 384
+# define GAME_WIDTH 840  // 1400 * 0.4 ≈ 560
+# define GAME_HEIGHT 576 // 960 * 0.4 ≈ 384
 
-# define MINIMAP_SCALE       6     // 🔹 cada celda del mapa ocupa 6 píxeles (ajusta a gusto)
-# define MINIMAP_SIZE_LIMIT  200   // 🔹 tamaño máximo del minimapa (en píxeles)
-# define MINIMAP_OFFSET_X    (WIDTH - MINIMAP_SIZE_LIMIT - 20) // 🔹 lado derecho
-# define MINIMAP_OFFSET_Y    20    // 🔹 margen superior
 # define MINIMAP_PLAYER_SIZE 3     // 🔹 radio del punto del jugador
 
 # define SCALE_SPRITE 2.0
@@ -43,6 +40,22 @@
 # define MOVE_SPEED_LIZARD 1
 
 # define LERP_SPEED 1
+
+// MINIMAPA
+# define COL_BG             0x000000
+# define COL_WALL           0xA9A9A9
+# define COL_FLOOR          0x000000
+# define COL_WALL_BORDER    0x404040
+# define COL_UNK_FOG        0x000000
+# define COL_PLAYER         0xFF2D2D
+# define COL_BOMB           0xFFB84D
+# define COL_LIZARD         0x5AFF7A
+
+# define INIT_REVEAL_RADIUS 6
+# define REVEAL_STEP_RADIUS 3
+# define MINIMAP_SIZE_LIMIT 250
+# define MINIMAP_OFFSET_X   (WIDTH - MINIMAP_SIZE_LIMIT - 20)
+# define MINIMAP_OFFSET_Y   250
 
 extern char			*map[];
 
@@ -211,7 +224,14 @@ void				render_sprites(t_game *g);
 t_sprite			**get_sprites(t_game *g);
 void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
 
+// minimap rendering
 void				draw_minimap(t_game *g);
+void				draw_map_tiles(t_game *g, int tile, int ox, int oy, int map_w, int map_h);
+void				draw_sprites_minimap(t_game *g, t_sprite **arr, int t, int ox, int oy, int color);
+void				draw_player_arrow(t_game *g, int tile, int ox, int oy);
+void				init_revealed_if_needed(int w, int h);
+void				reveal_radius(int cx, int cy, int r, int w, int h);
+void				put_rect(t_game *g, int x, int y, int w, int h, int c);
 
 // input
 int					key_press(int key, t_game *g);
