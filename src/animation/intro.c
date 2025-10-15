@@ -58,14 +58,14 @@ static int	read_intro(t_game *g)
 	fd = open("./textures/intro.txt", O_RDONLY);
 	if (fd < 0)
 		return (0);
-	p.x = 250;
+	p.x = 160;
 	p.y = 60;
 	line = get_next_line(fd);
-	g->font.scale = 0.6;
+	g->font.scale = 1.2;
 	while (line)
 	{
 		render_text(g, line, p);
-		p.y += g->font.char_h * 0.4 + 10;
+		p.y += g->font.char_h * 0.8 + 10;
 		free(line);
 		line = get_next_line(fd);
 	}

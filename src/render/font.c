@@ -13,7 +13,7 @@
 #include "../inc/cub3d.h"
 
 #define NUM_ROWS 5
-#define FONT_ORDER "ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ\n0123456789\n.:,;+-?/*."
+#define FONT_ORDER "ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ0\n123456789\n'+-:,.!?/"
 
 static void	set_bitmap(t_font *f, t_char_bitmap *cb, t_pos rc)
 {
