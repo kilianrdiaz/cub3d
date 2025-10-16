@@ -49,39 +49,21 @@ typedef enum e_render
 	GAME_OVER
 }					t_render;
 
+typedef enum e_map_texture
+{
+	NO,
+	SO,
+	EA,
+	WE,
+	F,
+	C
+}					t_map_texture;
+
 typedef enum e_sprite_type
 {
 	BOMB,
 	LIZARD
 }					t_sprite_type;
-
-typedef struct s_tex
-{
-	void			*img;
-	char			*addr;
-	int				width;
-	int				height;
-	int				bpp;
-	int				line_len;
-	int				endian;
-	unsigned int	color;
-}					t_tex;
-
-typedef struct s_sprite
-{
-	double			x;
-	double			y;
-	double			inv_det;
-	double			trans_x;
-	double			trans_y;
-	int				width;
-	int				height;
-	int				screen_x;
-	double			delay;
-	double			scale;
-	t_state			state;
-	t_sprite_type	type;
-}					t_sprite;
 
 typedef struct s_char_bitmap
 {
@@ -120,6 +102,34 @@ typedef struct s_keys
 	int				space;
 }					t_keys;
 
+typedef struct s_tex
+{
+	void			*img;
+	char			*addr;
+	int				width;
+	int				height;
+	int				bpp;
+	int				line_len;
+	int				endian;
+	unsigned int	color;
+}					t_tex;
+
+typedef struct s_sprite
+{
+	double			x;
+	double			y;
+	double			inv_det;
+	double			trans_x;
+	double			trans_y;
+	int				width;
+	int				height;
+	int				screen_x;
+	double			delay;
+	double			scale;
+	t_state			state;
+	t_sprite_type	type;
+}					t_sprite;
+
 typedef struct s_spidy
 {
 	double			x;
@@ -147,18 +157,13 @@ typedef struct s_game
 	t_render		render_state;
 	char			**map;
 	t_spidy			spider;
-	t_tex			floor;
-	t_tex			ceiling;
 	t_font			font;
-	t_tex			wall_north;
-	t_tex			wall_south;
-	t_tex			wall_east;
-	t_tex			wall_west;
 	double			zbuffer[WIDTH];
 	t_sprite		**bombs;
 	t_sprite		**lizards;
 	t_tex			*bomb_tex;
 	t_tex			*lizard_tex;
+	t_tex			*map_text;
 	t_keys			keys;
 }					t_game;
 
@@ -224,6 +229,7 @@ void				calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex);
 t_tex				get_texture_wall(t_game g, t_ray ray);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
+int					register_score(t_game *g);
 // input
 int					key_press(int key, t_game *g);
 int					key_release(int key, t_game *g);
@@ -233,6 +239,6 @@ void				update_player_position(t_game *g);
 void				spider_attack(t_game *g);
 void				move_lizards(t_game *g);
 
-int					close_program(t_game *g);
+void				close_program(t_game *g);
 
 #endif

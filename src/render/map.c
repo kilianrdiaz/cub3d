@@ -22,20 +22,20 @@ static void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 	{
 		map.x = (int)ray->side_dist_x;
 		map.y = (int)ray->side_dist_y;
-		ray->tx = (int)((ray->side_dist_x - map.x) * g->floor.width);
-		ray->ty = (int)((ray->side_dist_y - map.y) * g->floor.height);
+		ray->tx = (int)((ray->side_dist_x - map.x) * g->map_text[F].width);
+		ray->ty = (int)((ray->side_dist_y - map.y) * g->map_text[F].height);
 		/* clamp por si hay rounding negativo/extraño */
-		ray->tx = clamp_int(ray->tx, 0, g->floor.width - 1);
-		ray->ty = clamp_int(ray->ty, 0, g->floor.height - 1);
-		ray->color = *(unsigned int *)(g->floor.addr + ray->ty
-				* g->floor.line_len + ray->tx * (g->floor.bpp / 8));
+		ray->tx = clamp_int(ray->tx, 0, g->map_text[F].width - 1);
+		ray->ty = clamp_int(ray->ty, 0, g->map_text[F].height - 1);
+		ray->color = *(unsigned int *)(g->map_text[F].addr + ray->ty
+				* g->map_text[F].line_len + ray->tx * (g->map_text[F].bpp / 8));
 		put_pixel(g, x, y, ray->color);
 		/* techo espejo */
-		ray->delta_dist_x = clamp_int(ray->tx, 0, g->ceiling.width - 1);
-		ray->delta_dist_y = clamp_int(ray->ty, 0, g->ceiling.height - 1);
-		ray->color = *(unsigned int *)(g->ceiling.addr + (int)ray->delta_dist_y
-				* g->ceiling.line_len + (int)ray->delta_dist_x * (g->ceiling.bpp
-					/ 8));
+		ray->delta_dist_x = clamp_int(ray->tx, 0, g->map_text[C].width - 1);
+		ray->delta_dist_y = clamp_int(ray->ty, 0, g->map_text[C].height - 1);
+		ray->color = *(unsigned int *)(g->map_text[C].addr
+				+ (int)ray->delta_dist_y * g->map_text[C].line_len
+				+ (int)ray->delta_dist_x * (g->map_text[C].bpp / 8));
 		put_pixel(g, x, HEIGHT - y - 1, ray->color);
 		ray->side_dist_x += ray->step_x;
 		ray->side_dist_y += ray->step_y;

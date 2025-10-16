@@ -17,14 +17,14 @@ t_tex	get_texture_wall(t_game g, t_ray ray)
 	if (ray.side == 0)
 	{
 		if (ray.dir_x0 > 0)
-			return (g.wall_west);
-		return (g.wall_east);
+			return (g.map_text[WE]);
+		return (g.map_text[EA]);
 	}
 	else
 	{
 		if (ray.dir_y0 > 0)
-			return (g.wall_south);
-		return (g.wall_north);
+			return (g.map_text[SO]);
+		return (g.map_text[NO]);
 	}
 }
 

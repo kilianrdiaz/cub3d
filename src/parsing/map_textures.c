@@ -15,17 +15,17 @@
 static t_tex	*get_tex_id(t_game *g, char *line)
 {
 	if (ft_strncmp(line, "NO ", 3) == 0)
-		return (&g->wall_north);
+		return (&g->map_text[NO]);
 	else if (ft_strncmp(line, "SO ", 3) == 0)
-		return (&g->wall_south);
+		return (&g->map_text[SO]);
 	else if (ft_strncmp(line, "WE ", 3) == 0)
-		return (&g->wall_west);
+		return (&g->map_text[WE]);
 	else if (ft_strncmp(line, "EA ", 3) == 0)
-		return (&g->wall_east);
+		return (&g->map_text[EA]);
 	else if (ft_strncmp(line, "F ", 2) == 0)
-		return (&g->floor);
+		return (&g->map_text[F]);
 	else if (ft_strncmp(line, "C ", 2) == 0)
-		return (&g->ceiling);
+		return (&g->map_text[C]);
 	if (!validate_line(line))
 		ft_error_exit("Error: Invalid line in texture definitions\n");
 	return (NULL);

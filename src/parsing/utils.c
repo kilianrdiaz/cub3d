@@ -21,8 +21,9 @@ int	ft_isspace(int c)
 
 int	check_loaded_textures(t_game *game)
 {
-	if (!game->wall_north.img || !game->wall_south.img || !game->wall_west.img
-		|| !game->wall_east.img || !game->floor.img || !game->ceiling.img)
+	if (!game->map_text[NO].img || !game->map_text[SO].img
+		|| !game->map_text[WE].img || !game->map_text[EA].img
+		|| !game->map_text[F].img || !game->map_text[C].img)
 		return (0);
 	return (1);
 }
@@ -45,6 +46,8 @@ int	validate_line(char *line)
 
 void	load_texture(t_game *g, t_tex *tex, char *path)
 {
+	if (!g || !tex || !path)
+		return ;
 	tex->img = mlx_xpm_file_to_image(g->mlx, path, &tex->width, &tex->height);
 	if (!tex->img)
 	{
