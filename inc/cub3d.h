@@ -40,6 +40,15 @@ typedef enum e_state
 	DEFUSED
 }					t_state;
 
+typedef enum e_render
+{
+	INTRO,
+	PLAYING,
+	WIN,
+	HIGH_SCORE,
+	GAME_OVER
+}					t_render;
+
 typedef enum e_sprite_type
 {
 	BOMB,
@@ -135,7 +144,7 @@ typedef struct s_game
 	int				line_len;
 	int				endian;
 	double			timer;
-	int				show_intro;
+	t_render		render_state;
 	char			**map;
 	t_spidy			spider;
 	t_tex			floor;

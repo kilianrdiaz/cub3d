@@ -38,9 +38,9 @@ static void	draw_fullscreen_image(t_game *g, t_tex *tex)
 static int	close_intro(int keycode, t_game *g)
 {
 	(void)keycode;
-	if (g->show_intro)
+	if (g->render_state == INTRO)
 	{
-		g->show_intro = 0;
+		g->render_state = PLAYING;
 		ft_bzero(&g->keys, sizeof(t_keys));
 		clean_screen(g);
 		mlx_hook(g->win, 2, 1L << 0, key_press, g);
@@ -77,7 +77,7 @@ int	show_intro(t_game *g)
 {
 	t_tex	intro;
 
-	g->show_intro = 1;
+	g->render_state = INTRO;
 	load_texture(g, &intro, "./textures/intro.xpm");
 	draw_fullscreen_image(g, &intro);
 	read_intro(g);

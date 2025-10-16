@@ -124,7 +124,7 @@ static void	render_floor_and_ceiling(t_game *g)
 
 int	render(t_game *g)
 {
-	if (g->show_intro)
+	if (g->render_state == INTRO)
 		return (show_intro(g));
 	update_player_position(g);
 	clean_screen(g);

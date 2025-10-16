@@ -70,7 +70,6 @@ int	main(int argc, char **argv)
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g);
-	g.show_intro = 1;
 	mlx_loop_hook(g.mlx, render, &g);
 	mlx_loop(g.mlx);
 	close_program(&g);
