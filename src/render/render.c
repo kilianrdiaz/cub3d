@@ -58,5 +58,7 @@ int	render(t_game *g)
 		return (show_intro(g));
 	if (g->render_state == PLAYING)
 		return (game(g));
+	if (g->render_state == HIGH_SCORE)
+		return (register_score(g));
 	return (0);
 }
