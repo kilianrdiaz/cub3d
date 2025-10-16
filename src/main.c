@@ -58,6 +58,29 @@ static void	create_mlx_window(t_game *g)
 	g->addr = mlx_get_data_addr(g->img, &g->bpp, &g->line_len, &g->endian);
 }
 
+int	close_program(t_game *g)
+{
+	clean_screen(g);
+	if (g->img)
+		mlx_destroy_image(g->mlx, g->img);
+	if (g->win)
+		mlx_destroy_window(g->mlx, g->win);
+	if (g->mlx)
+	{
+		mlx_destroy_display(g->mlx);
+		free(g->mlx);
+	}
+	ft_free_array((void ***)&g->bombs);
+	ft_free_array((void ***)&g->lizards);
+	ft_free_array((void ***)&g->map);
+	ft_free_array((void ***)&g->font.chars);
+	free(g->spider.hand);
+	free(g->bomb_tex);
+	free(g->lizard_tex);
+	exit(0);
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
 	t_game	g;

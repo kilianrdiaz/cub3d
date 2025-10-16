@@ -27,14 +27,15 @@ SRCS    = src/parsing/utils.c   \
 		  src/render/player.c \
 		  src/render/utils.c \
 		  src/render/map.c \
+		  src/render/ray_map.c \
 		  src/render/sprite.c \
 		  src/render/font.c \
 		  src/render/render.c \
 		  src/render/intro.c \
-		  src/animation/move_spider.c \
-		  src/animation/spider_attack.c \
-		  src/animation/move_lizards.c \
-		  src/animation/key_hooks.c \
+		  src/moves/spider.c \
+		  src/moves/spider_attack.c \
+		  src/moves/lizards.c \
+		  src/moves/key_hooks.c \
 		src/main.c 
 OBJ     = $(SRCS:.c=.o)
 
