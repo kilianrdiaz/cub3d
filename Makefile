@@ -36,6 +36,7 @@ SRCS    = src/parsing/utils.c   \
 		  src/moves/spider_attack.c \
 		  src/moves/lizards.c \
 		  src/moves/key_hooks.c \
+		  src/close_program.c \
 		src/main.c 
 OBJ     = $(SRCS:.c=.o)
 
