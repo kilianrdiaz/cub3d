@@ -30,10 +30,10 @@ SRCS    = src/parsing/utils.c   \
 		  src/render/sprite.c \
 		  src/render/font.c \
 		  src/render/render.c \
+		  src/render/intro.c \
 		  src/animation/move_spider.c \
 		  src/animation/spider_attack.c \
 		  src/animation/move_lizards.c \
-		  src/animation/intro.c \
 		  src/animation/key_hooks.c \
 		src/main.c 
 OBJ     = $(SRCS:.c=.o)
