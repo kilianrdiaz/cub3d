@@ -238,7 +238,7 @@ int					key_release(int key, t_game *g);
 void				update_player_position(t_game *g);
 void				spider_attack(t_game *g);
 void				move_lizards(t_game *g);
-void				update_web_target_position(t_game *g, t_sprite *sprites);
+void				update_web_target_position(t_game *g, t_sprite *sprites, t_ray ray);
 void				close_program(t_game *g);
 
 #endif

@@ -14,15 +14,18 @@
 
 static void	add_buttons(t_game *g, t_sprite *alphabet, int index, t_pos pos)
 {
+	int line_buttons;
+
+	line_buttons = pos.y;
 	pos.y += g->font.scale * g->font.char_h - 40;
-	g->font.scale = 0.75;
 	alphabet[index].x = pos.x;
-	alphabet[index].y = pos.y;
-	render_text(g, "DEL", pos);
+	alphabet[index].y = line_buttons;
 	index++;
+	g->font.scale = 0.75;
+	render_text(g, "DEL", pos);
 	pos.x += g->font.char_w * 4 * g->font.scale + 10;
 	alphabet[index].x = pos.x;
-	alphabet[index].y = pos.y;
+	alphabet[index].y = line_buttons;
 	render_text(g, "END", pos);
 	g->font.scale = 3.5;
 }
@@ -76,7 +79,7 @@ static t_ray	ray_web_target(t_game *g, t_tex web_target, float scale)
     return (ray);
 }
 
-void	draw_web_target(t_game *g, t_tex *web_target)
+static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 {
 	t_ray	ray;
 	float	scale;
@@ -101,6 +104,7 @@ void	draw_web_target(t_game *g, t_tex *web_target)
 					ray.color);
 		}
 	}
+	return (ray);
 }
 
 int	register_score(t_game *g)
@@ -120,9 +124,8 @@ int	register_score(t_game *g)
 	render_text(g, "ENTER NAME", pos);
 	g->font.scale = 3.5;
 	alphabet = print_alphabet(g, score_panel);
-    update_web_target_position(g, alphabet);
 	draw_hand(g, g->spider.x);
-	draw_web_target(g, &web_target);
+    update_web_target_position(g, alphabet, draw_web_target(g, &web_target));
 	free(alphabet);
 	g->font.scale = 2.5;
 	render_text(g, "-----", (t_pos){pos.x, pos.y + 700});
