@@ -120,6 +120,7 @@ int	register_score(t_game *g)
 	render_text(g, "ENTER NAME", pos);
 	g->font.scale = 3.5;
 	alphabet = print_alphabet(g, score_panel);
+    update_web_target_position(g, alphabet);
 	draw_hand(g, g->spider.x);
 	draw_web_target(g, &web_target);
 	free(alphabet);
