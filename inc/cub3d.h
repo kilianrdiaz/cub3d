@@ -214,6 +214,7 @@ int					clamp_int(int v, int a, int b);
 void				update_bombs(t_game *g);
 void				put_pixel(t_game *g, int x, int y, int color);
 void				clean_screen(t_game *g);
+t_ray				ray_hand(t_tex hand);
 void				draw_hand(t_game *g);
 t_tex				get_texture_wall(t_game g, t_ray ray);
 void				print_map(t_game *g);

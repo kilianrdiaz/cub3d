@@ -12,7 +12,7 @@
 
 #include "../../inc/cub3d.h"
 
-static t_ray	ray_hand(t_tex hand)
+t_ray	ray_hand(t_tex hand)
 {
 	t_ray	ray;
 
