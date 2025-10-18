@@ -45,6 +45,8 @@ typedef enum e_render
 	INTRO,
 	PLAYING,
 	WIN,
+	WAITING_FOR_NAME,
+	SCORE_SAVED,
 	HIGH_SCORE,
 	GAME_OVER
 }					t_render;
@@ -165,6 +167,7 @@ typedef struct s_game
 	t_tex			*lizard_tex;
 	t_tex			*map_text;
 	t_keys			keys;
+	int				score;
 }					t_game;
 
 typedef struct s_ray
@@ -229,7 +232,8 @@ void				calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex);
 t_tex				get_texture_wall(t_game g, t_ray ray);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
-int					register_score(t_game *g);
+char				*register_score(t_game *g, t_tex *score_panel);
+int					show_high_scores(t_game *g);
 // input
 int					key_press(int key, t_game *g);
 int					key_release(int key, t_game *g);
@@ -238,7 +242,7 @@ int					key_release(int key, t_game *g);
 void				update_player_position(t_game *g);
 void				spider_attack(t_game *g);
 void				move_lizards(t_game *g);
-void				set_name(t_game *g, t_sprite *alphabet, t_ray ray, t_pos pos);
+char				*set_name(t_game *g, t_sprite *alphabet, t_ray ray);
 void				close_program(t_game *g);
 
 #endif

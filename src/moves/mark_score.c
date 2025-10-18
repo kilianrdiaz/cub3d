@@ -85,21 +85,48 @@ static void	update_web_target_position(t_game *g, t_sprite *sprites)
 	check_limits(g, sprites, 28);
 }
 
-void set_name(t_game *g, t_sprite *alphabet, t_ray ray, t_pos pos)
+static char	*save_name(t_game *g, char *name)
+{
+	char	*full_line;
+	char	*score_str;
+
+	full_line = ft_strtrim(name, "-");
+	if (!full_line)
+	{
+		ft_putendl_fd("Error: Memory allocation failed", 2);
+		return (NULL);
+	}
+	full_line = ft_strappend(full_line, " ");
+	score_str = ft_itoa(g->score);
+	if (!score_str)
+		ft_putendl_fd("Error: Memory allocation failed", 2);
+	full_line = ft_strappend(full_line, score_str);
+	free(score_str);
+	if (!full_line)
+	{
+		ft_putendl_fd("Error: Memory allocation failed", 2);
+		return (NULL);
+	}
+	return (full_line);
+}
+
+char	*set_name(t_game *g, t_sprite *alphabet, t_ray ray)
 {
 	int			ch;
-	static char name[6] = "------";
+	static char name[7] = "------";
 	static int 	index = 0;
+	t_pos		pos;
 
 	update_web_target_position(g, alphabet);
 	g->font.scale = 2.5;
+	pos.x = (WIDTH - g->font.char_w * g->font.scale) / 7;
+	pos.y = (HEIGHT - g->font.char_h * g->font.scale) - 100;
 	render_text(g, name, pos);
 	if (g->spider.state != ATTACKING)
-		return ;
+		return (NULL);
 	ch = mark_letter(g, alphabet, ray);
-	printf("Selected index: %d\n", ch);
 	if (ch == -1)
-		return ;
+		return (NULL);
 	if (ch < 26 && index < 6) // A-Z
 		name[index++] = 'A' + ch;
 	else if (ch == 26) // DEL
@@ -108,5 +135,6 @@ void set_name(t_game *g, t_sprite *alphabet, t_ray ray, t_pos pos)
 			name[--index] = '-';
 	}
 	else if (ch == 27)
-		printf("Name entered: %s\n", name);
+		return (save_name(g, name));
+	return (NULL);
 }
