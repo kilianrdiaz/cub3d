@@ -18,7 +18,7 @@ static void	add_buttons(t_game *g, t_sprite *alphabet, int index, t_pos pos)
 
 	line_buttons = pos.y;
 	pos.y += g->font.scale * g->font.char_h - 40;
-	alphabet[index].x = pos.x;
+	alphabet[++index].x = pos.x;
 	alphabet[index].y = line_buttons;
 	index++;
 	g->font.scale = 0.75;
@@ -37,6 +37,7 @@ static t_sprite	*print_alphabet(t_game *game, t_tex score_panel)
 	t_sprite	*alphabet;
 	t_pos		pos;
 
+	game->font.scale = 3.5;
 	alphabet = ft_safe_calloc(sizeof(t_sprite), 28);
 	pos.x = (WIDTH - score_panel.width) / 2 - 60;
 	pos.y = (HEIGHT - score_panel.height) / 2 + 120;
@@ -44,8 +45,8 @@ static t_sprite	*print_alphabet(t_game *game, t_tex score_panel)
 	x = 'A' - 1;
 	while (++x <= 'Z' && ++index < 26)
 	{
-		alphabet[index].x = pos.x;
 		alphabet[index].y = pos.y;
+		alphabet[index].x = pos.x;
 		render_text(game, &x, pos);
         pos.x += game->font.char_w * game->font.scale + 10;
 		if ((x - 'A' + 1) % 9 == 0)
@@ -110,27 +111,25 @@ static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 int	register_score(t_game *g)
 {
 	t_tex score_panel;
-	t_tex web_target;
+	t_tex target;
 	t_sprite *alphabet;
 	t_pos pos;
+	t_ray ray;
 
 	g->render_state = HIGH_SCORE;
 	load_texture(g, &score_panel, "./textures/score_panel.xpm");
-	load_texture(g, &web_target, "./textures/web_target.xpm");
+	load_texture(g, &target, "./textures/web_target.xpm");
 	draw_fullscreen_image(g, &score_panel);
 	pos.x = (WIDTH - score_panel.width) / 2;
 	pos.y = (HEIGHT - score_panel.height) / 2;
 	g->font.scale = 1.5;
 	render_text(g, "ENTER NAME", pos);
-	g->font.scale = 3.5;
 	alphabet = print_alphabet(g, score_panel);
 	draw_hand(g, g->spider.x);
-    update_web_target_position(g, alphabet, draw_web_target(g, &web_target));
-	free(alphabet);
-	g->font.scale = 2.5;
-	render_text(g, "-----", (t_pos){pos.x, pos.y + 700});
+	ray = draw_web_target(g, &target);
+	set_name(g, alphabet, ray, (t_pos){pos.x, pos.y + 700});
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	mlx_destroy_image(g->mlx, score_panel.img);
-	mlx_destroy_image(g->mlx, web_target.img);
+	mlx_destroy_image(g->mlx, target.img);
 	return (0);
 }

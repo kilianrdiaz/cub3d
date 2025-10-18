@@ -41,31 +41,34 @@ static void	check_limits(t_game *g, t_sprite *sprites, int num_sprites)
 		g->spider.y = max.y;
 }
 
-static void	mark_letter(t_game *g, t_sprite *sprites, t_ray ray)
+int	mark_letter(t_game *g, t_sprite *sprites, t_ray ray)
 {
-	int		i;
-	float	w;
-	float	h;
+	int			i;
+	double		cx;
+	double		cy;
+	t_sprite	target;
 
-	float cx, cy;
 	// Coordenadas reales del centro del target (en pantalla)
 	cx = ray.draw_start_x + ray.draw_end_x / 2.0f;
 	cy = ray.draw_start_y + ray.draw_end_y / 2.0f;
-	for (i = 0; i < 28; i++) // 26 letras + 2 botones
+	i = -1;
+	while (++i < 28)
 	{
-		w = g->font.char_w * g->font.scale;
-		h = g->font.char_h * g->font.scale;
-		if (cx >= sprites[i].x && cx <= sprites[i].x + w && cy >= sprites[i].y
-			&& cy <= sprites[i].y + h)
+		target.trans_x = g->font.char_w * g->font.scale;
+		target.trans_y = g->font.char_h * g->font.scale;
+		if (cx >= sprites[i].x && cx <= sprites[i].x + target.trans_x
+			&& cy >= sprites[i].y && cy <= sprites[i].y + target.trans_y)
 		{
 			printf("✅ Marked letter/button at index: %d\n", i);
+			g->keys.space = 0;
 			// Aquí puedes registrar la letra o acción
-			break ;
+			return (i);
 		}
 	}
+	return (-1);
 }
 
-void	update_web_target_position(t_game *g, t_sprite *sprites, t_ray ray)
+static void	update_web_target_position(t_game *g, t_sprite *sprites)
 {
 	if (g->keys.a)
 		g->spider.x -= MOVE_MARK;
@@ -76,11 +79,34 @@ void	update_web_target_position(t_game *g, t_sprite *sprites, t_ray ray)
 	if (g->keys.s)
 		g->spider.y -= MOVE_SPEED;
 	if (g->keys.space)
-	{
 		g->spider.state = ATTACKING;
-		mark_letter(g, sprites, ray);
-	}
 	else if (g->spider.state == ATTACKING)
 		g->spider.state = ACTIVE;
 	check_limits(g, sprites, 28);
+}
+
+void set_name(t_game *g, t_sprite *alphabet, t_ray ray, t_pos pos)
+{
+	int			ch;
+	static char name[6] = "------";
+	static int 	index = 0;
+
+	update_web_target_position(g, alphabet);
+	g->font.scale = 2.5;
+	render_text(g, name, pos);
+	if (g->spider.state != ATTACKING)
+		return ;
+	ch = mark_letter(g, alphabet, ray);
+	printf("Selected index: %d\n", ch);
+	if (ch == -1)
+		return ;
+	if (ch < 26 && index < 6) // A-Z
+		name[index++] = 'A' + ch;
+	else if (ch == 26) // DEL
+	{
+		if (index > 0)
+			name[--index] = '-';
+	}
+	else if (ch == 27)
+		printf("Name entered: %s\n", name);
 }
