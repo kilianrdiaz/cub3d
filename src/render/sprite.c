@@ -40,18 +40,18 @@ static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex *tex)
 
 	if (sp->state == DEFUSED)
 		return ;
-	ray.tx = (int)(256 * (ray.line_height - (-sp->width / 2 + sp->screen_x))
+	ray.src.x = (int)(256 * (ray.line_height - (-sp->width / 2 + sp->screen_x))
 			* tex[sp->state].width / sp->width) / 256;
 	y = ray.draw_start_y - 1;
 	while (++y < ray.draw_end_y)
 	{
 		d = (y - ray.draw_start_y) * 256;
-		ray.ty = ((d * tex[sp->state].height) / sp->height) / 256;
-		if (ray.tx < 0 || ray.tx >= tex[sp->state].width || ray.ty < 0
-			|| ray.ty >= tex[sp->state].height)
+		ray.src.y = ((d * tex[sp->state].height) / sp->height) / 256;
+		if (ray.src.x < 0 || ray.src.x >= tex[sp->state].width || ray.src.y < 0
+			|| ray.src.y >= tex[sp->state].height)
 			continue ;
-		ray.color = *(unsigned int *)(tex[sp->state].addr + ray.ty
-				* tex[sp->state].line_len + ray.tx * (tex[sp->state].bpp / 8));
+		ray.color = *(unsigned int *)(tex[sp->state].addr + ray.src.y
+				* tex[sp->state].line_len + ray.src.x * (tex[sp->state].bpp / 8));
 		if ((ray.color & 0x00FFFFFF) != 0) // Transparencia
 			put_pixel(g, ray.line_height, y, ray.color);
 	}

@@ -31,6 +31,12 @@
 
 # define LERP_SPEED 1
 
+typedef struct s_coords
+{
+	double	x;
+	double	y;
+}					t_coords;
+
 typedef enum e_state
 {
 	ACTIVE,
@@ -193,8 +199,7 @@ typedef struct s_ray
 	int				draw_end_x;
 	int				draw_start_y;
 	int				draw_end_y;
-	int				tx;
-	int				ty;
+	t_pos			src;
 	int				color;
 }					t_ray;
 

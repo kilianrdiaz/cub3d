@@ -40,10 +40,10 @@ void	draw_hand(t_game *g, int x)
 		p.x = -1;
 		while (++p.x < l_ray.draw_end_x)
 		{
-			l_ray.tx = (int)(p.x / SCALE_SPRITE);
-			l_ray.ty = (int)(p.y / SCALE_SPRITE);
-			l_ray.color = *(unsigned int *)(hand.addr + l_ray.ty * hand.line_len
-					+ l_ray.tx * (hand.bpp / 8));
+			l_ray.src.x = (int)(p.x / SCALE_SPRITE);
+			l_ray.src.y = (int)(p.y / SCALE_SPRITE);
+			l_ray.color = *(unsigned int *)(hand.addr + l_ray.src.y * hand.line_len
+					+ l_ray.src.x * (hand.bpp / 8));
 			if ((l_ray.color & 0x00FFFFFF) != 0)
 				put_pixel(g, l_ray.draw_start_x + p.x, l_ray.draw_start_y + p.y,
 					l_ray.color);

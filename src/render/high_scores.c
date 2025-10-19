@@ -48,10 +48,10 @@ static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 		pos.x = -1;
 		while (++pos.x < ray.draw_end_x)
 		{
-			ray.tx = pos.x / scale;
-			ray.ty = pos.y / scale;
-			ray.color = *((unsigned int *)(web_target->addr + (ray.ty
-							* web_target->line_len + ray.tx * (web_target->bpp
+			ray.src.x = pos.x / scale;
+			ray.src.y = pos.y / scale;
+			ray.color = *((unsigned int *)(web_target->addr + (ray.src.y
+							* web_target->line_len + ray.src.x * (web_target->bpp
 								/ 8))));
 			if ((ray.color & 0x00FFFFFF) != 0)
 				put_pixel(g, ray.draw_start_x + pos.x, ray.draw_start_y + pos.y,
