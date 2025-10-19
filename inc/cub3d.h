@@ -195,10 +195,8 @@ typedef struct s_ray
 	int				hit;
 	int				side;
 	int				line_height;
-	int				draw_start_x;
-	int				draw_end_x;
-	int				draw_start_y;
-	int				draw_end_y;
+	t_pos			d_start;
+	t_pos			d_end;
 	t_pos			src;
 	int				color;
 }					t_ray;

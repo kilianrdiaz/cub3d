@@ -48,9 +48,9 @@ static void	draw_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int x)
 	int	y;
 
 	calculate_wall_stripe(g, ray, tex);
-	y = ray->draw_start_y - 1;
+	y = ray->d_start.y - 1;
 	d = 0;
-	while (++y <= ray->draw_end_y)
+	while (++y <= ray->d_end.y)
 	{
 		d = y * 256 - HEIGHT * 128 + ray->line_height * 128;
 		ray->src.y = ((d * tex.height) / ray->line_height) / 256;

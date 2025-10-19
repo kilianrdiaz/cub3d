@@ -31,12 +31,12 @@ t_tex	get_texture_wall(t_game g, t_ray ray)
 void	calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex)
 {
 	ray->line_height = (int)(HEIGHT / ray->perp_wall_dist);
-	ray->draw_start_y = -ray->line_height / 2 + HEIGHT / 2;
-	ray->draw_end_y = ray->line_height / 2 + HEIGHT / 2;
-	if (ray->draw_start_y < 0)
-		ray->draw_start_y = 0;
-	if (ray->draw_end_y >= HEIGHT)
-		ray->draw_end_y = HEIGHT - 1;
+	ray->d_start.y = -ray->line_height / 2 + HEIGHT / 2;
+	ray->d_end.y = ray->line_height / 2 + HEIGHT / 2;
+	if (ray->d_start.y < 0)
+		ray->d_start.y = 0;
+	if (ray->d_end.y >= HEIGHT)
+		ray->d_end.y = HEIGHT - 1;
 	ray->camera_x = g->spider.x + ray->perp_wall_dist * ray->dir_x0;
 	if (ray->side == 0)
 		ray->camera_x = g->spider.y + ray->perp_wall_dist * ray->dir_y0;

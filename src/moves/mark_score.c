@@ -49,8 +49,8 @@ int	mark_letter(t_game *g, t_sprite *sprites, t_ray ray)
 	t_sprite	target;
 
 	// Coordenadas reales del centro del target (en pantalla)
-	cx = ray.draw_start_x + ray.draw_end_x / 2.0f;
-	cy = ray.draw_start_y + ray.draw_end_y / 2.0f;
+	cx = ray.d_start.x + ray.d_end.x / 2.0f;
+	cy = ray.d_start.y + ray.d_end.y / 2.0f;
 	i = -1;
 	while (++i < 28)
 	{

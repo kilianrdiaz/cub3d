@@ -42,10 +42,10 @@ static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex *tex)
 		return ;
 	ray.src.x = (int)(256 * (ray.line_height - (-sp->width / 2 + sp->screen_x))
 			* tex[sp->state].width / sp->width) / 256;
-	y = ray.draw_start_y - 1;
-	while (++y < ray.draw_end_y)
+	y = ray.d_start.y - 1;
+	while (++y < ray.d_end.y)
 	{
-		d = (y - ray.draw_start_y) * 256;
+		d = (y - ray.d_start.y) * 256;
 		ray.src.y = ((d * tex[sp->state].height) / sp->height) / 256;
 		if (ray.src.x < 0 || ray.src.x >= tex[sp->state].width || ray.src.y < 0
 			|| ray.src.y >= tex[sp->state].height)
@@ -65,20 +65,20 @@ static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex *tex)
 	// 2️⃣ Offset vertical para apoyarlo en el suelo
 	ray->camera_x = (int)(HEIGHT / sp->trans_y * 0.5);
 	// 3️⃣ Límites verticales
-	ray->draw_start_y = -sp->height / 2 + HEIGHT / 2 + ray->camera_x;
-	ray->draw_end_y = sp->height / 2 + HEIGHT / 2 + ray->camera_x;
-	if (ray->draw_start_y < 0)
-		ray->draw_start_y = 0;
-	if (ray->draw_end_y >= HEIGHT)
-		ray->draw_end_y = HEIGHT - 1;
+	ray->d_start.y = -sp->height / 2 + HEIGHT / 2 + ray->camera_x;
+	ray->d_end.y = sp->height / 2 + HEIGHT / 2 + ray->camera_x;
+	if (ray->d_start.y < 0)
+		ray->d_start.y = 0;
+	if (ray->d_end.y >= HEIGHT)
+		ray->d_end.y = HEIGHT - 1;
 	// 4️⃣ Límites horizontales
 	sp->screen_x = (int)((GAME_WIDTH / 2) * (1 + sp->trans_x / sp->trans_y));
-	ray->draw_start_x = -sp->width / 2 + sp->screen_x;
-	ray->draw_end_x = ray->draw_start_x + sp->width;
-	if (ray->draw_start_x < 0)
-		ray->draw_start_x = 0;
-	if (ray->draw_end_x >= GAME_WIDTH)
-		ray->draw_end_x = GAME_WIDTH - 1;
+	ray->d_start.x = -sp->width / 2 + sp->screen_x;
+	ray->d_end.x = ray->d_start.x + sp->width;
+	if (ray->d_start.x < 0)
+		ray->d_start.x = 0;
+	if (ray->d_end.x >= GAME_WIDTH)
+		ray->d_end.x = GAME_WIDTH - 1;
 }
 
 static void	position_sprite(t_game *g, t_sprite sp)
@@ -101,8 +101,8 @@ static void	position_sprite(t_game *g, t_sprite sp)
 	if (sp.trans_y > 0.0)
 	{
 		ray_sprite(&sp, &ray, tex);
-		ray.line_height = ray.draw_start_x - 1;
-		while (++ray.line_height < ray.draw_end_x)
+		ray.line_height = ray.d_start.x - 1;
+		while (++ray.line_height < ray.d_end.x)
 			if (sp.trans_y > 0 && ray.line_height >= 0
 				&& ray.line_height < GAME_WIDTH
 				&& sp.trans_y < g->zbuffer[ray.line_height])

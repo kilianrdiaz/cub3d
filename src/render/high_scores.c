@@ -17,19 +17,19 @@ static t_ray	ray_web_target(t_game *g, t_tex web_target, float scale)
 	t_ray	ray;
 
 	ft_bzero(&ray, sizeof(t_ray));
-	ray.draw_end_x = g->spider.hand[ACTIVE].width * SCALE_SPRITE;
-	ray.draw_end_y = g->spider.hand[ACTIVE].height * SCALE_SPRITE;
-	ray.draw_start_x = g->spider.x - ray.draw_end_x / 2;
-	ray.draw_start_y = HEIGHT - ray.draw_end_y;
+	ray.d_end.x = g->spider.hand[ACTIVE].width * SCALE_SPRITE;
+	ray.d_end.y = g->spider.hand[ACTIVE].height * SCALE_SPRITE;
+	ray.d_start.x = g->spider.x - ray.d_end.x / 2;
+	ray.d_start.y = HEIGHT - ray.d_end.y;
 	// 2. Calculamos la escala según el tamaño de las letras
-	ray.draw_end_x = web_target.width * scale;
-	ray.draw_end_y = web_target.height * scale;
+	ray.d_end.x = web_target.width * scale;
+	ray.d_end.y = web_target.height * scale;
 	// 3. Ajuste vertical (por encima de la mano)
-	ray.line_height = -ray.draw_end_y * (1.0 + g->spider.y * 0.5);
+	ray.line_height = -ray.d_end.y * (1.0 + g->spider.y * 0.5);
 	// 4. Posición: centrado respecto a la mano
-	ray.draw_start_x = ray.draw_start_x + (ray.draw_end_x / 1.5)
-		- (ray.draw_end_x / 2);
-	ray.draw_start_y = ray.draw_start_y + ray.line_height;
+	ray.d_start.x = ray.d_start.x + (ray.d_end.x / 1.5)
+		- (ray.d_end.x / 2);
+	ray.d_start.y = ray.d_start.y + ray.line_height;
 	return (ray);
 }
 
@@ -43,10 +43,10 @@ static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 	ray = ray_web_target(g, *web_target, scale);
 	// 5. Dibujado con reescalado por muestreo sencillo
 	pos.y = -1;
-	while (++pos.y < ray.draw_end_y)
+	while (++pos.y < ray.d_end.y)
 	{
 		pos.x = -1;
-		while (++pos.x < ray.draw_end_x)
+		while (++pos.x < ray.d_end.x)
 		{
 			ray.src.x = pos.x / scale;
 			ray.src.y = pos.y / scale;
@@ -54,7 +54,7 @@ static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 							* web_target->line_len + ray.src.x * (web_target->bpp
 								/ 8))));
 			if ((ray.color & 0x00FFFFFF) != 0)
-				put_pixel(g, ray.draw_start_x + pos.x, ray.draw_start_y + pos.y,
+				put_pixel(g, ray.d_start.x + pos.x, ray.d_start.y + pos.y,
 					ray.color);
 		}
 	}
