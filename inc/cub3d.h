@@ -198,31 +198,37 @@ typedef struct s_ray
 	int				color;
 }					t_ray;
 
+// utils
+void				load_texture(t_game *g, t_tex *tex, char *path);
+int					validate_line(char *line);
+int					ft_isspace(int c);
+int					check_loaded_textures(t_game *game);
+int					clamp_int(int v, int a, int b);
+void				put_pixel(t_game *g, int x, int y, int color);
+t_tex				get_texture_wall(t_game g, t_ray ray);
+void				clean_screen(t_game *g);
+void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
+
 // parsing
 
 void				get_info_file(t_game *g, int argc, char **argv);
-void				load_texture(t_game *g, t_tex *tex, char *path);
 void				load_map_textures(t_game *g, char **content);
 char				**get_map(char **content);
 void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
-int					check_loaded_textures(t_game *game);
-int					validate_line(char *line);
-int					ft_isspace(int c);
+char				**get_scores(void);
+void				update_scores(char **scores, int position);
+t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
+int					get_position(t_game *g, char **scores);
 
 // rendering
 
 int					render(t_game *g);
-int					clamp_int(int v, int a, int b);
 void				update_bombs(t_game *g);
-void				put_pixel(t_game *g, int x, int y, int color);
-void				clean_screen(t_game *g);
 void				draw_hand(t_game *g, int x);
-t_tex				get_texture_wall(t_game g, t_ray ray);
 void				print_map(t_game *g);
 void				render_sprites(t_game *g);
 t_sprite			**get_sprites(t_game *g);
-void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
 void				render_text(t_game *g, char *str, t_pos pos);
 void				load_font(t_game *g, t_font *f, char *path);
 int					show_intro(t_game *g);
@@ -232,13 +238,10 @@ void				calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex);
 t_tex				get_texture_wall(t_game g, t_ray ray);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
-char				**get_scores(void);
-int					get_position(t_game *g, char **scores);
-t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
-void				update_scores(char **scores, int position);
 void				display_score_panel(t_game *g, t_tex *score_panel,
 						char **scores);
 int					show_high_scores(t_game *g);
+
 // input
 int					key_press(int key, t_game *g);
 int					key_release(int key, t_game *g);
@@ -248,6 +251,7 @@ void				update_player_position(t_game *g);
 void				spider_attack(t_game *g);
 void				move_lizards(t_game *g);
 char				*set_name(t_game *g, t_sprite *alphabet, t_ray ray);
+
 void				close_program(t_game *g);
 
 #endif

@@ -19,20 +19,20 @@ NAME    = cub3d
 CC      = cc
 CFLAGS = -Wall -Werror -Wextra -I inc -I $(LIB_DIR)
 MLX     = -lmlx -lXext -lX11 -lm
-SRCS    = src/parsing/utils.c   \
+SRCS    = src/utils/parsing.c  \
+		  src/utils/render.c    \
+		  src/utils/score.c   \
 		  src/parsing/map_textures.c   \
 		  src/parsing/map.c   \
 		  src/parsing/sprites.c   \
 		  src/parsing/file.c   \
 		  src/render/player.c \
-		  src/render/utils.c \
 		  src/render/map.c \
 		  src/render/ray_map.c \
 		  src/render/sprite.c \
 		  src/render/font.c \
 		  src/render/render.c \
 		  src/render/intro.c \
-		  src/render/scores_utils.c \
 		  src/render/display_scores.c \
 		  src/render/high_scores.c \
 		  src/moves/spider.c \
