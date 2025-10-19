@@ -232,7 +232,11 @@ void				calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex);
 t_tex				get_texture_wall(t_game g, t_ray ray);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
-char				*register_score(t_game *g, t_tex *score_panel);
+char				**get_scores(void);
+int					get_position(t_game *g, char **scores);
+t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
+void				update_scores(char **scores, int position);
+void				save_scores(char **scores);
 int					show_high_scores(t_game *g);
 // input
 int					key_press(int key, t_game *g);

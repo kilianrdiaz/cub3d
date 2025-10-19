@@ -12,53 +12,6 @@
 
 #include "../../inc/cub3d.h"
 
-static void	add_buttons(t_game *g, t_sprite *alphabet, int index, t_pos pos)
-{
-	int	line_buttons;
-
-	line_buttons = pos.y;
-	pos.y += g->font.scale * g->font.char_h - 40;
-	alphabet[++index].x = pos.x;
-	alphabet[index].y = line_buttons;
-	index++;
-	g->font.scale = 0.75;
-	render_text(g, "DEL", pos);
-	pos.x += g->font.char_w * 4 * g->font.scale + 10;
-	alphabet[index].x = pos.x;
-	alphabet[index].y = line_buttons;
-	render_text(g, "END", pos);
-	g->font.scale = 3.5;
-}
-
-static t_sprite	*print_alphabet(t_game *game, t_tex score_panel)
-{
-	char		x;
-	int			index;
-	t_sprite	*alphabet;
-	t_pos		pos;
-
-	game->font.scale = 3.5;
-	alphabet = ft_safe_calloc(sizeof(t_sprite), 28);
-	pos.x = (WIDTH - score_panel.width) / 2 - 60;
-	pos.y = (HEIGHT - score_panel.height) / 2 + 120;
-	index = -1;
-	x = 'A' - 1;
-	while (++x <= 'Z' && ++index < 26)
-	{
-		alphabet[index].y = pos.y;
-		alphabet[index].x = pos.x;
-		render_text(game, &x, pos);
-		pos.x += game->font.char_w * game->font.scale + 10;
-		if ((x - 'A' + 1) % 9 == 0)
-		{
-			pos.x = (WIDTH - score_panel.width) / 2 - 60;
-			pos.y += game->font.char_h * game->font.scale + 10;
-		}
-	}
-	add_buttons(game, alphabet, index, pos);
-	return (alphabet);
-}
-
 static t_ray	ray_web_target(t_game *g, t_tex web_target, float scale)
 {
 	t_ray	ray;
@@ -108,7 +61,7 @@ static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 	return (ray);
 }
 
-char	*register_score(t_game *g, t_tex *score_panel)
+static char	*register_score(t_game *g, t_tex *score_panel)
 {
 	t_tex		target;
 	t_sprite	*alphabet;
@@ -129,4 +82,58 @@ char	*register_score(t_game *g, t_tex *score_panel)
 	mlx_destroy_image(g->mlx, score_panel->img);
 	free(alphabet);
 	return (result);
+}
+
+static void	display_score_panel(t_game *g, t_tex *score_panel, char **scores)
+{
+	int		index;
+	t_pos	pos;
+
+	g->font.scale = 3.0;
+	draw_fullscreen_image(g, score_panel);
+	pos.x = (WIDTH - score_panel->width) / 2;
+	pos.y = (HEIGHT - score_panel->height) / 3;
+	render_text(g, "HIGH SCORES", pos);
+	if (!scores)
+		return ;
+	index = -1;
+	pos.y += g->font.char_h * g->font.scale + 90;
+	g->font.scale = 2.5;
+	while (scores[++index])
+	{
+		render_text(g, scores[index], pos);
+		pos.y += g->font.char_h * g->font.scale + 10;
+	}
+	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
+	mlx_destroy_image(g->mlx, score_panel->img);
+	ft_free_array((void ***)&scores);
+}
+
+int	show_high_scores(t_game *g)
+{
+	char	**scores;
+	int		position;
+	t_tex	score_panel;
+	char	*new_score;
+
+	load_texture(g, &score_panel, "./textures/score_panel.xpm");
+	scores = get_scores();
+	position = get_position(g, scores);
+	if (position != -1 && g->render_state != SCORE_SAVED)
+		g->render_state = WAITING_FOR_NAME;
+	if (g->render_state == WAITING_FOR_NAME)
+	{
+		new_score = register_score(g, &score_panel);
+		if (new_score)
+		{
+			update_scores(scores, position);
+			scores[position] = new_score;
+			save_scores(scores);
+			g->render_state = SCORE_SAVED;
+		}
+		ft_free_array((void ***)&scores);
+		return (0);
+	}
+	display_score_panel(g, &score_panel, scores);
+	return (0);
 }
