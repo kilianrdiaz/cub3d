@@ -236,7 +236,6 @@ char				**get_scores(void);
 int					get_position(t_game *g, char **scores);
 t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
 void				update_scores(char **scores, int position);
-void				save_scores(char **scores);
 void				display_score_panel(t_game *g, t_tex *score_panel,
 						char **scores);
 int					show_high_scores(t_game *g);

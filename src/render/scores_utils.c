@@ -17,7 +17,7 @@ char	**get_scores(void)
 	int		fd;
 	char	*line;
 	char	**scores;
-	int 	index;
+	int		index;
 
 	fd = open("scores.txt", O_RDONLY | O_CREAT, 0644);
 	if (fd == -1)
@@ -111,10 +111,10 @@ t_sprite	*print_alphabet(t_game *game, t_tex score_panel)
 	return (alphabet);
 }
 
-void update_scores(char **scores, int position)
+void	update_scores(char **scores, int position)
 {
-	int last;
-	int j;
+	int	last;
+	int	j;
 
 	if (!scores || position < 0 || scores[position] == NULL)
 		return ;
@@ -130,18 +130,4 @@ void update_scores(char **scores, int position)
 		j--;
 	}
 	scores[position] = NULL;
-}
-
-void	save_scores(char **scores)
-{
-	int	fd;
-	int	i;
-
-	fd = open("scores.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-		return ;
-	i = -1;
-	while (scores && scores[++i])
-		ft_putendl_fd(scores[i], fd);
-	close(fd);
 }

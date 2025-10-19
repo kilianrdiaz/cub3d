@@ -59,9 +59,7 @@ int	mark_letter(t_game *g, t_sprite *sprites, t_ray ray)
 		if (cx >= sprites[i].x && cx <= sprites[i].x + target.trans_x
 			&& cy >= sprites[i].y && cy <= sprites[i].y + target.trans_y)
 		{
-			printf("✅ Marked letter/button at index: %d\n", i);
 			g->keys.space = 0;
-			// Aquí puedes registrar la letra o acción
 			return (i);
 		}
 	}
@@ -113,8 +111,8 @@ static char	*save_name(t_game *g, char *name)
 char	*set_name(t_game *g, t_sprite *alphabet, t_ray ray)
 {
 	int			ch;
-	static char name[7] = "------";
-	static int 	index = 0;
+	static char	name[7] = "------";
+	static int	index = 0;
 	t_pos		pos;
 
 	update_web_target_position(g, alphabet);

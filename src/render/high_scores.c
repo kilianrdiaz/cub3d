@@ -84,6 +84,28 @@ static char	*register_score(t_game *g, t_tex *score_panel)
 	return (result);
 }
 
+static void	save_scores(char **scores)
+{
+	int	fd;
+	int	i;
+
+	if (!scores)
+		return ;
+	fd = open("scores.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+		return ;
+	i = -1;
+	while (scores && scores[++i])
+	{
+		if (!ft_putendl_fd(scores[i], fd))
+		{
+			ft_putendl_fd("Error: Could not write to scores.txt", 2);
+			break ;
+		}
+	}
+	close(fd);
+}
+
 int	show_high_scores(t_game *g)
 {
 	char	**scores;
