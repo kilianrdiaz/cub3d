@@ -17,6 +17,7 @@ char	**get_scores(void)
 	int		fd;
 	char	*line;
 	char	**scores;
+	int 	index;
 
 	fd = open("scores.txt", O_RDONLY | O_CREAT, 0644);
 	if (fd == -1)
@@ -24,18 +25,18 @@ char	**get_scores(void)
 		ft_putendl_fd("Error: Could not open scores.txt", 2);
 		return (NULL);
 	}
-	scores = NULL;
+	scores = ft_calloc(sizeof(char *), 6);
+	if (!scores)
+		return (close(fd), NULL);
 	line = get_next_line(fd);
-	while (line)
+	index = 0;
+	while (line && index < 5)
 	{
 		ft_clean_line(&line);
-		ft_append_array((void ***)&scores, ft_strdup(line));
-		free(line);
+		scores[index++] = line;
 		line = get_next_line(fd);
 	}
 	close(fd);
-	if (!scores)
-		scores = ft_safe_calloc(1, sizeof(char *));
 	return (scores);
 }
 
@@ -50,13 +51,12 @@ int	get_position(t_game *g, char **scores)
 	while (scores[++position])
 	{
 		line = ft_split(scores[position], ' ');
-		if (!line || !line[1])
-			break ;
-		if (g->score >= ft_atoi(line[1]))
-		{
-			ft_free_array((void ***)&line);
+		if (!line)
 			return (position);
-		}
+		if (!line[1])
+			return (ft_free_array((void ***)&line), position);
+		if (g->score > ft_atoi(line[1]))
+			return (ft_free_array((void ***)&line), position);
 		ft_free_array((void ***)&line);
 	}
 	if (position < 5)
@@ -111,28 +111,24 @@ t_sprite	*print_alphabet(t_game *game, t_tex score_panel)
 	return (alphabet);
 }
 
-void	update_scores(char **scores, int position)
+void update_scores(char **scores, int position)
 {
-	int	last;
-	int	j;
+	int last;
+	int j;
 
 	if (!scores || position < 0 || scores[position] == NULL)
 		return ;
-	// Contar elementos hasta NULL
 	last = 0;
 	while (scores[last])
 		last++;
-	// Comprobar que hay espacio para desplazar
 	if (scores[last] != NULL)
-		return ; // no hay hueco, no hacemos nada
-	// Desplazar los elementos hacia abajo desde el final hasta 'position'
+		return ;
 	j = last - 1;
 	while (j >= position)
 	{
 		scores[j + 1] = scores[j];
 		j--;
 	}
-	// Dejar la posición libre
 	scores[position] = NULL;
 }
 
