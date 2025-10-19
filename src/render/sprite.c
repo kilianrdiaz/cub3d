@@ -63,10 +63,10 @@ static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex *tex)
 	sp->height = (tex[sp->state].height * sp->scale / sp->trans_y);
 	sp->width = (tex[sp->state].width * sp->scale / sp->trans_y);
 	// 2️⃣ Offset vertical para apoyarlo en el suelo
-	ray->camera_x = (int)(HEIGHT / sp->trans_y * 0.5);
+	ray->view = (int)(HEIGHT / sp->trans_y * 0.5);
 	// 3️⃣ Límites verticales
-	ray->d_start.y = -sp->height / 2 + HEIGHT / 2 + ray->camera_x;
-	ray->d_end.y = sp->height / 2 + HEIGHT / 2 + ray->camera_x;
+	ray->d_start.y = -sp->height / 2 + HEIGHT / 2 + ray->view;
+	ray->d_end.y = sp->height / 2 + HEIGHT / 2 + ray->view;
 	if (ray->d_start.y < 0)
 		ray->d_start.y = 0;
 	if (ray->d_end.y >= HEIGHT)

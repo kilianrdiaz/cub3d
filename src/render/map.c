@@ -82,10 +82,10 @@ static void	calculate_distance_to_wall(t_game g, t_ray *ray)
 	}
 	// 4. Cálculo de la distancia perpendicular a la pared
 	ray->perp_wall_dist = (ray->src.y - g.spider.y + (1 - ray->step_y) / 2.0)
-		/ ray->dir_y0;
+		/ ray->left.y;
 	if (ray->side == 0)
 		ray->perp_wall_dist = (ray->src.x - g.spider.x + (1 - ray->step_x) / 2.0)
-			/ ray->dir_x0;
+			/ ray->left.x;
 	if (ray->perp_wall_dist <= 0.0)
 		ray->perp_wall_dist = 1e-6; // Evita divisiones por 0
 }
@@ -100,12 +100,12 @@ void	render_wall(t_game *g)
 	while (++x < GAME_WIDTH)
 	{
 		ray = ray_map(g, x);
-		if (ray.dir_x0 < 0)
+		if (ray.left.x < 0)
 		{
 			ray.step_x = -1;
 			ray.side_dist_x = (g->spider.x - ray.src.x) * ray.delta_dist_x;
 		}
-		if (ray.dir_y0 < 0)
+		if (ray.left.y < 0)
 		{
 			ray.step_y = -1;
 			ray.side_dist_y = (g->spider.y - ray.src.y) * ray.delta_dist_y;
@@ -126,20 +126,20 @@ void	render_floor_and_ceiling(t_game *g)
 	y = HEIGHT / 2;
 	while (++y < HEIGHT)
 	{
-		ray.dir_x0 = g->spider.dir_x - g->spider.plane_x;
-		ray.dir_y0 = g->spider.dir_y - g->spider.plane_y;
-		ray.dir_x1 = g->spider.dir_x + g->spider.plane_x;
-		ray.dir_y1 = g->spider.dir_y + g->spider.plane_y;
+		ray.left.x = g->spider.dir_x - g->spider.plane_x;
+		ray.left.y = g->spider.dir_y - g->spider.plane_y;
+		ray.right.x = g->spider.dir_x + g->spider.plane_x;
+		ray.right.y = g->spider.dir_y + g->spider.plane_y;
 		p = y - HEIGHT / 2;
 		if (p == 0)
 			continue ;
-		ray.pos_z = 0.5 * HEIGHT;
-		ray.row_distance = ray.pos_z / (double)p;
-		ray.side_dist_x = g->spider.x + ray.row_distance * ray.dir_x0;
-		ray.side_dist_y = g->spider.y + ray.row_distance * ray.dir_y0;
-		ray.step_x = ray.row_distance * (ray.dir_x1 - ray.dir_x0)
+		ray.view = 0.5 * HEIGHT;
+		ray.row_distance = ray.view / (double)p;
+		ray.side_dist_x = g->spider.x + ray.row_distance * ray.left.x;
+		ray.side_dist_y = g->spider.y + ray.row_distance * ray.left.y;
+		ray.step_x = ray.row_distance * (ray.right.x - ray.left.x)
 			/ (double)GAME_WIDTH;
-		ray.step_y = ray.row_distance * (ray.dir_y1 - ray.dir_y0)
+		ray.step_y = ray.row_distance * (ray.right.y - ray.left.y)
 			/ (double)GAME_WIDTH;
 		draw_floor_and_ceiling(g, &ray, y);
 	}

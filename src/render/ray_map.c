@@ -16,13 +16,13 @@ t_tex	get_texture_wall(t_game g, t_ray ray)
 {
 	if (ray.side == 0)
 	{
-		if (ray.dir_x0 > 0)
+		if (ray.left.x > 0)
 			return (g.map_text[WE]);
 		return (g.map_text[EA]);
 	}
 	else
 	{
-		if (ray.dir_y0 > 0)
+		if (ray.left.y > 0)
 			return (g.map_text[SO]);
 		return (g.map_text[NO]);
 	}
@@ -37,14 +37,14 @@ void	calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex)
 		ray->d_start.y = 0;
 	if (ray->d_end.y >= HEIGHT)
 		ray->d_end.y = HEIGHT - 1;
-	ray->camera_x = g->spider.x + ray->perp_wall_dist * ray->dir_x0;
+	ray->view = g->spider.x + ray->perp_wall_dist * ray->left.x;
 	if (ray->side == 0)
-		ray->camera_x = g->spider.y + ray->perp_wall_dist * ray->dir_y0;
-	ray->camera_x -= floor(ray->camera_x);
-	ray->src.x = (int)(ray->camera_x * tex.width);
+		ray->view = g->spider.y + ray->perp_wall_dist * ray->left.y;
+	ray->view -= floor(ray->view);
+	ray->src.x = (int)(ray->view * tex.width);
 	ray->src.x = clamp_int(ray->src.x, 0, tex.width - 1);
-	if ((ray->side == 0 && ray->dir_x0 > 0) || (ray->side == 1
-			&& ray->dir_y0 < 0))
+	if ((ray->side == 0 && ray->left.x > 0) || (ray->side == 1
+			&& ray->left.y < 0))
 		ray->src.x = tex.width - ray->src.x - 1;
 }
 
@@ -68,18 +68,18 @@ t_ray	ray_map(t_game *g, int x)
 	t_ray	ray;
 
 	ft_bzero(&ray, sizeof(t_ray));
-	ray.camera_x = 2 * x / (double)GAME_WIDTH - 1;
-	ray.dir_x0 = g->spider.dir_x + g->spider.plane_x * ray.camera_x;
-	ray.dir_y0 = g->spider.dir_y + g->spider.plane_y * ray.camera_x;
+	ray.view = 2 * x / (double)GAME_WIDTH - 1;
+	ray.left.x = g->spider.dir_x + g->spider.plane_x * ray.view;
+	ray.left.y = g->spider.dir_y + g->spider.plane_y * ray.view;
 	// Posición inicial en el mapa (celda del jugador)
 	ray.src.x = (int)g->spider.x;
 	ray.src.y = (int)g->spider.y;
 	// Distancias que recorrerá el rayo para cruzar una celda en X e Y
-	ray.delta_dist_x = fabs(1.0 / ray.dir_x0);
-	if (ray.dir_x0 == 0.0)
+	ray.delta_dist_x = fabs(1.0 / ray.left.x);
+	if (ray.left.x == 0.0)
 		ray.delta_dist_x = 1e30;
-	ray.delta_dist_y = fabs(1.0 / ray.dir_y0);
-	if (ray.dir_y0 == 0.0)
+	ray.delta_dist_y = fabs(1.0 / ray.left.y);
+	if (ray.left.y == 0.0)
 		ray.delta_dist_y = 1e30;
 	ray.perp_wall_dist = 0.0;
 	ray.step_x = 1;

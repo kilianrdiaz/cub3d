@@ -178,12 +178,9 @@ typedef struct s_game
 
 typedef struct s_ray
 {
-	double			camera_x;
-	double			dir_x0;
-	double			dir_y0;
-	double			dir_x1;
-	double			dir_y1;
-	double			pos_z;
+	double			view;
+	t_coords		left;
+	t_coords		right;
 	double			row_distance;
 	double			side_dist_x;
 	double			side_dist_y;
