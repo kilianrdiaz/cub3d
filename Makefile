@@ -33,6 +33,7 @@ SRCS    = src/parsing/utils.c   \
 		  src/render/render.c \
 		  src/render/intro.c \
 		  src/render/scores_utils.c \
+		  src/render/display_scores.c \
 		  src/render/high_scores.c \
 		  src/moves/spider.c \
 		  src/moves/spider_attack.c \

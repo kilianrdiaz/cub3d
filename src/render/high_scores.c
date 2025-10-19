@@ -84,31 +84,6 @@ static char	*register_score(t_game *g, t_tex *score_panel)
 	return (result);
 }
 
-static void	display_score_panel(t_game *g, t_tex *score_panel, char **scores)
-{
-	int		index;
-	t_pos	pos;
-
-	g->font.scale = 3.0;
-	draw_fullscreen_image(g, score_panel);
-	pos.x = (WIDTH - score_panel->width) / 2;
-	pos.y = (HEIGHT - score_panel->height) / 3;
-	render_text(g, "HIGH SCORES", pos);
-	if (!scores)
-		return ;
-	index = -1;
-	pos.y += g->font.char_h * g->font.scale + 90;
-	g->font.scale = 2.5;
-	while (scores[++index])
-	{
-		render_text(g, scores[index], pos);
-		pos.y += g->font.char_h * g->font.scale + 10;
-	}
-	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	mlx_destroy_image(g->mlx, score_panel->img);
-	ft_free_array((void ***)&scores);
-}
-
 int	show_high_scores(t_game *g)
 {
 	char	**scores;
@@ -135,5 +110,5 @@ int	show_high_scores(t_game *g)
 		return (0);
 	}
 	display_score_panel(g, &score_panel, scores);
-	return (0);
+	return (ft_free_array((void ***)&scores), 0);
 }
