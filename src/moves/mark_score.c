@@ -23,12 +23,12 @@ static void	check_limits(t_game *g, t_sprite *sprites, int num_sprites)
 	if (!sprites)
 		return ;
 	g->font.scale = 3.5;
-	max.x = sprites[0].x;
-	min = sprites[0].x + (g->font.char_w * g->font.scale) - 10;
+	max.x = sprites[0].pos.x;
+	min = sprites[0].pos.x + (g->font.char_w * g->font.scale) - 10;
 	i = -1;
 	while (++i < num_sprites)
-		if (sprites[i].x > max.x)
-			max.x = sprites[i].x;
+		if (sprites[i].pos.x > max.x)
+			max.x = sprites[i].pos.x;
 	max.y = g->font.char_h * g->font.scale / num_sprites;
 	max.x += g->font.char_w * g->font.scale;
 	if (g->spider.pos.x < min)
@@ -44,20 +44,20 @@ static void	check_limits(t_game *g, t_sprite *sprites, int num_sprites)
 int	mark_letter(t_game *g, t_sprite *sprites, t_ray ray)
 {
 	int			i;
-	double		cx;
-	double		cy;
+	t_coords	x;
 	t_sprite	target;
 
 	// Coordenadas reales del centro del target (en pantalla)
-	cx = ray.d_start.x + ray.d_end.x / 2.0f;
-	cy = ray.d_start.y + ray.d_end.y / 2.0f;
+	x.x = ray.d_start.x + ray.d_end.x / 2.0f;
+	x.y = ray.d_start.y + ray.d_end.y / 2.0f;
 	i = -1;
 	while (++i < 28)
 	{
-		target.trans_x = g->font.char_w * g->font.scale;
-		target.trans_y = g->font.char_h * g->font.scale;
-		if (cx >= sprites[i].x && cx <= sprites[i].x + target.trans_x
-			&& cy >= sprites[i].y && cy <= sprites[i].y + target.trans_y)
+		target.trans.x = g->font.char_w * g->font.scale;
+		target.trans.y = g->font.char_h * g->font.scale;
+		if (x.x >= sprites[i].pos.x && x.x <= sprites[i].pos.x + target.trans.x
+			&& x.y >= sprites[i].pos.y && x.y <= sprites[i].pos.y
+			+ target.trans.y)
 		{
 			g->keys.space = 0;
 			return (i);

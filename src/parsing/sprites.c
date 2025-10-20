@@ -59,8 +59,7 @@ static void	create_sprite(t_game *g, t_pos p, char type)
 	t_sprite	*sprite;
 
 	sprite = ft_safe_calloc(1, sizeof(t_sprite));
-	sprite->x = p.x;
-	sprite->y = p.y;
+	sprite->pos = (t_coords){p.x, p.y};
 	if (type == 'L')
 	{
 		sprite->scale = 2;

@@ -124,11 +124,9 @@ typedef struct s_tex
 
 typedef struct s_sprite
 {
-	double			x;
-	double			y;
+	t_coords		pos;
+	t_coords		trans;
 	double			inv_det;
-	double			trans_x;
-	double			trans_y;
 	int				width;
 	int				height;
 	int				screen_x;
