@@ -27,8 +27,7 @@ static t_ray	ray_web_target(t_game *g, t_tex web_target, float scale)
 	// 3. Ajuste vertical (por encima de la mano)
 	ray.line_height = -ray.d_end.y * (1.0 + g->spider.y * 0.5);
 	// 4. Posición: centrado respecto a la mano
-	ray.d_start.x = ray.d_start.x + (ray.d_end.x / 1.5)
-		- (ray.d_end.x / 2);
+	ray.d_start.x = ray.d_start.x + (ray.d_end.x / 1.5) - (ray.d_end.x / 2);
 	ray.d_start.y = ray.d_start.y + ray.line_height;
 	return (ray);
 }
@@ -51,8 +50,8 @@ static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 			ray.src.x = pos.x / scale;
 			ray.src.y = pos.y / scale;
 			ray.color = *((unsigned int *)(web_target->addr + (ray.src.y
-							* web_target->line_len + ray.src.x * (web_target->bpp
-								/ 8))));
+							* web_target->line_len + ray.src.x
+							* (web_target->bpp / 8))));
 			if ((ray.color & 0x00FFFFFF) != 0)
 				put_pixel(g, ray.d_start.x + pos.x, ray.d_start.y + pos.y,
 					ray.color);

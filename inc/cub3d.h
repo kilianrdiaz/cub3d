@@ -179,6 +179,7 @@ typedef struct s_game
 typedef struct s_ray
 {
 	double			view;
+	t_coords		coords;
 	t_coords		left;
 	t_coords		right;
 	double			row_distance;
@@ -187,15 +188,11 @@ typedef struct s_ray
 	double			delta_dist_x;
 	double			delta_dist_y;
 	double			perp_wall_dist;
-	double			step_x;
-	double			step_y;
-	int				hit;
-	int				side;
 	int				line_height;
 	t_pos			d_start;
 	t_pos			d_end;
 	t_pos			src;
-	int				color;
+	unsigned int	color;
 }					t_ray;
 
 // utils
@@ -205,7 +202,6 @@ int					ft_isspace(int c);
 int					check_loaded_textures(t_game *game);
 int					clamp_int(int v, int a, int b);
 void				put_pixel(t_game *g, int x, int y, int color);
-t_tex				get_texture_wall(t_game g, t_ray ray);
 void				clean_screen(t_game *g);
 void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
 
@@ -234,8 +230,8 @@ void				load_font(t_game *g, t_font *f, char *path);
 int					show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex *tex);
 t_ray				ray_map(t_game *g, int x);
-void				calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex);
-t_tex				get_texture_wall(t_game g, t_ray ray);
+void				calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex, t_pos dist);
+t_tex				get_texture_wall(t_game g, t_ray ray, t_pos dist);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
 void				display_score_panel(t_game *g, t_tex *score_panel,
