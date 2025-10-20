@@ -212,22 +212,22 @@ char				**get_scores(void);
 void				update_scores(char **scores, int position);
 t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
 int					get_position(t_game *g, char **scores);
+t_ray				ray_map(t_game g, int x);
+t_tex				get_texture_wall(t_game g, t_ray ray, int dist);
+void				print_map(t_game *g);
+t_sprite			**get_sprites(t_game *g);
 
 // rendering
 
 int					render(t_game *g);
 void				update_bombs(t_game *g);
 void				draw_hand(t_game *g, int x);
-void				print_map(t_game *g);
 void				render_sprites(t_game *g);
-t_sprite			**get_sprites(t_game *g);
 void				render_text(t_game *g, char *str, t_pos pos);
 void				load_font(t_game *g, t_font *f, char *path);
 int					show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex *tex);
-t_ray				ray_map(t_game g, int x);
 void				calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex, int dist);
-t_tex				get_texture_wall(t_game g, t_ray ray, int dist);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
 void				display_score_panel(t_game *g, t_tex *score_panel,

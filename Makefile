@@ -21,6 +21,7 @@ CFLAGS = -Wall -Werror -Wextra -I inc -I $(LIB_DIR)
 MLX     = -lmlx -lXext -lX11 -lm
 SRCS    = src/utils/parsing.c  \
 		  src/utils/render.c    \
+		  src/utils/ray_map.c \
 		  src/utils/score.c   \
 		  src/parsing/map_textures.c   \
 		  src/parsing/map.c   \
@@ -28,7 +29,6 @@ SRCS    = src/utils/parsing.c  \
 		  src/parsing/file.c   \
 		  src/render/player.c \
 		  src/render/map.c \
-		  src/render/ray_map.c \
 		  src/render/sprite.c \
 		  src/render/font.c \
 		  src/render/render.c \
