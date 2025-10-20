@@ -31,14 +31,14 @@ static void	check_limits(t_game *g, t_sprite *sprites, int num_sprites)
 			max.x = sprites[i].x;
 	max.y = g->font.char_h * g->font.scale / num_sprites;
 	max.x += g->font.char_w * g->font.scale;
-	if (g->spider.x < min)
-		g->spider.x = min;
-	if (g->spider.x > max.x)
-		g->spider.x = max.x;
-	if (g->spider.y < 0)
-		g->spider.y = 0;
-	if (g->spider.y > max.y)
-		g->spider.y = max.y;
+	if (g->spider.pos.x < min)
+		g->spider.pos.x = min;
+	if (g->spider.pos.x > max.x)
+		g->spider.pos.x = max.x;
+	if (g->spider.pos.y < 0)
+		g->spider.pos.y = 0;
+	if (g->spider.pos.y > max.y)
+		g->spider.pos.y = max.y;
 }
 
 int	mark_letter(t_game *g, t_sprite *sprites, t_ray ray)
@@ -69,13 +69,13 @@ int	mark_letter(t_game *g, t_sprite *sprites, t_ray ray)
 static void	update_web_target_position(t_game *g, t_sprite *sprites)
 {
 	if (g->keys.a)
-		g->spider.x -= MOVE_MARK;
+		g->spider.pos.x -= MOVE_MARK;
 	if (g->keys.d)
-		g->spider.x += MOVE_MARK;
+		g->spider.pos.x += MOVE_MARK;
 	if (g->keys.w)
-		g->spider.y += MOVE_SPEED;
+		g->spider.pos.y += MOVE_SPEED;
 	if (g->keys.s)
-		g->spider.y -= MOVE_SPEED;
+		g->spider.pos.y -= MOVE_SPEED;
 	if (g->keys.space)
 		g->spider.state = ATTACKING;
 	else if (g->spider.state == ATTACKING)

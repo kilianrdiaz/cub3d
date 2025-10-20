@@ -27,15 +27,16 @@ static void	move_player(t_game *g, double dir)
 	double	new_y;
 	double	distance;
 
-	new_x = g->spider.x + g->spider.dir_x * dir * MOVE_SPEED;
-	new_y = g->spider.y + g->spider.dir_y * dir * MOVE_SPEED;
-	distance = sqrt(pow(new_x - g->spider.x, 2) + pow(new_y - g->spider.y, 2));
+	new_x = g->spider.pos.x + g->spider.dir.x * dir * MOVE_SPEED;
+	new_y = g->spider.pos.y + g->spider.dir.y * dir * MOVE_SPEED;
+	distance = sqrt(pow(new_x - g->spider.pos.x, 2) + pow(new_y
+				- g->spider.pos.y, 2));
 	if (is_walkable((int)new_x, (int)new_y, g->map))
 	{
-		g->map[(int)g->spider.y][(int)g->spider.x] = '0';
-		g->spider.x = new_x;
-		g->spider.y = new_y;
-		g->map[(int)g->spider.y][(int)g->spider.x] = 'P';
+		g->map[(int)g->spider.pos.y][(int)g->spider.pos.x] = '0';
+		g->spider.pos.x = new_x;
+		g->spider.pos.y = new_y;
+		g->map[(int)g->spider.pos.y][(int)g->spider.pos.x] = 'P';
 	}
 	g->spider.move_accum += distance;
 	if (g->spider.move_accum >= 0.40)
@@ -54,12 +55,12 @@ static void	rotate_spidy(t_spidy *spidy, double angle)
 	double	olddir_x;
 	double	oldplane_x;
 
-	olddir_x = spidy->dir_x;
-	oldplane_x = spidy->plane_x;
-	spidy->dir_x = spidy->dir_x * cos(angle) - spidy->dir_y * sin(angle);
-	spidy->dir_y = olddir_x * sin(angle) + spidy->dir_y * cos(angle);
-	spidy->plane_x = spidy->plane_x * cos(angle) - spidy->plane_y * sin(angle);
-	spidy->plane_y = oldplane_x * sin(angle) + spidy->plane_y * cos(angle);
+	olddir_x = spidy->dir.x;
+	oldplane_x = spidy->plane.x;
+	spidy->dir.x = spidy->dir.x * cos(angle) - spidy->dir.y * sin(angle);
+	spidy->dir.y = olddir_x * sin(angle) + spidy->dir.y * cos(angle);
+	spidy->plane.x = spidy->plane.x * cos(angle) - spidy->plane.y * sin(angle);
+	spidy->plane.y = oldplane_x * sin(angle) + spidy->plane.y * cos(angle);
 }
 
 void	update_player_position(t_game *g)

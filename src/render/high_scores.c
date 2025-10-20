@@ -19,13 +19,13 @@ static t_ray	ray_web_target(t_game *g, t_tex web_target, float scale)
 	ft_bzero(&ray, sizeof(t_ray));
 	ray.d_end.x = g->spider.hand[ACTIVE].width * SCALE_SPRITE;
 	ray.d_end.y = g->spider.hand[ACTIVE].height * SCALE_SPRITE;
-	ray.d_start.x = g->spider.x - ray.d_end.x / 2;
+	ray.d_start.x = g->spider.pos.x - ray.d_end.x / 2;
 	ray.d_start.y = HEIGHT - ray.d_end.y;
 	// 2. Calculamos la escala según el tamaño de las letras
 	ray.d_end.x = web_target.width * scale;
 	ray.d_end.y = web_target.height * scale;
 	// 3. Ajuste vertical (por encima de la mano)
-	ray.line_height = -ray.d_end.y * (1.0 + g->spider.y * 0.5);
+	ray.line_height = -ray.d_end.y * (1.0 + g->spider.pos.y * 0.5);
 	// 4. Posición: centrado respecto a la mano
 	ray.d_start.x = ray.d_start.x + (ray.d_end.x / 1.5) - (ray.d_end.x / 2);
 	ray.d_start.y = ray.d_start.y + ray.line_height;
@@ -73,7 +73,7 @@ static char	*register_score(t_game *g, t_tex *score_panel)
 	render_text(g, "ENTER NAME", (t_pos){(WIDTH - score_panel->width) / 2,
 		(HEIGHT - score_panel->height) / 2});
 	alphabet = print_alphabet(g, *score_panel);
-	draw_hand(g, g->spider.x);
+	draw_hand(g, g->spider.pos.x);
 	ray = draw_web_target(g, &target);
 	result = set_name(g, alphabet, ray);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);

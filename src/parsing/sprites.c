@@ -15,17 +15,17 @@
 static int	set_direction(t_game *g, char c)
 {
 	if (c == 'N' || c == 'P')
-		return (g->spider.dir_x = 0, g->spider.dir_y = -1,
-			g->spider.plane_x = 0.66, g->spider.plane_y = 0, 0);
+		return (g->spider.dir.x = 0, g->spider.dir.y = -1,
+			g->spider.plane.x = 0.66, g->spider.plane.y = 0, 0);
 	if (c == 'S')
-		return (g->spider.dir_x = 0, g->spider.dir_y = 1, g->spider.plane_x
-			= -0.66, g->spider.plane_y = 0, 0);
+		return (g->spider.dir.x = 0, g->spider.dir.y = 1, g->spider.plane.x
+			= -0.66, g->spider.plane.y = 0, 0);
 	if (c == 'E')
-		return (g->spider.dir_x = 1, g->spider.dir_y = 0, g->spider.plane_x = 0,
-			g->spider.plane_y = 0.66, 0);
+		return (g->spider.dir.x = 1, g->spider.dir.y = 0, g->spider.plane.x = 0,
+			g->spider.plane.y = 0.66, 0);
 	if (c == 'W')
-		return (g->spider.dir_x = -1, g->spider.dir_y = 0,
-			g->spider.plane_x = 0, g->spider.plane_y = -0.66, 0);
+		return (g->spider.dir.x = -1, g->spider.dir.y = 0,
+			g->spider.plane.x = 0, g->spider.plane.y = -0.66, 0);
 	return (-1);
 }
 
@@ -44,8 +44,8 @@ void	create_spiderman(t_game *g)
 			if (c == 'N' || c == 'S' || c == 'E' || c == 'W' || c == 'P')
 			{
 				ft_bzero(&g->spider, sizeof(t_spidy));
-				g->spider.x = p.x + 0.5;
-				g->spider.y = p.y + 0.5;
+				g->spider.pos.x = p.x + 0.5;
+				g->spider.pos.y = p.y + 0.5;
 				set_direction(g, c);
 				return ;
 			}

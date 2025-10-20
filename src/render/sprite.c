@@ -92,12 +92,12 @@ static void	position_sprite(t_game *g, t_sprite sp)
 	tex = g->bomb_tex;
 	if (sp.type != BOMB)
 		tex = g->lizard_tex;
-	sp.x = sp.x + 0.5 - g->spider.x;
-	sp.y = sp.y + 0.5 - g->spider.y;
-	sp.inv_det = 1.0 / (g->spider.plane_x * g->spider.dir_y - g->spider.dir_x
-			* g->spider.plane_y);
-	sp.trans_x = sp.inv_det * (g->spider.dir_y * sp.x - g->spider.dir_x * sp.y);
-	sp.trans_y = sp.inv_det * (-g->spider.plane_y * sp.x + g->spider.plane_x
+	sp.x = sp.x + 0.5 - g->spider.pos.x;
+	sp.y = sp.y + 0.5 - g->spider.pos.y;
+	sp.inv_det = 1.0 / (g->spider.plane.x * g->spider.dir.y - g->spider.dir.x
+			* g->spider.plane.y);
+	sp.trans_x = sp.inv_det * (g->spider.dir.y * sp.x - g->spider.dir.x * sp.y);
+	sp.trans_y = sp.inv_det * (-g->spider.plane.y * sp.x + g->spider.plane.x
 			* sp.y);
 	if (sp.trans_y > 0.0)
 	{
@@ -128,8 +128,8 @@ void	render_sprites(t_game *g)
 	while (sprites[++count.y])
 	{
 		order[count.y].index = count.y;
-		order[count.y].dist = pow(g->spider.x - sprites[count.y]->x, 2)
-			+ pow(g->spider.y - sprites[count.y]->y, 2);
+		order[count.y].dist = pow(g->spider.pos.x - sprites[count.y]->x, 2)
+			+ pow(g->spider.pos.y - sprites[count.y]->y, 2);
 		recalc_sprite_scale(g, sprites[count.y], sqrt(order[count.y].dist));
 	}
 	sort_sprites(order, count.x);

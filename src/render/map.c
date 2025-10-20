@@ -80,10 +80,10 @@ static void	calculate_distance_to_wall(t_game g, t_ray *ray, int *side)
 		}
 	}
 	// 4. Cálculo de la distancia perpendicular a la pared
-	ray->row_distance = (ray->src.y - g.spider.y + (1 - ray->coords.y) / 2.0)
-		/ ray->left.y;
+	ray->row_distance = (ray->src.y - g.spider.pos.y + (1 - ray->coords.y)
+			/ 2.0) / ray->left.y;
 	if (!(*side))
-		ray->row_distance = (ray->src.x - g.spider.x + (1 - ray->coords.x)
+		ray->row_distance = (ray->src.x - g.spider.pos.x + (1 - ray->coords.x)
 				/ 2.0) / ray->left.x;
 	if (ray->row_distance <= 0.0)
 		ray->row_distance = 1e-6; // Evita divisiones por 0
@@ -103,12 +103,12 @@ void	render_wall(t_game *g)
 		if (ray.left.x < 0)
 		{
 			ray.coords.x = -1;
-			ray.side_dist_x = (g->spider.x - ray.src.x) * ray.delta_dist_x;
+			ray.side_dist_x = (g->spider.pos.x - ray.src.x) * ray.delta_dist_x;
 		}
 		if (ray.left.y < 0)
 		{
 			ray.coords.y = -1;
-			ray.side_dist_y = (g->spider.y - ray.src.y) * ray.delta_dist_y;
+			ray.side_dist_y = (g->spider.pos.y - ray.src.y) * ray.delta_dist_y;
 		}
 		calculate_distance_to_wall(*g, &ray, &side);
 		tex = get_texture_wall(*g, ray, side);
@@ -127,17 +127,17 @@ void	render_floor_and_ceiling(t_game *g)
 	y = HEIGHT / 2;
 	while (++y < HEIGHT)
 	{
-		ray.left.x = g->spider.dir_x - g->spider.plane_x;
-		ray.left.y = g->spider.dir_y - g->spider.plane_y;
-		ray.right.x = g->spider.dir_x + g->spider.plane_x;
-		ray.right.y = g->spider.dir_y + g->spider.plane_y;
+		ray.left.x = g->spider.dir.x - g->spider.plane.x;
+		ray.left.y = g->spider.dir.y - g->spider.plane.y;
+		ray.right.x = g->spider.dir.x + g->spider.plane.x;
+		ray.right.y = g->spider.dir.y + g->spider.plane.y;
 		p = y - HEIGHT / 2;
 		if (p == 0)
 			continue ;
 		ray.view = 0.5 * HEIGHT;
 		ray.row_distance = ray.view / (double)p;
-		ray.side_dist_x = g->spider.x + ray.row_distance * ray.left.x;
-		ray.side_dist_y = g->spider.y + ray.row_distance * ray.left.y;
+		ray.side_dist_x = g->spider.pos.x + ray.row_distance * ray.left.x;
+		ray.side_dist_y = g->spider.pos.y + ray.row_distance * ray.left.y;
 		ray.coords.x = ray.row_distance * (ray.right.x - ray.left.x)
 			/ (double)GAME_WIDTH;
 		ray.coords.y = ray.row_distance * (ray.right.y - ray.left.y)

@@ -83,7 +83,8 @@ void	recalc_sprite_scale(t_game *g, t_sprite *sp, double dist)
 	max_dist = 8;
 	if (sp->type == LIZARD)
 		max_dist = 10;
-	dist = sqrt(pow(g->spider.x - sp->x, 2) + pow(g->spider.y - sp->y, 2));
+	dist = sqrt(pow(g->spider.pos.x - sp->x, 2) + pow(g->spider.pos.y - sp->y,
+				2));
 	if (dist > max_dist)
 	{
 		sp->scale += (0.0 - sp->scale) * LERP_SPEED;

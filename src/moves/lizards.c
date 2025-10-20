@@ -70,28 +70,26 @@ static double	get_move_speed(double diff)
 
 static void	chase_lizard(t_game *g, t_sprite *l, t_spidy *p)
 {
-	double	diff_x;
-	double	diff_y;
-	double	dx;
-	double	dy;
+	t_coords	diff;
+	t_coords	direction;
 
-	diff_x = p->x - l->x;
-	diff_y = p->y - l->y;
-	dx = 0;
-	dy = 0;
-	if (fabs(diff_x) > fabs(diff_y))
-		dx = get_move_speed(diff_x);
+	diff.x = p->pos.x - l->x;
+	diff.y = p->pos.y - l->y;
+	direction.x = 0;
+	direction.y = 0;
+	if (fabs(diff.x) > fabs(diff.y))
+		direction.x = get_move_speed(diff.x);
 	else
-		dy = get_move_speed(diff_y);
-	if (move_lizard_to(g, l, l->x + dx, l->y + dy))
+		direction.y = get_move_speed(diff.y);
+	if (move_lizard_to(g, l, l->x + direction.x, l->y + direction.y))
 		return ;
-	dx = 0;
-	dy = 0;
-	if (fabs(diff_x) > fabs(diff_y))
-		dy = get_move_speed(diff_y);
+	direction.x = 0;
+	direction.y = 0;
+	if (fabs(diff.x) > fabs(diff.y))
+		direction.y = get_move_speed(diff.y);
 	else
-		dx = get_move_speed(diff_x);
-	move_lizard_to(g, l, l->x + dx, l->y + dy);
+		direction.x = get_move_speed(diff.x);
+	move_lizard_to(g, l, l->x + direction.x, l->y + direction.y);
 }
 
 void	move_lizards(t_game *g)
@@ -113,7 +111,7 @@ void	move_lizards(t_game *g)
 		else if (l->state == MOVING || (l->state == ATTACKED
 				&& g->timer >= l->delay))
 			l->state = ACTIVE;
-		dist = (fabs(l->x - g->spider.x) + fabs(l->y - g->spider.y));
+		dist = (fabs(l->x - g->spider.pos.x) + fabs(l->y - g->spider.pos.y));
 		if (dist <= 2.1)
 			l->state = ATTACKING;
 		else if (dist <= DETECT_RADIUS)

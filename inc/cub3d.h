@@ -140,12 +140,9 @@ typedef struct s_sprite
 
 typedef struct s_spidy
 {
-	double			x;
-	double			y;
-	double			dir_x;
-	double			dir_y;
-	double			plane_x;
-	double			plane_y;
+	t_coords		pos;
+	t_coords		dir;
+	t_coords		plane;
 	double			move_accum;
 	t_tex			*hand;
 	t_state			state;

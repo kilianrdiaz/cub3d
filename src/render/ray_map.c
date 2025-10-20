@@ -37,9 +37,9 @@ void	calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex, int side)
 		ray->d_start.y = 0;
 	if (ray->d_end.y >= HEIGHT)
 		ray->d_end.y = HEIGHT - 1;
-	ray->view = g.spider.x + ray->row_distance * ray->left.x;
+	ray->view = g.spider.pos.x + ray->row_distance * ray->left.x;
 	if (!side)
-		ray->view = g.spider.y + ray->row_distance * ray->left.y;
+		ray->view = g.spider.pos.y + ray->row_distance * ray->left.y;
 	ray->view -= floor(ray->view);
 	ray->src.x = (int)(ray->view * tex.width);
 	ray->src.x = clamp_int(ray->src.x, 0, tex.width - 1);
@@ -68,11 +68,11 @@ t_ray	ray_map(t_game g, int x)
 
 	ft_bzero(&ray, sizeof(t_ray));
 	ray.view = 2 * x / (double)GAME_WIDTH - 1;
-	ray.left.x = g.spider.dir_x + g.spider.plane_x * ray.view;
-	ray.left.y = g.spider.dir_y + g.spider.plane_y * ray.view;
+	ray.left.x = g.spider.dir.x + g.spider.plane.x * ray.view;
+	ray.left.y = g.spider.dir.y + g.spider.plane.y * ray.view;
 	// Posición inicial en el mapa (celda del jugador)
-	ray.src.x = (int)g.spider.x;
-	ray.src.y = (int)g.spider.y;
+	ray.src.x = (int)g.spider.pos.x;
+	ray.src.y = (int)g.spider.pos.y;
 	// Distancias que recorrerá el rayo para cruzar una celda en X e Y
 	ray.delta_dist_x = fabs(1.0 / ray.left.x);
 	if (ray.left.x == 0.0)
@@ -82,8 +82,8 @@ t_ray	ray_map(t_game g, int x)
 		ray.delta_dist_y = 1e30;
 	ray.row_distance = 0.0;
 	ray.coords.x = 1;
-	ray.side_dist_x = (ray.src.x + 1.0 - g.spider.x) * ray.delta_dist_x;
+	ray.side_dist_x = (ray.src.x + 1.0 - g.spider.pos.x) * ray.delta_dist_x;
 	ray.coords.y = 1;
-	ray.side_dist_y = (ray.src.y + 1.0 - g.spider.y) * ray.delta_dist_y;
+	ray.side_dist_y = (ray.src.y + 1.0 - g.spider.pos.y) * ray.delta_dist_y;
 	return (ray);
 }
