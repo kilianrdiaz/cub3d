@@ -229,8 +229,8 @@ void				load_font(t_game *g, t_font *f, char *path);
 int					show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex *tex);
 t_ray				ray_map(t_game *g, int x);
-void				calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex, t_pos dist);
-t_tex				get_texture_wall(t_game g, t_ray ray, t_pos dist);
+void				calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int dist);
+t_tex				get_texture_wall(t_game g, t_ray ray, int dist);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
 void				display_score_panel(t_game *g, t_tex *score_panel,

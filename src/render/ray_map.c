@@ -12,9 +12,9 @@
 
 #include "../../inc/cub3d.h"
 
-t_tex	get_texture_wall(t_game g, t_ray ray, t_pos dist)
+t_tex	get_texture_wall(t_game g, t_ray ray, int side)
 {
-	if (dist.x == 0)
+	if (!side)
 	{
 		if (ray.left.x > 0)
 			return (g.map_text[WE]);
@@ -28,7 +28,7 @@ t_tex	get_texture_wall(t_game g, t_ray ray, t_pos dist)
 	}
 }
 
-void	calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex, t_pos dist)
+void	calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int side)
 {
 	ray->line_height = (int)(HEIGHT / ray->row_distance);
 	ray->d_start.y = -ray->line_height / 2 + HEIGHT / 2;
@@ -38,13 +38,12 @@ void	calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex, t_pos dist)
 	if (ray->d_end.y >= HEIGHT)
 		ray->d_end.y = HEIGHT - 1;
 	ray->view = g->spider.x + ray->row_distance * ray->left.x;
-	if (dist.x == 0)
+	if (!side)
 		ray->view = g->spider.y + ray->row_distance * ray->left.y;
 	ray->view -= floor(ray->view);
 	ray->src.x = (int)(ray->view * tex.width);
 	ray->src.x = clamp_int(ray->src.x, 0, tex.width - 1);
-	if ((dist.x == 0 && ray->left.x > 0) || (dist.x == 1
-			&& ray->left.y < 0))
+	if ((!side == 0 && ray->left.x > 0) || (side && ray->left.y < 0))
 		ray->src.x = tex.width - ray->src.x - 1;
 }
 
