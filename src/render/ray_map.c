@@ -30,16 +30,16 @@ t_tex	get_texture_wall(t_game g, t_ray ray, t_pos dist)
 
 void	calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex, t_pos dist)
 {
-	ray->line_height = (int)(HEIGHT / ray->perp_wall_dist);
+	ray->line_height = (int)(HEIGHT / ray->row_distance);
 	ray->d_start.y = -ray->line_height / 2 + HEIGHT / 2;
 	ray->d_end.y = ray->line_height / 2 + HEIGHT / 2;
 	if (ray->d_start.y < 0)
 		ray->d_start.y = 0;
 	if (ray->d_end.y >= HEIGHT)
 		ray->d_end.y = HEIGHT - 1;
-	ray->view = g->spider.x + ray->perp_wall_dist * ray->left.x;
+	ray->view = g->spider.x + ray->row_distance * ray->left.x;
 	if (dist.x == 0)
-		ray->view = g->spider.y + ray->perp_wall_dist * ray->left.y;
+		ray->view = g->spider.y + ray->row_distance * ray->left.y;
 	ray->view -= floor(ray->view);
 	ray->src.x = (int)(ray->view * tex.width);
 	ray->src.x = clamp_int(ray->src.x, 0, tex.width - 1);
@@ -81,7 +81,7 @@ t_ray	ray_map(t_game *g, int x)
 	ray.delta_dist_y = fabs(1.0 / ray.left.y);
 	if (ray.left.y == 0.0)
 		ray.delta_dist_y = 1e30;
-	ray.perp_wall_dist = 0.0;
+	ray.row_distance = 0.0;
 	ray.coords.x = 1;
 	ray.side_dist_x = (ray.src.x + 1.0 - g->spider.x) * ray.delta_dist_x;
 	ray.coords.y = 1;

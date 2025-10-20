@@ -83,13 +83,13 @@ static void	calculate_distance_to_wall(t_game g, t_ray *ray, t_pos *dist)
 			dist->y = 1;
 	}
 	// 4. Cálculo de la distancia perpendicular a la pared
-	ray->perp_wall_dist = (ray->src.y - g.spider.y + (1 - ray->coords.y) / 2.0)
+	ray->row_distance = (ray->src.y - g.spider.y + (1 - ray->coords.y) / 2.0)
 		/ ray->left.y;
 	if (dist->x == 0)
-		ray->perp_wall_dist = (ray->src.x - g.spider.x + (1 - ray->coords.x)
+		ray->row_distance = (ray->src.x - g.spider.x + (1 - ray->coords.x)
 				/ 2.0) / ray->left.x;
-	if (ray->perp_wall_dist <= 0.0)
-		ray->perp_wall_dist = 1e-6; // Evita divisiones por 0
+	if (ray->row_distance <= 0.0)
+		ray->row_distance = 1e-6; // Evita divisiones por 0
 }
 
 void	render_wall(t_game *g)
@@ -117,7 +117,7 @@ void	render_wall(t_game *g)
 		tex = get_texture_wall(*g, ray, dist);
 		calculate_wall_stripe(g, &ray, tex, dist);
 		draw_wall_stripe(g, &ray, tex, x);
-		g->zbuffer[x] = ray.perp_wall_dist; // Guardamos la distancia del rayo
+		g->zbuffer[x] = ray.row_distance; // Guardamos la distancia del rayo
 	}
 }
 
