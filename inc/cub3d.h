@@ -33,8 +33,8 @@
 
 typedef struct s_coords
 {
-	double	x;
-	double	y;
+	double			x;
+	double			y;
 }					t_coords;
 
 typedef enum e_state
@@ -177,11 +177,9 @@ typedef struct s_ray
 	t_coords		coords;
 	t_coords		left;
 	t_coords		right;
+	t_coords		side_dist;
+	t_coords		delta_dist;
 	double			row_distance;
-	double			side_dist_x;
-	double			side_dist_y;
-	double			delta_dist_x;
-	double			delta_dist_y;
 	int				line_height;
 	t_pos			d_start;
 	t_pos			d_end;
@@ -198,6 +196,17 @@ int					clamp_int(int v, int a, int b);
 void				put_pixel(t_game *g, int x, int y, int color);
 void				clean_screen(t_game *g);
 void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
+t_tex				get_texture_wall(t_game g, t_ray ray, int dist);
+t_sprite			**get_sprites(t_game *g);
+void				calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex,
+						int dist);
+void				calculate_distance_to_wall(t_game g, t_ray *ray, int *side);
+t_ray				ray_map(t_game g, int x);
+char				**get_scores(void);
+int					get_position(t_game *g, char **scores);
+t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
+void				update_scores(char **scores, int position);
+void				print_map(t_game *g);
 
 // parsing
 
@@ -206,14 +215,6 @@ void				load_map_textures(t_game *g, char **content);
 char				**get_map(char **content);
 void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
-char				**get_scores(void);
-void				update_scores(char **scores, int position);
-t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
-int					get_position(t_game *g, char **scores);
-t_ray				ray_map(t_game g, int x);
-t_tex				get_texture_wall(t_game g, t_ray ray, int dist);
-void				print_map(t_game *g);
-t_sprite			**get_sprites(t_game *g);
 
 // rendering
 
@@ -225,7 +226,6 @@ void				render_text(t_game *g, char *str, t_pos pos);
 void				load_font(t_game *g, t_font *f, char *path);
 int					show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex *tex);
-void				calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex, int dist);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
 void				display_score_panel(t_game *g, t_tex *score_panel,

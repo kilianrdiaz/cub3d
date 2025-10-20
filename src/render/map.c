@@ -20,10 +20,10 @@ static void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 	x = -1;
 	while (++x < GAME_WIDTH)
 	{
-		map.x = (int)ray->side_dist_x;
-		map.y = (int)ray->side_dist_y;
-		ray->src.x = (int)((ray->side_dist_x - map.x) * g->map_text[F].width);
-		ray->src.y = (int)((ray->side_dist_y - map.y) * g->map_text[F].height);
+		map.x = (int)ray->side_dist.x;
+		map.y = (int)ray->side_dist.y;
+		ray->src.x = (int)((ray->side_dist.x - map.x) * g->map_text[F].width);
+		ray->src.y = (int)((ray->side_dist.y - map.y) * g->map_text[F].height);
 		/* clamp por si hay rounding negativo/extraño */
 		ray->src.x = clamp_int(ray->src.x, 0, g->map_text[F].width - 1);
 		ray->src.y = clamp_int(ray->src.y, 0, g->map_text[F].height - 1);
@@ -32,14 +32,14 @@ static void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 					/ 8));
 		put_pixel(g, x, y, ray->color);
 		/* techo espejo */
-		ray->delta_dist_x = clamp_int(ray->src.x, 0, g->map_text[C].width - 1);
-		ray->delta_dist_y = clamp_int(ray->src.y, 0, g->map_text[C].height - 1);
+		ray->delta_dist.x = clamp_int(ray->src.x, 0, g->map_text[C].width - 1);
+		ray->delta_dist.y = clamp_int(ray->src.y, 0, g->map_text[C].height - 1);
 		ray->color = *(unsigned int *)(g->map_text[C].addr
-				+ (int)ray->delta_dist_y * g->map_text[C].line_len
-				+ (int)ray->delta_dist_x * (g->map_text[C].bpp / 8));
+				+ (int)ray->delta_dist.y * g->map_text[C].line_len
+				+ (int)ray->delta_dist.x * (g->map_text[C].bpp / 8));
 		put_pixel(g, x, HEIGHT - y - 1, ray->color);
-		ray->side_dist_x += ray->coords.x;
-		ray->side_dist_y += ray->coords.y;
+		ray->side_dist.x += ray->coords.x;
+		ray->side_dist.y += ray->coords.y;
 	}
 }
 
@@ -61,34 +61,6 @@ static void	draw_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int x)
 	}
 }
 
-static void	calculate_distance_to_wall(t_game g, t_ray *ray, int *side)
-{
-	while (ray->src.x >= 0 && ray->src.y >= 0 && g.map[ray->src.y]
-		&& g.map[ray->src.y][ray->src.x] != '1')
-	{
-		if (ray->side_dist_x < ray->side_dist_y)
-		{
-			ray->side_dist_x += ray->delta_dist_x;
-			ray->src.x += ray->coords.x;
-			*side = 0;
-		}
-		else
-		{
-			ray->side_dist_y += ray->delta_dist_y;
-			ray->src.y += ray->coords.y;
-			*side = 1;
-		}
-	}
-	// 4. Cálculo de la distancia perpendicular a la pared
-	ray->row_distance = (ray->src.y - g.spider.pos.y + (1 - ray->coords.y)
-			/ 2.0) / ray->left.y;
-	if (!(*side))
-		ray->row_distance = (ray->src.x - g.spider.pos.x + (1 - ray->coords.x)
-				/ 2.0) / ray->left.x;
-	if (ray->row_distance <= 0.0)
-		ray->row_distance = 1e-6; // Evita divisiones por 0
-}
-
 void	render_wall(t_game *g)
 {
 	t_ray	ray;
@@ -103,12 +75,12 @@ void	render_wall(t_game *g)
 		if (ray.left.x < 0)
 		{
 			ray.coords.x = -1;
-			ray.side_dist_x = (g->spider.pos.x - ray.src.x) * ray.delta_dist_x;
+			ray.side_dist.x = (g->spider.pos.x - ray.src.x) * ray.delta_dist.x;
 		}
 		if (ray.left.y < 0)
 		{
 			ray.coords.y = -1;
-			ray.side_dist_y = (g->spider.pos.y - ray.src.y) * ray.delta_dist_y;
+			ray.side_dist.y = (g->spider.pos.y - ray.src.y) * ray.delta_dist.y;
 		}
 		calculate_distance_to_wall(*g, &ray, &side);
 		tex = get_texture_wall(*g, ray, side);
@@ -136,8 +108,8 @@ void	render_floor_and_ceiling(t_game *g)
 			continue ;
 		ray.view = 0.5 * HEIGHT;
 		ray.row_distance = ray.view / (double)p;
-		ray.side_dist_x = g->spider.pos.x + ray.row_distance * ray.left.x;
-		ray.side_dist_y = g->spider.pos.y + ray.row_distance * ray.left.y;
+		ray.side_dist.x = g->spider.pos.x + ray.row_distance * ray.left.x;
+		ray.side_dist.y = g->spider.pos.y + ray.row_distance * ray.left.y;
 		ray.coords.x = ray.row_distance * (ray.right.x - ray.left.x)
 			/ (double)GAME_WIDTH;
 		ray.coords.y = ray.row_distance * (ray.right.y - ray.left.y)
