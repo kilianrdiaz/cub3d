@@ -99,7 +99,7 @@ void	render_wall(t_game *g)
 	x = -1;
 	while (++x < GAME_WIDTH)
 	{
-		ray = ray_map(g, x);
+		ray = ray_map(*g, x);
 		if (ray.left.x < 0)
 		{
 			ray.coords.x = -1;
@@ -112,7 +112,7 @@ void	render_wall(t_game *g)
 		}
 		calculate_distance_to_wall(*g, &ray, &side);
 		tex = get_texture_wall(*g, ray, side);
-		calculate_wall_stripe(g, &ray, tex, side);
+		calculate_wall_stripe(*g, &ray, tex, side);
 		draw_wall_stripe(g, &ray, tex, x);
 		g->zbuffer[x] = ray.row_distance; // Guardamos la distancia del rayo
 	}
