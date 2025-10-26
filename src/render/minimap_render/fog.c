@@ -8,58 +8,58 @@
 
 #include "../../../inc/cub3d.h"
 
-extern char **revealed;
-extern int last_w, last_h;
-
-void free_revealed(void)
+void	free_revealed(t_minimap *m)
 {
-	int i = -1;
-	if (!revealed)
-		return;
-	while (++i < last_h)
-		free(revealed[i]);
-	free(revealed);
-	revealed = NULL;
+	int	i;
+
+	if (!m->revealed)
+		return ;
+	i = -1;
+	while (++i < m->height)
+		free(m->revealed[i]);
+	free(m->revealed);
+	m->revealed = NULL;
+	m->width = 0;
+	m->height = 0;
 }
 
-void init_revealed_if_needed(int w, int h)
+void	init_revealed_if_needed(t_minimap *m, int w, int h)
 {
-	int i;
+	int	i;
 
-	if (revealed && w == last_w && h == last_h)
-		return;
-	free_revealed();
-	revealed = malloc(sizeof(char *) * h);
-	if (!revealed)
-		return;
+	if (m->revealed && w == m->width && h == m->height)
+		return ;
+	free_revealed(m);
+	m->revealed = malloc(sizeof(char *) * h);
+	if (!m->revealed)
+		return ;
 	i = -1;
 	while (++i < h)
 	{
-		revealed[i] = malloc(w);
-		if (revealed[i])
-			ft_memset(revealed[i], 0, w);
+		m->revealed[i] = malloc(w);
+		if (!m->revealed[i])
+			break ;
+		ft_memset(m->revealed[i], 0, w);
 	}
-	last_w = w;
-	last_h = h;
+	m->width = w;
+	m->height = h;
 }
 
-void reveal_radius(int cx, int cy, int r, int w, int h)
+void	reveal_radius(t_minimap *m, int cx, int cy, int r)
 {
-	int y, x;
+	int	y;
+	int	x;
 
+	if (!m->revealed)
+		return ;
 	y = fmax(0, cy - r) - 1;
-	while (++y <= fmin(h - 1, cy + r))
+	while (++y <= fmin(m->height - 1, cy + r))
 	{
 		x = fmax(0, cx - r) - 1;
-		while (++x <= fmin(w - 1, cx + r))
+		while (++x <= fmin(m->width - 1, cx + r))
 			if (sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy)) <= r + 0.4)
-				revealed[y][x] = 1;
+				m->revealed[y][x] = 1;
 	}
 }
 
-int is_revealed(int x, int y, int w, int h)
-{
-	if (!revealed || x < 0 || y < 0 || x >= w || y >= h)
-		return (0);
-	return (revealed[y][x]);
-}
+

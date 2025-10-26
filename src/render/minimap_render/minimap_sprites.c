@@ -8,23 +8,36 @@
 
 #include "../../../inc/cub3d.h"
 
-extern int last_w, last_h;
-extern int is_revealed(int x, int y, int w, int h);
-
-void draw_sprites_minimap(t_game *g, t_sprite **arr, int t, int ox, int oy, int color)
+static void	draw_single_sprite(t_game *g, t_minimap *m,
+		t_sprite *sp, t_sprite_info *inf)
 {
-	int i, sx, sy, s;
+	int		s;
+	int		sx;
+	int		sy;
+	int		mx;
+	int		my;
+
+	mx = (int)sp->x;
+	my = (int)sp->y;
+	if (!m->revealed || mx < 0 || my < 0
+		|| mx >= m->width || my >= m->height
+		|| !m->revealed[my][mx])
+		return ;
+	sx = inf->ox + sp->x * inf->t;
+	sy = inf->oy + sp->y * inf->t;
+	s = fmax(2, inf->t / 2);
+	put_rect(g, sx - s / 2, sy - s / 2, s, s, inf->color);
+}
+
+void	draw_sprites_minimap(t_game *g, t_minimap *m,
+		t_sprite **arr, t_sprite_info *inf)
+{
+	int		i;
 
 	i = -1;
 	while (arr && arr[++i])
-	{
-		int mx = (int)arr[i]->x;
-		int my = (int)arr[i]->y;
-		if (!is_revealed(mx, my, last_w, last_h))
-			continue;
-		sx = ox + arr[i]->x * t;
-		sy = oy + arr[i]->y * t;
-		s = fmax(2, t / 2);
-		put_rect(g, sx - s / 2, sy - s / 2, s, s, color);
-	}
+		draw_single_sprite(g, m, arr[i], inf);
 }
+
+
+

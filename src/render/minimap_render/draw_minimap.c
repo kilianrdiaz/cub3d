@@ -8,33 +8,30 @@
 
 #include "../../../inc/cub3d.h"
 
-/* === Bordes y rectángulos === */
-void draw_border(t_game *g, int x, int y, int w, int h, int color)
+void	draw_border(t_game *g, int x, int y, int w, int h, int color)
 {
-	int i;
+	int	i;
 
 	if (w <= 1 || h <= 1)
-		return;
-	i = 0;
-	while (i < w)
+		return ;
+	i = -1;
+	while (++i < w)
 	{
 		put_pixel(g, x + i, y, color);
 		put_pixel(g, x + i, y + h - 1, color);
-		++i;
 	}
-	i = 0;
-	while (i < h)
+	i = -1;
+	while (++i < h)
 	{
 		put_pixel(g, x, y + i, color);
 		put_pixel(g, x + w - 1, y + i, color);
-		++i;
 	}
 }
 
-void put_rect(t_game *g, int x, int y, int w, int h, int c)
+void	put_rect(t_game *g, int x, int y, int w, int h, int c)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = -1;
 	while (++i < h)
@@ -45,36 +42,37 @@ void put_rect(t_game *g, int x, int y, int w, int h, int c)
 	}
 }
 
-/* === Dibujo de tiles === */
-
-extern int is_revealed(int x, int y, int w, int h);
-
-void draw_map_tiles(t_game *g, int tile, int ox, int oy, int map_w, int map_h)
+static void	draw_tile(t_game *g, t_minimap *m, int x, int y, int t, int ox, int oy)
 {
-	int y;
-	int x;
-	int sx;
-	int sy;
+	int	sx;
+	int	sy;
 
-	y = 0;
-	while (g->map[y])
+	sx = ox + x * t;
+	sy = oy + y * t;
+	if (!m->revealed || !m->revealed[y][x])
+		put_rect(g, sx, sy, t, t, COL_UNK_FOG);
+	else if (g->map[y][x] == '1')
 	{
-		x = 0;
-		while (g->map[y][x])
-		{
-			sx = ox + x * tile;
-			sy = oy + y * tile;
-			if (!is_revealed(x, y, map_w, map_h))
-				put_rect(g, sx, sy, tile, tile, COL_UNK_FOG);
-			else if (g->map[y][x] == '1')
-			{
-				put_rect(g, sx, sy, tile, tile, COL_WALL);
-				draw_border(g, sx, sy, tile, tile, COL_WALL_BORDER);
-			}
-			else
-				put_rect(g, sx, sy, tile, tile, 0x000000);
-			++x;
-		}
-		++y;
+		put_rect(g, sx, sy, t, t, COL_WALL);
+		draw_border(g, sx, sy, t, t, COL_WALL_BORDER);
+	}
+	else
+		put_rect(g, sx, sy, t, t, 0x000000);
+}
+
+void	draw_map_tiles(t_game *g, t_minimap *m, int t, int ox, int oy)
+{
+	int	y;
+	int	x;
+
+	y = -1;
+	while (g->map[++y])
+	{
+		x = -1;
+		while (g->map[y][++x])
+			draw_tile(g, m, x, y, t, ox, oy);
 	}
 }
+
+
+

@@ -8,69 +8,82 @@
 
 #include "../../../inc/cub3d.h"
 
-static void draw_filled_triangle(t_game *g,
-	int x0, int y0, int x1, int y1, int x2, int y2, int color)
+static void	fill_triangle_line(t_game *g, int y, double xhit[2], int color)
 {
-	int y, xs, xe, xi;
-	double  t;
-	int ys[3] = {y0, y1, y2};
-	int xs_arr[3] = {x0, x1, x2};
-	int miny = fmin(y0, fmin(y1, y2));
-	int maxy = fmax(y0, fmax(y1, y2));
+	int	xs;
+	int	xe;
+	int	xi;
 
-	y = miny - 1;
-	while (++y <= maxy)
-	{
-		int hits = 0;
-		double xhit[2];
-		for (int i = 0; i < 3; ++i)
-		{
-			int j = (i + 1) % 3;
-			if ((ys[i] <= y && y < ys[j]) || (ys[j] <= y && y < ys[i]))
-			{
-				t = (double)(y - ys[i]) / (ys[j] - ys[i]);
-				xhit[hits++] = xs_arr[i] + t * (xs_arr[j] - xs_arr[i]);
-				if (hits == 2) break;
-			}
-		}
-		if (hits == 2)
-		{
-			xs = (int)floor(fmin(xhit[0], xhit[1]));
-			xe = (int)ceil(fmax(xhit[0], xhit[1]));
-			xi = xs - 1;
-			while (++xi <= xe)
-				if (xi >= 0 && xi < WIDTH && y >= 0 && y < HEIGHT)
-					put_pixel(g, xi, y, color);
-		}
-	}
+	xs = (int)floor(fmin(xhit[0], xhit[1]));
+	xe = (int)ceil(fmax(xhit[0], xhit[1]));
+	xi = xs - 1;
+	while (++xi <= xe)
+		if (xi >= 0 && xi < WIDTH && y >= 0 && y < HEIGHT)
+			put_pixel(g, xi, y, color);
 }
 
-void draw_player_arrow(t_game *g, int tile, int ox, int oy)
+static void	process_triangle_line(t_game *g, t_triangle *t, int y)
 {
-	double ang, ca, sa;
-	int size, p[6], cx, cy;
-	double offset_x, offset_y;
+	int		i;
+	int		hits;
+	double	ratio;
+	double	xhit[2];
+
+	hits = 0;
+	i = -1;
+	while (++i < 3)
+	{
+		int	j;
+
+		j = (i + 1) % 3;
+		if ((t->y[i] <= y && y < t->y[j])
+			|| (t->y[j] <= y && y < t->y[i]))
+		{
+			ratio = (double)(y - t->y[i]) / (t->y[j] - t->y[i]);
+			xhit[hits++] = t->x[i] + ratio * (t->x[j] - t->x[i]);
+			if (hits == 2)
+				break ;
+		}
+	}
+	if (hits == 2)
+		fill_triangle_line(g, y, xhit, t->color);
+}
+
+static void	draw_filled_triangle(t_game *g, t_triangle *t)
+{
+	int	miny;
+	int	maxy;
+	int	y;
+
+	miny = fmin(t->y[0], fmin(t->y[1], t->y[2]));
+	maxy = fmax(t->y[0], fmax(t->y[1], t->y[2]));
+	y = miny - 1;
+	while (++y <= maxy)
+		process_triangle_line(g, t, y);
+}
+
+void	draw_player_arrow(t_game *g, int tile, int ox, int oy)
+{
+	double	ang;
+	double	ca;
+	double	sa;
+	int		cx;
+	int		cy;
+	t_triangle	t;
 
 	ang = atan2(g->spider.dir_y, g->spider.dir_x);
 	ca = cos(ang);
 	sa = sin(ang);
-	size = fmax(3, tile);
-
 	cx = ox + (int)(g->spider.x * tile);
 	cy = oy + (int)(g->spider.y * tile);
-
-	/* centrado */
-	offset_x = -ca * (size / 2.0);
-	offset_y = -sa * (size / 2.0);
-	cx += (int)round(offset_x);
-	cy += (int)round(offset_y);
-
-	p[0] = cx + (int)round(ca * size);
-	p[1] = cy + (int)round(sa * size);
-	p[2] = cx - (int)round(sa * (size / 2));
-	p[3] = cy + (int)round(ca * (size / 2));
-	p[4] = cx + (int)round(sa * (size / 2));
-	p[5] = cy - (int)round(ca * (size / 2));
-
-	draw_filled_triangle(g, p[0], p[1], p[2], p[3], p[4], p[5], COL_PLAYER);
+	cx += (int)round(-ca * (tile / 2.0));
+	cy += (int)round(-sa * (tile / 2.0));
+	t.x[0] = cx + (int)round(ca * tile);
+	t.y[0] = cy + (int)round(sa * tile);
+	t.x[1] = cx - (int)round(sa * (tile / 2));
+	t.y[1] = cy + (int)round(ca * (tile / 2));
+	t.x[2] = cx + (int)round(sa * (tile / 2));
+	t.y[2] = cy - (int)round(ca * (tile / 2));
+	t.color = COL_PLAYER;
+	draw_filled_triangle(g, &t);
 }
