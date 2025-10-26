@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/10/26 18:03:35 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/10/26 18:33:42 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@
 # define COL_BOMB           0xFFB84D
 # define COL_LIZARD         0x5AFF7A
 
-# define INIT_REVEAL_RADIUS 6
-# define REVEAL_STEP_RADIUS 3
-# define MINIMAP_SIZE_LIMIT 250
+# define INIT_REVEAL_RADIUS 3
+# define REVEAL_STEP_RADIUS 1
+# define MINIMAP_SIZE_LIMIT 500
 # define MINIMAP_OFFSET_X   (WIDTH - MINIMAP_SIZE_LIMIT - 20)
 # define MINIMAP_OFFSET_Y   250
 

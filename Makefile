@@ -6,7 +6,7 @@
 #    By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/15 14:52:33 by alejhern          #+#    #+#              #
-#    Updated: 2025/09/17 21:22:58 by kroyo-di         ###   ########.fr        #
+#    Updated: 2025/10/26 18:38:48 by kroyo-di         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,8 +17,17 @@
 
 NAME    = cub3d
 CC      = cc
-CFLAGS = -Wall -Werror -Wextra -I inc -I $(LIB_DIR)
-MLX     = -lmlx -lXext -lX11 -lm
+CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
+
+LIBFT_DIR = libft/
+LIBFT = $(LIBFT_DIR)libft.a
+LIBFT_REPO = https://github.com/alejhern/libft.git
+
+MLX_REPO = https://github.com/42Paris/minilibx-linux.git
+MLX_DIR = minilibx-linux
+MLX_LIB = $(MLX_DIR)/libmlx.a
+MLX     = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
+
 SRCS    = src/parsing/utils.c   \
 		  src/parsing/map_textures.c   \
 		  src/parsing/map.c   \
@@ -39,22 +48,10 @@ SRCS    = src/parsing/utils.c   \
 		  src/animation/move_lizards.c \
 		  src/animation/intro.c \
 		  src/animation/key_hooks.c \
-		src/main.c 
-OBJ     = $(SRCS:.c=.o)
+		  src/main.c 
 
-LIBFT_DIR = libft/
-LIBFT = $(LIBFT_DIR)libft.a
-LIBFT_REPO = https://github.com/alejhern/libft.git
-
-MLX_REPO = https://github.com/42Paris/minilibx-linux.git
-MLX_DIR = minilibx-linux
-MLX_LIB = $(MLX_DIR)/libmlx.a
-MLX     = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
-
-NAME    = cub3d
-CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
-
+OBJ_DIR = obj
+OBJ     = $(patsubst src/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 # **************************************************************************** #
 #                                 RULES                                        #
@@ -65,8 +62,12 @@ all: $(LIBFT) $(MLX_LIB) $(NAME)
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
 
-%.o: %.c ./inc/cub3d.h Makefile
+$(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 $(LIBFT):
 	@if [ ! -d "$(LIBFT_DIR)" ]; then \
@@ -84,7 +85,7 @@ $(MLX_LIB):
 
 clean:
 	@make -C $(LIBFT_DIR) clean
-	rm -f $(OBJ)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	@make -C $(LIBFT_DIR) fclean
