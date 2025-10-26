@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/10/26 18:33:42 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/10/26 19:41:12 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,7 +245,7 @@ void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
 
 // minimap rendering
 void				draw_minimap(t_game *g);
-void				draw_map_tiles(t_game *g, t_minimap *m, int tile, int ox, int oy);
+void				draw_map_tiles(t_game *g, t_minimap *m, int t, int ox, int oy);
 void				draw_sprites_minimap(t_game *g, t_minimap *m, t_sprite **arr, t_sprite_info *inf);
 void				draw_player_arrow(t_game *g, int tile, int ox, int oy);
 void				init_revealed_if_needed(t_minimap *m, int w, int h);
