@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 13:56:22 by alejhern          #+#    #+#             */
-/*   Updated: 2025/10/26 17:23:24 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/10/29 21:55:38 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,8 +133,8 @@ int	render(t_game *g)
 	render_sprites(g);
 	update_bombs(g);
 	move_lizards(g);
-	draw_minimap(g); //Minimapa
-	//draw_hand(g);
+	draw_minimap(g);
+	draw_hand(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	if (g->spider.state == ATTACKING)
 		spider_attack(g);

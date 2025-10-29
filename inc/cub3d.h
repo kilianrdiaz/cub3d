@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/10/26 19:41:12 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/10/29 21:48:16 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,44 @@ typedef struct s_triangle
 	int		color;
 }	t_triangle;
 
+typedef struct s_rect
+{
+	int	x;
+	int	y;
+	int	w;
+	int	h;
+	int	c;
+}				t_rect;
+
+typedef struct s_tileinfo
+{
+	int	t;
+	int	ox;
+	int	oy;
+}				t_tileinfo;
+
+typedef struct s_dims
+{
+	int	w;
+	int	h;
+}				t_dims;
+
+typedef struct s_tile
+{
+	int			x;
+	int			y;
+	t_tileinfo	info;
+}				t_tile;
+
+typedef struct s_position
+{
+	int	sx;
+	int	sy;
+	int	s;
+	int	mx;
+	int	my;
+}				t_position;
+
 typedef struct s_map
 {
 	char			**map;
@@ -244,14 +282,16 @@ t_sprite			**get_sprites(t_game *g);
 void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
 
 // minimap rendering
-void				draw_minimap(t_game *g);
-void				draw_map_tiles(t_game *g, t_minimap *m, int t, int ox, int oy);
-void				draw_sprites_minimap(t_game *g, t_minimap *m, t_sprite **arr, t_sprite_info *inf);
-void				draw_player_arrow(t_game *g, int tile, int ox, int oy);
-void				init_revealed_if_needed(t_minimap *m, int w, int h);
-void				reveal_radius(t_minimap *m, int cx, int cy, int r);
-void				update_revealed(t_minimap *m, int px, int py);
-void				put_rect(t_game *g, int x, int y, int w, int h, int c);
+void			draw_minimap(t_game *g);
+void			draw_map_tiles(t_game *g, t_minimap *m, t_tileinfo info);
+void			draw_sprites_minimap(t_game *g, t_minimap *m,
+					t_sprite **arr, t_sprite_info *inf);
+void			draw_player_arrow(t_game *g, int tile, int ox, int oy);
+void			init_revealed_if_needed(t_minimap *m, int w, int h);
+void			reveal_radius(t_minimap *m, int cx, int cy, int r);
+void			update_revealed(t_minimap *m, int px, int py);
+void			put_rect(t_game *g, t_rect r);
+void			draw_tile(t_game *g, t_minimap *m, t_tile tile);
 
 // input
 int					key_press(int key, t_game *g);
