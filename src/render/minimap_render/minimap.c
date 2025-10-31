@@ -74,7 +74,6 @@ void	draw_minimap(t_game *g)
 	w = ft_strlen(g->map[0]);
 	if (!m->revealed || m->width != w || m->height != h)
 		init_revealed_if_needed(m, w, h);
-	reveal_radius(m, (int)g->spider.pos.x, (int)g->spider.pos.y, INIT_REVEAL_RADIUS);
 	reveal_radius(m, (int)g->spider.pos.x, (int)g->spider.pos.y, REVEAL_STEP_RADIUS);
 	t = fmin((MINIMAP_SIZE_LIMIT - 12) / w, (MINIMAP_SIZE_LIMIT - 12) / h);
 	if (t < 2)

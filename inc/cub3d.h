@@ -45,13 +45,11 @@
 # define COL_BOMB           0xFFB84D
 # define COL_LIZARD         0x5AFF7A
 
-# define INIT_REVEAL_RADIUS 3
-# define REVEAL_STEP_RADIUS 1
+# define REVEAL_STEP_RADIUS 3
 # define MINIMAP_SIZE_LIMIT 500
 # define MINIMAP_OFFSET_X   (WIDTH - MINIMAP_SIZE_LIMIT - 20)
 # define MINIMAP_OFFSET_Y   250
 
-extern char			*map[];
 typedef struct s_coords
 {
 	double			x;
