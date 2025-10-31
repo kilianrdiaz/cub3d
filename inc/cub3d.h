@@ -175,13 +175,6 @@ typedef struct s_sprite_info
 	int		color;
 }	t_sprite_info;
 
-typedef struct s_triangle
-{
-	int		x[3];
-	int		y[3];
-	int		color;
-}	t_triangle;
-
 typedef struct s_rect
 {
 	int	x;

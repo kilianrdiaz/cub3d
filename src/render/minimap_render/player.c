@@ -26,7 +26,7 @@ static void	fill_triangle_line(t_game *g, int y, double xhit[2], int color)
 			put_pixel(g, xi, y, color);
 }
 
-static void	process_triangle_line(t_game *g, t_triangle *t, int y)
+static void	process_triangle_line(t_game *g, t_pos *t, int y)
 {
 	int		i;
 	int		hits;
@@ -39,26 +39,26 @@ static void	process_triangle_line(t_game *g, t_triangle *t, int y)
 	while (++i < 3)
 	{
 		j = (i + 1) % 3;
-		if ((t->y[i] <= y && y < t->y[j]) || (t->y[j] <= y && y < t->y[i]))
+		if ((t[i].y <= y && y < t[j].y) || (t[j].y <= y && y < t[i].y))
 		{
-			ratio = (double)(y - t->y[i]) / (t->y[j] - t->y[i]);
-			xhit[hits++] = t->x[i] + ratio * (t->x[j] - t->x[i]);
+			ratio = (double)(y - t[i].y) / (t[j].y - t[i].y);
+			xhit[hits++] = t[i].x + ratio * (t[j].x - t[i].x);
 			if (hits == 2)
 				break ;
 		}
 	}
 	if (hits == 2)
-		fill_triangle_line(g, y, xhit, t->color);
+		fill_triangle_line(g, y, xhit, COL_PLAYER);
 }
 
-static void	draw_filled_triangle(t_game *g, t_triangle *t)
+static void	draw_filled_triangle(t_game *g, t_pos *t)
 {
 	int	miny;
 	int	maxy;
 	int	y;
 
-	miny = fmin(t->y[0], fmin(t->y[1], t->y[2]));
-	maxy = fmax(t->y[0], fmax(t->y[1], t->y[2]));
+	miny = fmin(t[0].y, fmin(t[1].y, t[2].y));
+	maxy = fmax(t[0].y, fmax(t[1].y, t[2].y));
 	y = miny - 1;
 	while (++y <= maxy)
 		process_triangle_line(g, t, y);
@@ -69,22 +69,21 @@ void	draw_player_arrow(t_game *g, int tile, int ox, int oy)
 	double		ang;
 	double		ca;
 	double		sa;
-	t_triangle	t;
+	t_pos		t[3];
 	int			cx;
 
 	ang = atan2(g->spider.dir.y, g->spider.dir.x);
 	ca = cos(ang);
 	sa = sin(ang);
 	cx = ox + (int)(g->spider.pos.x * tile) - (int)round(ca * (tile / 2.0));
-	t.x[0] = cx + (int)round(ca * tile);
-	t.y[0] = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
+	t[0].x = cx + (int)round(ca * tile);
+	t[0].y = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
 		+ (int)round(sa * tile);
-	t.x[1] = cx - (int)round(sa * (tile / 2));
-	t.y[1] = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
+	t[1].x = cx - (int)round(sa * (tile / 2));
+	t[1].y = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
 		+ (int)round(ca * (tile / 2));
-	t.x[2] = cx + (int)round(sa * (tile / 2));
-	t.y[2] = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
+	t[2].x = cx + (int)round(sa * (tile / 2));
+	t[2].y = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
 		- (int)round(ca * (tile / 2));
-	t.color = COL_PLAYER;
-	draw_filled_triangle(g, &t);
+	draw_filled_triangle(g, t);
 }
