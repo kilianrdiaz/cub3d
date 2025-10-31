@@ -15,26 +15,22 @@
 static void	draw_single_sprite(t_game *g, t_minimap *m,
 		t_sprite *sp, t_sprite_info *inf)
 {
-	t_position	p;
 	t_rect		r;
 
 	if (!sp || sp->state == DEFUSED)
 		return ;
-	p.mx = (int)sp->pos.x;
-	p.my = (int)sp->pos.y;
-	if (!m->revealed || p.mx < 0 || p.my < 0
-		|| p.mx >= m->width || p.my >= m->height
-		|| !m->revealed[p.my][p.mx])
+	if (!m->revealed || sp->pos.x < 0 || sp->pos.y < 0
+		|| sp->pos.x >= m->width || sp->pos.y >= m->height
+		|| !m->revealed[(int)sp->pos.y][(int)sp->pos.x])
 		return ;
-	p.sx = inf->ox + (int)(sp->pos.x * inf->t + inf->t / 2);
-	p.sy = inf->oy + (int)(sp->pos.y * inf->t + inf->t / 2);
-	p.s = (int)(inf->t * 0.5);
-	if (p.s < 2)
-		p.s = 2;
-	r.x = p.sx - p.s / 2;
-	r.y = p.sy - p.s / 2;
-	r.w = p.s;
-	r.h = p.s;
+	r.x = inf->ox + (int)(sp->pos.x * inf->t + inf->t / 2);
+	r.y = inf->oy + (int)(sp->pos.y * inf->t + inf->t / 2);
+	r.w = (int)(inf->t * 0.5);
+	if (r.w < 2)
+		r.w = 2;
+	r.x -= r.w / 2;
+	r.y -= r.w / 2;
+	r.h = r.w;
 	r.c = inf->color;
 	put_rect(g, r);
 }

@@ -204,15 +204,6 @@ typedef struct s_tile
 	t_tileinfo	info;
 }				t_tile;
 
-typedef struct s_position
-{
-	int	sx;
-	int	sy;
-	int	s;
-	int	mx;
-	int	my;
-}				t_position;
-
 typedef struct	s_minimap
 {
 	char	**revealed;
