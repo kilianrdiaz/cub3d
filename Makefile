@@ -14,11 +14,6 @@
 #                                 VARIABLES                                    #
 # **************************************************************************** #
 
-
-NAME    = cub3d
-CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
-MLX     = -lmlx -lXext -lX11 -lm
 SRCS    = src/utils/parsing.c  \
 		  src/utils/render.c    \
 		  src/utils/ray_map.c \
@@ -58,8 +53,10 @@ MLX_DIR = minilibx-linux
 MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX     = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 
-OBJ_DIR = obj
-OBJ     = $(patsubst src/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+NAME    = cub3d
+CC      = cc
+CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
+
 
 # **************************************************************************** #
 #                                 RULES                                        #
@@ -70,12 +67,8 @@ all: $(LIBFT) $(MLX_LIB) $(NAME)
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
 
-$(OBJ_DIR)/%.o: src/%.c | $(OBJ_DIR)
-	@mkdir -p $(dir $@)
+%.o: %.c ./inc/cub3d.h Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
-
-$(OBJ_DIR):
-	mkdir -p $(OBJ_DIR)
 
 $(LIBFT):
 	@if [ ! -d "$(LIBFT_DIR)" ]; then \
