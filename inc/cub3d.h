@@ -28,8 +28,8 @@
 
 # define SCALE_SPRITE 2.0
 
-# define MOVE_SPEED 0.07
-# define ROT_SPEED 0.05
+# define MOVE_SPEED 0.1
+# define ROT_SPEED 0.1
 # define DETECT_RADIUS 10.0
 # define MOVE_SPEED_LIZARD 1
 
@@ -52,6 +52,11 @@
 # define MINIMAP_OFFSET_Y   250
 
 extern char			*map[];
+typedef struct s_coords
+{
+	double			x;
+	double			y;
+}					t_coords;
 
 typedef enum e_state
 {
@@ -62,39 +67,52 @@ typedef enum e_state
 	DEFUSED
 }					t_state;
 
+typedef enum e_render
+{
+	INTRO,
+	PLAYING,
+	WIN,
+	WAITING_FOR_NAME,
+	SCORE_SAVED,
+	HIGH_SCORE,
+	GAME_OVER
+}					t_render;
+
+typedef enum e_map_texture
+{
+	NO,
+	SO,
+	EA,
+	WE,
+	F,
+	C
+}					t_map_texture;
+
 typedef enum e_sprite_type
 {
 	BOMB,
 	LIZARD
 }					t_sprite_type;
 
-typedef struct s_tex
+typedef struct s_char_bitmap
+{
+	unsigned int	*pixels;
+	int				width;
+	int				height;
+}					t_char_bitmap;
+
+typedef struct s_font
 {
 	void			*img;
 	char			*addr;
-	int				width;
-	int				height;
 	int				bpp;
 	int				line_len;
 	int				endian;
-	unsigned int	color;
-}					t_tex;
-
-typedef struct s_sprite
-{
-	double			x;
-	double			y;
-	double			inv_det;
-	double			trans_x;
-	double			trans_y;
-	int				width;
-	int				height;
-	int				screen_x;
-	double			delay;
+	int				char_w;
+	int				char_h;
 	double			scale;
-	t_state			state;
-	t_sprite_type	type;
-}					t_sprite;
+	t_char_bitmap	chars[128];
+}					t_font;
 
 typedef struct s_sprite_order
 {
@@ -113,14 +131,37 @@ typedef struct s_keys
 	int				space;
 }					t_keys;
 
+typedef struct s_tex
+{
+	void			*img;
+	char			*addr;
+	int				width;
+	int				height;
+	int				bpp;
+	int				line_len;
+	int				endian;
+	unsigned int	color;
+}					t_tex;
+
+typedef struct s_sprite
+{
+	t_coords		pos;
+	t_coords		trans;
+	double			inv_det;
+	int				width;
+	int				height;
+	int				screen_x;
+	double			delay;
+	double			scale;
+	t_state			state;
+	t_sprite_type	type;
+}					t_sprite;
+
 typedef struct s_spidy
 {
-	double			x;
-	double			y;
-	double			dir_x;
-	double			dir_y;
-	double			plane_x;
-	double			plane_y;
+	t_coords		pos;
+	t_coords		dir;
+	t_coords		plane;
 	double			move_accum;
 	t_tex			*hand;
 	t_state			state;
@@ -179,13 +220,6 @@ typedef struct s_position
 	int	my;
 }				t_position;
 
-typedef struct s_map
-{
-	char			**map;
-	int				height;
-	int				width;
-}					t_map;
-
 typedef struct	s_minimap
 {
 	char	**revealed;
@@ -204,82 +238,81 @@ typedef struct s_game
 	int				line_len;
 	int				endian;
 	double			timer;
-	int				show_intro;
+	t_render		render_state;
 	char			**map;
 	t_spidy			spider;
-	t_tex			floor;
-	t_tex			ceiling;
-	t_tex			wall_north;
-	t_tex			wall_south;
-	t_tex			wall_east;
-	t_tex			wall_west;
+	t_font			font;
 	double			zbuffer[WIDTH];
 	t_sprite		**bombs;
 	t_sprite		**lizards;
 	t_tex			*bomb_tex;
 	t_tex			*lizard_tex;
+	t_tex			*map_text;
 	t_keys			keys;
 	t_minimap		minimap;
+	int				score;
 }					t_game;
 
 typedef struct s_ray
 {
-	double			camera_x;
-	double			dir_x0;
-	double			dir_y0;
-	double			dir_x1;
-	double			dir_y1;
-	double			pos_z;
+	double			view;
+	t_coords		coords;
+	t_coords		left;
+	t_coords		right;
+	t_coords		side_dist;
+	t_coords		delta_dist;
 	double			row_distance;
-	double			side_dist_x;
-	double			side_dist_y;
-	double			delta_dist_x;
-	double			delta_dist_y;
-	double			perp_wall_dist;
-	double			step_x;
-	double			step_y;
-	int				hit;
-	int				side;
 	int				line_height;
-	int				draw_start_x;
-	int				draw_end_x;
-	int				draw_start_y;
-	int				draw_end_y;
-	int				tx;
-	int				ty;
-	int				color;
+	t_pos			d_start;
+	t_pos			d_end;
+	t_pos			src;
+	unsigned int	color;
 }					t_ray;
 
-
+// utils
+void				load_texture(t_game *g, t_tex *tex, char *path);
+int					validate_line(char *line);
+int					ft_isspace(int c);
+int					check_loaded_textures(t_game *game);
+int					clamp_int(int v, int a, int b);
+void				put_pixel(t_game *g, int x, int y, int color);
+void				clean_screen(t_game *g);
+void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
+t_tex				get_texture_wall(t_game g, t_ray ray, int dist);
+t_sprite			**get_sprites(t_game *g);
+void				calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex,
+						int dist);
+void				calculate_distance_to_wall(t_game g, t_ray *ray, int *side);
+t_ray				ray_map(t_game g, int x);
+char				**get_scores(void);
+int					get_position(t_game *g, char **scores);
+t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
+void				update_scores(char **scores, int position);
+void				print_map(t_game *g);
 
 // parsing
 
 void				get_info_file(t_game *g, int argc, char **argv);
-void				load_texture(t_game *g, t_tex *tex, char *path);
 void				load_map_textures(t_game *g, char **content);
 char				**get_map(char **content);
 void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
-int					check_loaded_textures(t_game *game);
-int					validate_line(char *line);
-int					ft_isspace(int c);
 
 // rendering
 
 int					render(t_game *g);
-int					show_intro(t_game *g);
-void				draw_floor_and_ceiling(t_game *g, t_ray *ray, int y);
-void				draw_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int x);
-int					clamp_int(int v, int a, int b);
 void				update_bombs(t_game *g);
-void				put_pixel(t_game *g, int x, int y, int color);
-void				clean_screen(t_game *g);
-void				draw_hand(t_game *g);
-t_tex				get_texture_wall(t_game g, t_ray ray);
-void				print_map(t_game *g);
+void				draw_hand(t_game *g, int x);
 void				render_sprites(t_game *g);
-t_sprite			**get_sprites(t_game *g);
-void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
+void				render_text(t_game *g, char *str, t_pos pos);
+void				load_font(t_game *g, t_font *f, char *path);
+int					show_intro(t_game *g);
+void				draw_fullscreen_image(t_game *g, t_tex *tex);
+void				render_floor_and_ceiling(t_game *g);
+void				render_wall(t_game *g);
+void				display_score_panel(t_game *g, t_tex *score_panel,
+						char **scores);
+int					show_high_scores(t_game *g);
 
 // minimap rendering
 void			draw_minimap(t_game *g);
@@ -297,11 +330,12 @@ void			draw_tile(t_game *g, t_minimap *m, t_tile tile);
 int					key_press(int key, t_game *g);
 int					key_release(int key, t_game *g);
 
-// moves
+// animation
 void				update_player_position(t_game *g);
 void				spider_attack(t_game *g);
 void				move_lizards(t_game *g);
+char				*set_name(t_game *g, t_sprite *alphabet, t_ray ray);
 
-int					close_program(t_game *g);
+void				close_program(t_game *g);
 
 #endif

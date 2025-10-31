@@ -12,8 +12,6 @@
 
 #include "../../../inc/cub3d.h"
 
-#include "../../../inc/cub3d.h"
-
 void	put_rect(t_game *g, t_rect r)
 {
 	int	i;

@@ -18,6 +18,36 @@
 NAME    = cub3d
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
+MLX     = -lmlx -lXext -lX11 -lm
+SRCS    = src/utils/parsing.c  \
+		  src/utils/render.c    \
+		  src/utils/ray_map.c \
+		  src/utils/score.c   \
+		  src/parsing/map_textures.c   \
+		  src/parsing/map.c   \
+		  src/parsing/sprites.c   \
+		  src/parsing/file.c   \
+		  src/render/player.c \
+		  src/render/map.c \
+		  src/render/sprite.c \
+		  src/render/font.c \
+		  src/render/render.c \
+		  src/render/intro.c \
+		  src/render/display_scores.c \
+		  src/render/high_scores.c \
+		  src/render/minimap_render/minimap.c \
+		  src/render/minimap_render/draw_minimap.c \
+		  src/render/minimap_render/minimap_sprites.c \
+		  src/render/minimap_render/fog.c \
+		  src/render/minimap_render/player.c \
+		  src/moves/spider.c \
+		  src/moves/spider_attack.c \
+		  src/moves/lizards.c \
+		  src/moves/key_hooks.c \
+		  src/moves/mark_score.c \
+		  src/close_program.c \
+		src/main.c 
+OBJ     = $(SRCS:.c=.o)
 
 LIBFT_DIR = libft/
 LIBFT = $(LIBFT_DIR)libft.a
@@ -27,28 +57,6 @@ MLX_REPO = https://github.com/42Paris/minilibx-linux.git
 MLX_DIR = minilibx-linux
 MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX     = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
-
-SRCS    = src/parsing/utils.c   \
-		  src/parsing/map_textures.c   \
-		  src/parsing/map.c   \
-		  src/parsing/sprites.c   \
-		  src/parsing/file.c   \
-		  src/render/player.c \
-		  src/render/utils.c \
-		  src/render/map.c \
-		  src/render/sprite.c \
-		  src/render/render.c \
-		  src/render/minimap_render/minimap.c \
-		  src/render/minimap_render/draw_minimap.c \
-		  src/render/minimap_render/minimap_sprites.c \
-		  src/render/minimap_render/fog.c \
-		  src/render/minimap_render/player.c \
-		  src/animation/move_spider.c \
-		  src/animation/spider_attack.c \
-		  src/animation/move_lizards.c \
-		  src/animation/intro.c \
-		  src/animation/key_hooks.c \
-		  src/main.c 
 
 OBJ_DIR = obj
 OBJ     = $(patsubst src/%.c, $(OBJ_DIR)/%.o, $(SRCS))

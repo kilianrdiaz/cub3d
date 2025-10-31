@@ -20,14 +20,14 @@ static void	draw_single_sprite(t_game *g, t_minimap *m,
 
 	if (!sp || sp->state == DEFUSED)
 		return ;
-	p.mx = (int)sp->x;
-	p.my = (int)sp->y;
+	p.mx = (int)sp->pos.x;
+	p.my = (int)sp->pos.y;
 	if (!m->revealed || p.mx < 0 || p.my < 0
 		|| p.mx >= m->width || p.my >= m->height
 		|| !m->revealed[p.my][p.mx])
 		return ;
-	p.sx = inf->ox + (int)(sp->x * inf->t + inf->t / 2);
-	p.sy = inf->oy + (int)(sp->y * inf->t + inf->t / 2);
+	p.sx = inf->ox + (int)(sp->pos.x * inf->t + inf->t / 2);
+	p.sy = inf->oy + (int)(sp->pos.y * inf->t + inf->t / 2);
 	p.s = (int)(inf->t * 0.5);
 	if (p.s < 2)
 		p.s = 2;

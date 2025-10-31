@@ -72,18 +72,18 @@ void	draw_player_arrow(t_game *g, int tile, int ox, int oy)
 	t_triangle	t;
 	int			cx;
 
-	ang = atan2(g->spider.dir_y, g->spider.dir_x);
+	ang = atan2(g->spider.dir.y, g->spider.dir.x);
 	ca = cos(ang);
 	sa = sin(ang);
-	cx = ox + (int)(g->spider.x * tile) - (int)round(ca * (tile / 2.0));
+	cx = ox + (int)(g->spider.pos.x * tile) - (int)round(ca * (tile / 2.0));
 	t.x[0] = cx + (int)round(ca * tile);
-	t.y[0] = oy + (int)(g->spider.y * tile) - (int)round(sa * (tile / 2.0))
+	t.y[0] = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
 		+ (int)round(sa * tile);
 	t.x[1] = cx - (int)round(sa * (tile / 2));
-	t.y[1] = oy + (int)(g->spider.y * tile) - (int)round(sa * (tile / 2.0))
+	t.y[1] = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
 		+ (int)round(ca * (tile / 2));
 	t.x[2] = cx + (int)round(sa * (tile / 2));
-	t.y[2] = oy + (int)(g->spider.y * tile) - (int)round(sa * (tile / 2.0))
+	t.y[2] = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
 		- (int)round(ca * (tile / 2));
 	t.color = COL_PLAYER;
 	draw_filled_triangle(g, &t);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 13:56:50 by alejhern          #+#    #+#             */
-/*   Updated: 2025/09/16 13:56:52 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/10/19 20:47:55 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ void	recalc_sprite_scale(t_game *g, t_sprite *sp, double dist)
 	max_dist = 8;
 	if (sp->type == LIZARD)
 		max_dist = 10;
-	dist = sqrt(pow(g->spider.x - sp->x, 2) + pow(g->spider.y - sp->y, 2));
+	dist = sqrt(pow(g->spider.pos.x - sp->pos.x, 2) + pow(g->spider.pos.y
+				- sp->pos.y, 2));
 	if (dist > max_dist)
 	{
 		sp->scale += (0.0 - sp->scale) * LERP_SPEED;

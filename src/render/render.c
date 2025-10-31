@@ -12,120 +12,31 @@
 
 #include "../../inc/cub3d.h"
 
-static void	calculate_distance_to_wall(t_game g, t_ray *ray)
+void	draw_fullscreen_image(t_game *g, t_tex *tex)
 {
-	while (ray->hit == 0)
+	t_pos	p;
+	t_pos	src_pos;
+	char	*src;
+	int		color;
+
+	p.y = -1;
+	while (++p.y < HEIGHT)
 	{
-		if (ray->side_dist_x < ray->side_dist_y)
+		p.x = -1;
+		while (++p.x < WIDTH)
 		{
-			ray->side_dist_x += ray->delta_dist_x;
-			ray->tx += ray->step_x;
-			ray->side = 0;
+			src_pos.x = p.x * tex->width / WIDTH;
+			src_pos.y = p.y * tex->height / HEIGHT;
+			src = tex->addr + (src_pos.y * tex->line_len + src_pos.x * (tex->bpp
+						/ 8));
+			color = *(unsigned int *)src;
+			put_pixel(g, p.x, p.y, color);
 		}
-		else
-		{
-			ray->side_dist_y += ray->delta_dist_y;
-			ray->ty += ray->step_y;
-			ray->side = 1;
-		}
-		if (ray->tx < 0 || ray->ty < 0 || g.map[ray->ty][ray->tx] == '1')
-			ray->hit = 1;
-	}
-	// 4. Cálculo de la distancia perpendicular a la pared
-	ray->perp_wall_dist = (ray->ty - g.spider.y + (1 - ray->step_y) / 2.0)
-		/ ray->dir_y0;
-	if (ray->side == 0)
-		ray->perp_wall_dist = (ray->tx - g.spider.x + (1 - ray->step_x) / 2.0)
-			/ ray->dir_x0;
-	if (ray->perp_wall_dist <= 0.0)
-		ray->perp_wall_dist = 1e-6; // Evita divisiones por 0
-}
-
-static t_ray	initialize_ray(t_game *g, int x)
-{
-	t_ray	ray;
-
-	ft_bzero(&ray, sizeof(t_ray));
-	ray.camera_x = 2 * x / (double)GAME_WIDTH - 1;
-	ray.dir_x0 = g->spider.dir_x + g->spider.plane_x * ray.camera_x;
-	ray.dir_y0 = g->spider.dir_y + g->spider.plane_y * ray.camera_x;
-	// Posición inicial en el mapa (celda del jugador)
-	ray.tx = (int)g->spider.x;
-	ray.ty = (int)g->spider.y;
-	// Distancias que recorrerá el rayo para cruzar una celda en X e Y
-	ray.delta_dist_x = fabs(1.0 / ray.dir_x0);
-	if (ray.dir_x0 == 0.0)
-		ray.delta_dist_x = 1e30;
-	ray.delta_dist_y = fabs(1.0 / ray.dir_y0);
-	if (ray.dir_y0 == 0.0)
-		ray.delta_dist_y = 1e30;
-	ray.perp_wall_dist = 0.0;
-	ray.step_x = 1;
-	ray.side_dist_x = (ray.tx + 1.0 - g->spider.x) * ray.delta_dist_x;
-	ray.step_y = 1;
-	ray.side_dist_y = (ray.ty + 1.0 - g->spider.y) * ray.delta_dist_y;
-	return (ray);
-}
-
-static void	render_wall(t_game *g)
-{
-	t_ray	ray;
-	t_tex	tex;
-	int		x;
-
-	x = -1;
-	while (++x < GAME_WIDTH)
-	{
-		ray = initialize_ray(g, x);
-		if (ray.dir_x0 < 0)
-		{
-			ray.step_x = -1;
-			ray.side_dist_x = (g->spider.x - ray.tx) * ray.delta_dist_x;
-		}
-		if (ray.dir_y0 < 0)
-		{
-			ray.step_y = -1;
-			ray.side_dist_y = (g->spider.y - ray.ty) * ray.delta_dist_y;
-		}
-		calculate_distance_to_wall(*g, &ray);
-		tex = get_texture_wall(*g, ray);
-		draw_wall_stripe(g, &ray, tex, x);
-		g->zbuffer[x] = ray.perp_wall_dist; // Guardamos la distancia del rayo
 	}
 }
 
-static void	render_floor_and_ceiling(t_game *g)
+static int	game(t_game *g)
 {
-	t_ray	ray;
-	int		y;
-	int		p;
-
-	y = HEIGHT / 2;
-	while (++y < HEIGHT)
-	{
-		ray.dir_x0 = g->spider.dir_x - g->spider.plane_x;
-		ray.dir_y0 = g->spider.dir_y - g->spider.plane_y;
-		ray.dir_x1 = g->spider.dir_x + g->spider.plane_x;
-		ray.dir_y1 = g->spider.dir_y + g->spider.plane_y;
-		p = y - HEIGHT / 2;
-		if (p == 0)
-			continue ;
-		ray.pos_z = 0.5 * HEIGHT;
-		ray.row_distance = ray.pos_z / (double)p;
-		ray.side_dist_x = g->spider.x + ray.row_distance * ray.dir_x0;
-		ray.side_dist_y = g->spider.y + ray.row_distance * ray.dir_y0;
-		ray.step_x = ray.row_distance * (ray.dir_x1 - ray.dir_x0)
-			/ (double)GAME_WIDTH;
-		ray.step_y = ray.row_distance * (ray.dir_y1 - ray.dir_y0)
-			/ (double)GAME_WIDTH;
-		draw_floor_and_ceiling(g, &ray, y);
-	}
-}
-
-int	render(t_game *g)
-{
-	if (g->show_intro)
-		return (show_intro(g));
 	update_player_position(g);
 	clean_screen(g);
 	render_floor_and_ceiling(g);
@@ -133,11 +44,25 @@ int	render(t_game *g)
 	render_sprites(g);
 	update_bombs(g);
 	move_lizards(g);
+	draw_hand(g, GAME_WIDTH / 2);
 	draw_minimap(g);
-	draw_hand(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	if (g->spider.state == ATTACKING)
 		spider_attack(g);
 	g->timer += 0.1;
+	return (0);
+}
+
+int	render(t_game *g)
+{
+	if (g->render_state == INTRO)
+		return (show_intro(g));
+	if (g->render_state == PLAYING)
+		return (game(g));
+	if (g->render_state == HIGH_SCORE || g->render_state == WAITING_FOR_NAME
+		|| g->render_state == SCORE_SAVED)
+		return (show_high_scores(g));
+	if (g->render_state == GAME_OVER)
+		close_program(g);
 	return (0);
 }

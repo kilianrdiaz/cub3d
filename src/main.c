@@ -14,19 +14,19 @@
 
 static void	load_sprite_textures(t_game *g)
 {
-	g->spider.hand = malloc(sizeof(t_tex) * sizeof(t_state));
+	g->spider.hand = ft_calloc(sizeof(t_tex), sizeof(t_state));
 	if (!g->spider.hand)
 		ft_error_exit("Error: Memory allocation failed for spider textures\n");
 	load_texture(g, &g->spider.hand[ACTIVE], "./textures/spiderhand_01.xpm");
 	load_texture(g, &g->spider.hand[MOVING], "./textures/spiderhand_02.xpm");
 	load_texture(g, &g->spider.hand[ATTACKING],
 		"./textures/spiderhand_attack.xpm");
-	g->bomb_tex = malloc(sizeof(t_tex) * sizeof(t_state));
+	g->bomb_tex = ft_calloc(sizeof(t_tex), sizeof(t_state));
 	if (!g->bomb_tex)
 		ft_error_exit("Error: Memory allocation failed for bomb textures\n");
 	load_texture(g, &g->bomb_tex[ACTIVE], "./textures/bomb.xpm");
 	load_texture(g, &g->bomb_tex[ATTACKED], "./textures/bomb_attacked.xpm");
-	g->lizard_tex = malloc(sizeof(t_tex) * sizeof(t_state));
+	g->lizard_tex = ft_calloc(sizeof(t_tex), sizeof(t_state));
 	if (!g->lizard_tex)
 		ft_error_exit("Error: Memory allocation failed for lizard textures\n");
 	load_texture(g, &g->lizard_tex[ACTIVE], "./textures/lizard.xpm");
@@ -64,12 +64,15 @@ int	main(int argc, char **argv)
 
 	ft_bzero(&g, sizeof(t_game));
 	create_mlx_window(&g);
+	g.map_text = ft_calloc(sizeof(t_tex), 6);
+	if (!g.map_text)
+		ft_error_exit("Error: Memory allocation failed for map textures\n");
 	get_info_file(&g, argc, argv);
 	load_sprite_textures(&g);
+	load_font(&g, &g.font, "./textures/font.xpm");
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g);
-	g.show_intro = 1;
 	mlx_loop_hook(g.mlx, render, &g);
 	mlx_loop(g.mlx);
 	close_program(&g);

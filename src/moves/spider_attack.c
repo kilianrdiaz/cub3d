@@ -24,8 +24,8 @@ void	update_bombs(t_game *g)
 		if (g->bombs[i]->state == ATTACKED)
 		{
 			g->bombs[i]->state = DEFUSED;
-			printf("Bomb at (%.1f, %.1f) has been defused.\n", g->bombs[i]->x,
-				g->bombs[i]->y);
+			printf("Bomb at (%.1f, %.1f) has been defused.\n",
+				g->bombs[i]->pos.x, g->bombs[i]->pos.y);
 			g->bomb_count--;
 		}
 	}
@@ -39,8 +39,7 @@ static int	check_if_is_lizard(t_game *g, int x, int y)
 	i = -1;
 	while (g->lizards && g->lizards[++i])
 	{
-		t.x = (int)g->lizards[i]->x;
-		t.y = (int)g->lizards[i]->y;
+		t = (t_pos){(int)g->lizards[i]->pos.x, (int)g->lizards[i]->pos.y};
 		if (t.x == x && t.y == y)
 		{
 			g->lizards[i]->state = ATTACKED;
@@ -61,8 +60,7 @@ static int	check_if_is_bomb(t_game *g, int x, int y)
 	i = -1;
 	while (g->bombs && g->bombs[++i])
 	{
-		t.x = (int)g->bombs[i]->x;
-		t.y = (int)g->bombs[i]->y;
+		t = (t_pos){(int)g->bombs[i]->pos.x, (int)g->bombs[i]->pos.y};
 		if (t.x == x && t.y == y && g->bombs[i]->state != DEFUSED)
 		{
 			g->bombs[i]->state = ATTACKED;
@@ -82,8 +80,8 @@ void	spider_attack(t_game *g)
 	i = 0;
 	while (++i <= 4)
 	{
-		t.x = (int)g->spider.x + (int)(g->spider.dir_x * i);
-		t.y = (int)g->spider.y + (int)(g->spider.dir_y * i);
+		t.x = (int)g->spider.pos.x + (int)(g->spider.dir.x * i);
+		t.y = (int)g->spider.pos.y + (int)(g->spider.dir.y * i);
 		if (t.x < 0 || t.y < 0)
 			break ;
 		if (check_if_is_lizard(g, t.x, t.y) || check_if_is_bomb(g, t.x, t.y))

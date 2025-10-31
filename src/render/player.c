@@ -12,41 +12,41 @@
 
 #include "../../inc/cub3d.h"
 
-static t_ray	ray_hand(t_tex hand)
+static t_ray	ray_hand(t_tex hand, double spider_x)
 {
 	t_ray	ray;
 
-	ray.draw_end_x = hand.width * SCALE_SPRITE;
-	ray.draw_end_y = hand.height * SCALE_SPRITE;
-	ray.draw_start_x = GAME_WIDTH / 2 - ray.draw_end_x / 2;
-	ray.draw_start_y = HEIGHT - ray.draw_end_y;
+	ft_bzero(&ray, sizeof(t_ray));
+	ray.d_end.x = hand.width * SCALE_SPRITE;
+	ray.d_end.y = hand.height * SCALE_SPRITE;
+	ray.d_start.x = spider_x - ray.d_end.x / 2;
+	ray.d_start.y = HEIGHT - ray.d_end.y;
 	return (ray);
 }
 
-void	draw_hand(t_game *g)
+void	draw_hand(t_game *g, int x)
 {
-	t_ray	ray;
 	t_pos	p;
 	t_tex	hand;
+	t_ray	l_ray;
 
 	if (!g->spider.hand || !g->spider.hand[0].addr || !g->spider.hand[1].addr)
 		return ;
 	hand = g->spider.hand[g->spider.state];
-	ray = ray_hand(hand);
+	l_ray = ray_hand(hand, x);
 	p.y = -1;
-	while (++p.y < ray.draw_end_y)
+	while (++p.y < l_ray.d_end.y)
 	{
 		p.x = -1;
-		while (++p.x < ray.draw_end_x)
+		while (++p.x < l_ray.d_end.x)
 		{
-			// mapeo inverso: de pantalla → textura
-			ray.tx = (int)(p.x / SCALE_SPRITE);
-			ray.ty = (int)(p.y / SCALE_SPRITE);
-			ray.color = *(unsigned int *)(hand.addr + ray.ty * hand.line_len
-					+ ray.tx * (hand.bpp / 8));
-			if ((ray.color & 0x00FFFFFF) != 0) // ignorar fondo transparente
-				put_pixel(g, ray.draw_start_x + p.x, ray.draw_start_y + p.y,
-					ray.color);
+			l_ray.src.x = (int)(p.x / SCALE_SPRITE);
+			l_ray.src.y = (int)(p.y / SCALE_SPRITE);
+			l_ray.color = *(unsigned int *)(hand.addr + l_ray.src.y
+					* hand.line_len + l_ray.src.x * (hand.bpp / 8));
+			if ((l_ray.color & 0x00FFFFFF) != 0)
+				put_pixel(g, l_ray.d_start.x + p.x, l_ray.d_start.y + p.y,
+					l_ray.color);
 		}
 	}
 }

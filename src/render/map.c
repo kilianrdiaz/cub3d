@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/16 14:45:16 by alejhern          #+#    #+#             */
-/*   Updated: 2025/09/16 14:45:19 by alejhern         ###   ########.fr       */
+/*   Created: 2025/10/16 15:33:01 by alejhern          #+#    #+#             */
+/*   Updated: 2025/10/16 15:44:58 by alejhern         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/cub3d.h"
 
-void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
+static void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 {
 	int		x;
 	t_pos	map;
@@ -20,94 +20,100 @@ void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 	x = -1;
 	while (++x < GAME_WIDTH)
 	{
-		map.x = (int)ray->side_dist_x;
-		map.y = (int)ray->side_dist_y;
-		ray->tx = (int)((ray->side_dist_x - map.x) * g->floor.width);
-		ray->ty = (int)((ray->side_dist_y - map.y) * g->floor.height);
+		map.x = (int)ray->side_dist.x;
+		map.y = (int)ray->side_dist.y;
+		ray->src.x = (int)((ray->side_dist.x - map.x) * g->map_text[F].width);
+		ray->src.y = (int)((ray->side_dist.y - map.y) * g->map_text[F].height);
 		/* clamp por si hay rounding negativo/extraño */
-		ray->tx = clamp_int(ray->tx, 0, g->floor.width - 1);
-		ray->ty = clamp_int(ray->ty, 0, g->floor.height - 1);
-		ray->color = *(unsigned int *)(g->floor.addr + ray->ty
-				* g->floor.line_len + ray->tx * (g->floor.bpp / 8));
+		ray->src.x = clamp_int(ray->src.x, 0, g->map_text[F].width - 1);
+		ray->src.y = clamp_int(ray->src.y, 0, g->map_text[F].height - 1);
+		ray->color = *(unsigned int *)(g->map_text[F].addr + ray->src.y
+				* g->map_text[F].line_len + ray->src.x * (g->map_text[F].bpp
+					/ 8));
 		put_pixel(g, x, y, ray->color);
 		/* techo espejo */
-		ray->delta_dist_x = clamp_int(ray->tx, 0, g->ceiling.width - 1);
-		ray->delta_dist_y = clamp_int(ray->ty, 0, g->ceiling.height - 1);
-		ray->color = *(unsigned int *)(g->ceiling.addr + (int)ray->delta_dist_y
-				* g->ceiling.line_len + (int)ray->delta_dist_x * (g->ceiling.bpp
-					/ 8));
+		ray->delta_dist.x = clamp_int(ray->src.x, 0, g->map_text[C].width - 1);
+		ray->delta_dist.y = clamp_int(ray->src.y, 0, g->map_text[C].height - 1);
+		ray->color = *(unsigned int *)(g->map_text[C].addr
+				+ (int)ray->delta_dist.y * g->map_text[C].line_len
+				+ (int)ray->delta_dist.x * (g->map_text[C].bpp / 8));
 		put_pixel(g, x, HEIGHT - y - 1, ray->color);
-		ray->side_dist_x += ray->step_x;
-		ray->side_dist_y += ray->step_y;
+		ray->side_dist.x += ray->coords.x;
+		ray->side_dist.y += ray->coords.y;
 	}
 }
 
-void	calculate_wall_stripe(t_game *g, t_ray *ray, t_tex tex)
-{
-	ray->line_height = (int)(HEIGHT / ray->perp_wall_dist);
-	ray->draw_start_y = -ray->line_height / 2 + HEIGHT / 2;
-	ray->draw_end_y = ray->line_height / 2 + HEIGHT / 2;
-	if (ray->draw_start_y < 0)
-		ray->draw_start_y = 0;
-	if (ray->draw_end_y >= HEIGHT)
-		ray->draw_end_y = HEIGHT - 1;
-	ray->camera_x = g->spider.x + ray->perp_wall_dist * ray->dir_x0;
-	if (ray->side == 0)
-		ray->camera_x = g->spider.y + ray->perp_wall_dist * ray->dir_y0;
-	ray->camera_x -= floor(ray->camera_x);
-	ray->tx = (int)(ray->camera_x * tex.width);
-	ray->tx = clamp_int(ray->tx, 0, tex.width - 1);
-	if ((ray->side == 0 && ray->dir_x0 > 0) || (ray->side == 1
-			&& ray->dir_y0 < 0))
-		ray->tx = tex.width - ray->tx - 1;
-}
-
-void	draw_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int x)
+static void	draw_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int x)
 {
 	int	d;
 	int	y;
 
-	calculate_wall_stripe(g, ray, tex);
-	y = ray->draw_start_y - 1;
+	y = ray->d_start.y - 1;
 	d = 0;
-	while (++y <= ray->draw_end_y)
+	while (++y <= ray->d_end.y)
 	{
 		d = y * 256 - HEIGHT * 128 + ray->line_height * 128;
-		ray->ty = ((d * tex.height) / ray->line_height) / 256;
-		ray->ty = clamp_int(ray->ty, 0, tex.height - 1);
-		ray->color = *(unsigned int *)(tex.addr + ray->ty * tex.line_len
-				+ ray->tx * (tex.bpp / 8));
+		ray->src.y = ((d * tex.height) / ray->line_height) / 256;
+		ray->src.y = clamp_int(ray->src.y, 0, tex.height - 1);
+		ray->color = *(unsigned int *)(tex.addr + ray->src.y * tex.line_len
+				+ ray->src.x * (tex.bpp / 8));
 		put_pixel(g, x, y, ray->color);
 	}
 }
 
-t_tex	get_texture_wall(t_game g, t_ray ray)
+void	render_wall(t_game *g)
 {
-	if (ray.side == 0)
+	t_ray	ray;
+	t_tex	tex;
+	int		side;
+	int		x;
+
+	x = -1;
+	while (++x < GAME_WIDTH)
 	{
-		if (ray.dir_x0 > 0)
-			return (g.wall_west);
-		return (g.wall_east);
-	}
-	else
-	{
-		if (ray.dir_y0 > 0)
-			return (g.wall_south);
-		return (g.wall_north);
+		ray = ray_map(*g, x);
+		if (ray.left.x < 0)
+		{
+			ray.coords.x = -1;
+			ray.side_dist.x = (g->spider.pos.x - ray.src.x) * ray.delta_dist.x;
+		}
+		if (ray.left.y < 0)
+		{
+			ray.coords.y = -1;
+			ray.side_dist.y = (g->spider.pos.y - ray.src.y) * ray.delta_dist.y;
+		}
+		calculate_distance_to_wall(*g, &ray, &side);
+		tex = get_texture_wall(*g, ray, side);
+		calculate_wall_stripe(*g, &ray, tex, side);
+		draw_wall_stripe(g, &ray, tex, x);
+		g->zbuffer[x] = ray.row_distance; // Guardamos la distancia del rayo
 	}
 }
 
-void	print_map(t_game *g)
+void	render_floor_and_ceiling(t_game *g)
 {
-	t_pos	p;
+	t_ray	ray;
+	int		y;
+	int		p;
 
-	p.y = -1;
-	while (g->map[++p.y])
+	y = HEIGHT / 2;
+	while (++y < HEIGHT)
 	{
-		p.x = -1;
-		while (g->map[p.y][++p.x])
-			printf("%c", g->map[p.y][p.x]);
-		printf("\n");
+		ray.left.x = g->spider.dir.x - g->spider.plane.x;
+		ray.left.y = g->spider.dir.y - g->spider.plane.y;
+		ray.right.x = g->spider.dir.x + g->spider.plane.x;
+		ray.right.y = g->spider.dir.y + g->spider.plane.y;
+		p = y - HEIGHT / 2;
+		if (p == 0)
+			continue ;
+		ray.view = 0.5 * HEIGHT;
+		ray.row_distance = ray.view / (double)p;
+		ray.side_dist.x = g->spider.pos.x + ray.row_distance * ray.left.x;
+		ray.side_dist.y = g->spider.pos.y + ray.row_distance * ray.left.y;
+		ray.coords.x = ray.row_distance * (ray.right.x - ray.left.x)
+			/ (double)GAME_WIDTH;
+		ray.coords.y = ray.row_distance * (ray.right.y - ray.left.y)
+			/ (double)GAME_WIDTH;
+		draw_floor_and_ceiling(g, &ray, y);
 	}
-	printf("\n");
 }
