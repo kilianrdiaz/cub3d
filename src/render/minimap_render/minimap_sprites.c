@@ -12,12 +12,27 @@
 
 #include "../../../inc/cub3d.h"
 
+static int show_sprite(t_game *g, t_sprite *sp)
+{
+	double	dist;
+
+	if (!sp || sp->state == DEFUSED)
+		return (0);
+	if (sp->type != LIZARD)
+		return (1);
+	dist = sqrt(pow(g->spider.pos.x - sp->pos.x, 2)
+			+ pow(g->spider.pos.y - sp->pos.y, 2));
+	if (dist <= 5)
+		return (1);
+	return (0);
+}
+
 static void	draw_single_sprite(t_game *g, t_minimap *m,
 		t_sprite *sp, t_sprite_info *inf)
 {
 	t_rect		r;
 
-	if (!sp || sp->state == DEFUSED)
+	if (!show_sprite(g, sp))
 		return ;
 	if (!m->revealed || sp->pos.x < 0 || sp->pos.y < 0
 		|| sp->pos.x >= m->width || sp->pos.y >= m->height
