@@ -63,5 +63,6 @@ void	close_program(t_game *g)
 	ft_free_array((void ***)&g->bombs);
 	ft_free_array((void ***)&g->lizards);
 	ft_free_array((void ***)&g->map);
+	ft_free_array((void ***)&g->minimap.revealed);
 	exit(0);
 }

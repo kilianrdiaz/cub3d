@@ -165,15 +165,6 @@ typedef struct s_spidy
 	t_state			state;
 }					t_spidy;
 
-typedef struct s_rect
-{
-	int				x;
-	int				y;
-	int				w;
-	int				h;
-	int				c;
-}					t_rect;
-
 typedef struct s_minimap
 {
 	char			**revealed;
@@ -274,7 +265,7 @@ int					show_high_scores(t_game *g);
 void				draw_minimap(t_game *g);
 void				draw_sprites_minimap(t_game *g);
 void				draw_player_arrow(t_game *g, t_minimap m);
-void				put_rect(t_game *g, t_rect r);
+void				put_rect(t_game *g, t_sprite r, unsigned int color);
 void				draw_tile(t_game *g, t_pos tile);
 
 // input

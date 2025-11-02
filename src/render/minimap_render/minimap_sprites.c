@@ -29,9 +29,9 @@ static int	show_sprite(t_game *g, t_sprite *sp)
 
 static void	draw_single_sprite(t_game *g, t_sprite *sp, unsigned int color)
 {
-	t_rect	r;
-	t_pos	offset;
-	int		size_title;
+	t_sprite	r;
+	t_pos		offset;
+	int			size_title;
 
 	if (!show_sprite(g, sp))
 		return ;
@@ -42,16 +42,15 @@ static void	draw_single_sprite(t_game *g, t_sprite *sp, unsigned int color)
 	offset.x = g->minimap.offset.x;
 	offset.y = g->minimap.offset.y;
 	size_title = g->minimap.tile_size;
-	r.x = offset.x + (int)(sp->pos.x * size_title + size_title / 2);
-	r.y = offset.y + (int)(sp->pos.y * size_title + size_title / 2);
-	r.w = (int)(size_title * 0.5);
-	if (r.w < 2)
-		r.w = 2;
-	r.x -= r.w / 2;
-	r.y -= r.w / 2;
-	r.h = r.w;
-	r.c = color;
-	put_rect(g, r);
+	r.pos.x = offset.x + (int)(sp->pos.x * size_title + size_title / 2);
+	r.pos.y = offset.y + (int)(sp->pos.y * size_title + size_title / 2);
+	r.width = (int)(size_title * 0.5);
+	if (r.width < 2)
+		r.width = 2;
+	r.height = r.width;
+	r.pos.x -= r.width / 2;
+	r.pos.y -= r.height / 2;
+	put_rect(g, r, color);
 }
 
 void	draw_sprites_minimap(t_game *g)

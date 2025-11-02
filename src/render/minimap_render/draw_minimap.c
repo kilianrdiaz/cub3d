@@ -12,68 +12,57 @@
 
 #include "../../../inc/cub3d.h"
 
-void	put_rect(t_game *g, t_rect r)
+void	put_rect(t_game *g, t_sprite r, unsigned int color)
 {
 	int	i;
 	int	j;
 
-	if (r.w <= 0 || r.h <= 0)
+	if (r.width <= 0 || r.height <= 0)
 		return ;
 	i = -1;
-	while (++i < r.h)
+	while (++i < r.height)
 	{
 		j = -1;
-		while (++j < r.w)
-			put_pixel(g, r.x + j, r.y + i, r.c);
+		while (++j < r.width)
+			put_pixel(g, r.pos.x + j, r.pos.y + i, color);
 	}
 }
 
-void	draw_border(t_game *g, t_rect r)
+void	draw_border(t_game *g, t_sprite r, unsigned int color)
 {
 	int	i;
 
-	if (r.w <= 1 || r.h <= 1)
+	if (r.width <= 1 || r.height <= 1)
 		return ;
 	i = -1;
-	while (++i < r.w)
+	while (++i < r.width)
 	{
-		put_pixel(g, r.x + i, r.y, r.c);
-		put_pixel(g, r.x + i, r.y + r.h - 1, r.c);
+		put_pixel(g, r.pos.x + i, r.pos.y, color);
+		put_pixel(g, r.pos.x + i, r.pos.y + r.height - 1, color);
 	}
 	i = -1;
-	while (++i < r.h)
+	while (++i < r.height)
 	{
-		put_pixel(g, r.x, r.y + i, r.c);
-		put_pixel(g, r.x + r.w - 1, r.y + i, r.c);
+		put_pixel(g, r.pos.x, r.pos.y + i, color);
+		put_pixel(g, r.pos.x + r.width - 1, r.pos.y + i, color);
 	}
-}
-
-static void	draw_wall_tile(t_game *g, t_rect r)
-{
-	r.c = COL_WALL;
-	put_rect(g, r);
-	r.c = COL_WALL_BORDER;
-	draw_border(g, r);
-}
-
-static void	draw_basic_tile(t_game *g, int color, t_rect r)
-{
-	r.c = color;
-	put_rect(g, r);
 }
 
 void	draw_tile(t_game *g, t_pos tile)
 {
-	t_rect	r;
+	t_sprite	r;
 
-	r.x = g->minimap.offset.x + tile.x * g->minimap.tile_size;
-	r.y = g->minimap.offset.y + tile.y * g->minimap.tile_size;
-	r.w = g->minimap.tile_size;
-	r.h = g->minimap.tile_size;
+	r.pos.x = g->minimap.offset.x + tile.x * g->minimap.tile_size;
+	r.pos.y = g->minimap.offset.y + tile.y * g->minimap.tile_size;
+	r.width = g->minimap.tile_size;
+	r.height = g->minimap.tile_size;
 	if (!g->minimap.revealed || !g->minimap.revealed[tile.y][tile.x])
-		draw_basic_tile(g, COL_UNK_FOG, r);
+		put_rect(g, r, COL_UNK_FOG);
 	else if (g->map[tile.y][tile.x] == '1')
-		draw_wall_tile(g, r);
+	{
+		put_rect(g, r, COL_WALL);
+		draw_border(g, r, COL_WALL_BORDER);
+	}
 	else
-		draw_basic_tile(g, 0x000000, r);
+		put_rect(g, r, COL_FLOOR);
 }
