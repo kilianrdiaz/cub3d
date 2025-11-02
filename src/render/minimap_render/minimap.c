@@ -12,7 +12,45 @@
 
 #include "../../../inc/cub3d.h"
 
-void	draw_map_tiles(t_game *g)
+static void	init_revealed_if_needed(t_minimap *m, int w, int h)
+{
+	int	i;
+
+	if (m->revealed && w == m->width && h == m->height)
+		return ;
+	ft_free_array((void ***)m->revealed);
+	m->revealed = malloc(sizeof(char *) * h);
+	if (!m->revealed)
+		return ;
+	i = -1;
+	while (++i < h)
+	{
+		m->revealed[i] = ft_calloc(sizeof(char), w);
+		if (!m->revealed[i])
+			break ;
+	}
+	m->width = w;
+	m->height = h;
+}
+
+static void	reveal_radius(t_minimap *m, int cx, int cy, int r)
+{
+	t_pos	pos;
+
+	if (!m->revealed)
+		return ;
+	pos.y = fmax(0, cy - r) - 1;
+	while (++pos.y <= fmin(m->height - 1, cy + r))
+	{
+		pos.x = fmax(0, cx - r) - 1;
+		while (++pos.x <= fmin(m->width - 1, cx + r))
+			if (sqrt((pos.x - cx) * (pos.x - cx) + (pos.y - cy) * (pos.y
+						- cy)) <= r + 0.4)
+				m->revealed[pos.y][pos.x] = 1;
+	}
+}
+
+static void	draw_map_tiles(t_game *g)
 {
 	t_pos	pos;
 
