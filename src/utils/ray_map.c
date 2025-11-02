@@ -100,23 +100,3 @@ t_ray	ray_map(t_game g, int x)
 	ray.side_dist.y = (ray.src.y + 1.0 - g.spider.pos.y) * ray.delta_dist.y;
 	return (ray);
 }
-
-void	print_map(t_game *g)
-{
-	t_pos	p;
-
-	p.y = -1;
-	while (g->map[++p.y])
-	{
-		p.x = -1;
-		while (g->map[p.y][++p.x])
-		{
-			if ((int)g->spider.pos.x == p.x && (int)g->spider.pos.y == p.y)
-				printf("P");
-			else
-				printf("%c", g->map[p.y][p.x]);
-		}
-		printf("\n");
-	}
-	printf("\n");
-}

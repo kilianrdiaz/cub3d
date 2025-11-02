@@ -235,7 +235,6 @@ char				**get_scores(void);
 int					get_position(t_game *g, char **scores);
 t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
 void				update_scores(char **scores, int position);
-void				print_map(t_game *g);
 
 // parsing
 

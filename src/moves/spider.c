@@ -47,7 +47,6 @@ static void	move_player(t_game *g, double dir)
 	else if (g->spider.state == MOVING)
 		g->spider.state = ACTIVE;
 	g->spider.move_accum = 0.0;
-	print_map(g);
 }
 
 static void	rotate_spidy(t_spidy *spidy, double angle)
