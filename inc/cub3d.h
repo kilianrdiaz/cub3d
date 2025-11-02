@@ -272,14 +272,14 @@ int					show_high_scores(t_game *g);
 
 // minimap rendering
 void				draw_minimap(t_game *g);
-void				draw_map_tiles(t_game *g, t_minimap *m);
-void				draw_sprites_minimap(t_game *g, t_minimap *m);
-void				draw_player_arrow(t_game *g, int tile, int ox, int oy);
+void				draw_map_tiles(t_game *g);
+void				draw_sprites_minimap(t_game *g);
+void				draw_player_arrow(t_game *g, t_minimap m);
 void				init_revealed_if_needed(t_minimap *m, int w, int h);
 void				reveal_radius(t_minimap *m, int cx, int cy, int r);
 void				update_revealed(t_minimap *m, int px, int py);
 void				put_rect(t_game *g, t_rect r);
-void				draw_tile(t_game *g, t_minimap *m, t_pos tile);
+void				draw_tile(t_game *g, t_pos tile);
 
 // input
 int					key_press(int key, t_game *g);

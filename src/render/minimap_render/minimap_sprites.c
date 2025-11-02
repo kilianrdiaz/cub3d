@@ -27,8 +27,7 @@ static int	show_sprite(t_game *g, t_sprite *sp)
 	return (0);
 }
 
-static void	draw_single_sprite(t_game *g, t_minimap *m, t_sprite *sp,
-		unsigned int color)
+static void	draw_single_sprite(t_game *g, t_sprite *sp, unsigned int color)
 {
 	t_rect	r;
 	t_pos	offset;
@@ -36,13 +35,13 @@ static void	draw_single_sprite(t_game *g, t_minimap *m, t_sprite *sp,
 
 	if (!show_sprite(g, sp))
 		return ;
-	if (!m->revealed || sp->pos.x < 0 || sp->pos.y < 0 || sp->pos.x >= m->width
-		|| sp->pos.y >= m->height
-		|| !m->revealed[(int)sp->pos.y][(int)sp->pos.x])
+	if (!g->minimap.revealed || sp->pos.x < 0 || sp->pos.y < 0
+		|| sp->pos.x >= g->minimap.width || sp->pos.y >= g->minimap.height
+		|| !g->minimap.revealed[(int)sp->pos.y][(int)sp->pos.x])
 		return ;
-	offset.x = m->offset.x;
-	offset.y = m->offset.y;
-	size_title = m->tile_size;
+	offset.x = g->minimap.offset.x;
+	offset.y = g->minimap.offset.y;
+	size_title = g->minimap.tile_size;
 	r.x = offset.x + (int)(sp->pos.x * size_title + size_title / 2);
 	r.y = offset.y + (int)(sp->pos.y * size_title + size_title / 2);
 	r.w = (int)(size_title * 0.5);
@@ -55,7 +54,7 @@ static void	draw_single_sprite(t_game *g, t_minimap *m, t_sprite *sp,
 	put_rect(g, r);
 }
 
-void	draw_sprites_minimap(t_game *g, t_minimap *m)
+void	draw_sprites_minimap(t_game *g)
 {
 	int				i;
 	unsigned int	color;
@@ -63,9 +62,9 @@ void	draw_sprites_minimap(t_game *g, t_minimap *m)
 	i = -1;
 	color = COL_BOMB;
 	while (g->bombs && g->bombs[++i])
-		draw_single_sprite(g, m, g->bombs[i], color);
+		draw_single_sprite(g, g->bombs[i], color);
 	i = -1;
 	color = COL_LIZARD;
 	while (g->lizards && g->lizards[++i])
-		draw_single_sprite(g, m, g->lizards[i], color);
+		draw_single_sprite(g, g->lizards[i], color);
 }

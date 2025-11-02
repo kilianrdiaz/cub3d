@@ -12,7 +12,7 @@
 
 #include "../../../inc/cub3d.h"
 
-void	draw_map_tiles(t_game *g, t_minimap *m)
+void	draw_map_tiles(t_game *g)
 {
 	t_pos	pos;
 
@@ -21,15 +21,8 @@ void	draw_map_tiles(t_game *g, t_minimap *m)
 	{
 		pos.x = -1;
 		while (g->map[pos.y][++pos.x])
-			draw_tile(g, m, pos);
+			draw_tile(g, pos);
 	}
-}
-
-static void	draw_minimap_elements(t_game *g, t_minimap *m)
-{
-	draw_map_tiles(g, m);
-	draw_sprites_minimap(g, m);
-	draw_player_arrow(g, m->tile_size, m->offset.x, m->offset.y);
 }
 
 void	draw_minimap(t_game *g)
@@ -49,5 +42,7 @@ void	draw_minimap(t_game *g)
 		g->minimap.tile_size = 2;
 	g->minimap.offset.x = MINIMAP_OFFSET_X + 6;
 	g->minimap.offset.y = MINIMAP_OFFSET_Y + 6;
-	draw_minimap_elements(g, &g->minimap);
+	draw_map_tiles(g);
+	draw_sprites_minimap(g);
+	draw_player_arrow(g, g->minimap);
 }

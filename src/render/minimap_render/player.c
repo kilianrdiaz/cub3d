@@ -64,26 +64,27 @@ static void	draw_filled_triangle(t_game *g, t_pos *t)
 		process_triangle_line(g, t, y);
 }
 
-void	draw_player_arrow(t_game *g, int tile, int ox, int oy)
+void	draw_player_arrow(t_game *g, t_minimap m)
 {
-	double		ang;
-	double		ca;
-	double		sa;
-	t_pos		t[3];
-	int			cx;
+	double	ang;
+	double	ca;
+	double	sa;
+	int		cx;
+	t_pos	t[3];
 
 	ang = atan2(g->spider.dir.y, g->spider.dir.x);
 	ca = cos(ang);
 	sa = sin(ang);
-	cx = ox + (int)(g->spider.pos.x * tile) - (int)round(ca * (tile / 2.0));
-	t[0].x = cx + (int)round(ca * tile);
-	t[0].y = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
-		+ (int)round(sa * tile);
-	t[1].x = cx - (int)round(sa * (tile / 2));
-	t[1].y = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
-		+ (int)round(ca * (tile / 2));
-	t[2].x = cx + (int)round(sa * (tile / 2));
-	t[2].y = oy + (int)(g->spider.pos.y * tile) - (int)round(sa * (tile / 2.0))
-		- (int)round(ca * (tile / 2));
+	cx = m.offset.x + (int)(g->spider.pos.x * m.tile_size) - (int)round(ca
+			* (m.tile_size / 2.0));
+	t[0].x = cx + (int)round(ca * m.tile_size);
+	t[0].y = m.offset.y + (int)(g->spider.pos.y * m.tile_size) - (int)round(sa
+			* (m.tile_size / 2.0)) + (int)round(sa * m.tile_size);
+	t[1].x = cx - (int)round(sa * (m.tile_size / 2));
+	t[1].y = m.offset.y + (int)(g->spider.pos.y * m.tile_size) - (int)round(sa
+			* (m.tile_size / 2.0)) + (int)round(ca * (m.tile_size / 2));
+	t[2].x = cx + (int)round(sa * (m.tile_size / 2));
+	t[2].y = m.offset.y + (int)(g->spider.pos.y * m.tile_size) - (int)round(sa
+			* (m.tile_size / 2.0)) - (int)round(ca * (m.tile_size / 2));
 	draw_filled_triangle(g, t);
 }
