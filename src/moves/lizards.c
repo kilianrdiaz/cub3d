@@ -14,24 +14,22 @@
 
 static int	move_lizard_to(t_game *g, t_sprite *l, t_coords move)
 {
-	t_pos	old_pos;
-	t_pos	new_pos;
+	int 	x;
 
-	old_pos.x = (int)l->pos.x;
-	old_pos.y = (int)l->pos.y;
-	new_pos.x = (int)move.x;
-	new_pos.y = (int)move.y;
-	if (new_pos.x < 0 || new_pos.y < 0)
+	if (move.x < 0 || move.y < 0)
 		return (0);
-	if (g->map[new_pos.y][new_pos.x] == '1'
-		|| g->map[new_pos.y][new_pos.x] == 'L')
+	if (g->map[(int)move.y][(int)move.x] == '1')
 		return (0);
-	if (new_pos.x != old_pos.x || new_pos.y != old_pos.y)
+	x = -1;
+	while (g->bombs && g->bombs[++x])
 	{
-		if (g->map[old_pos.y][old_pos.x] == 'L')
-			g->map[old_pos.y][old_pos.x] = '0';
-		if (g->map[new_pos.y][new_pos.x] == '0')
-			g->map[new_pos.y][new_pos.x] = 'L';
+		if (g->bombs[x]->state == DEFUSED)
+			continue ;
+		if (g->bombs[x]->pos.x == move.x
+			&& g->bombs[x]->pos.y == move.y)
+			g->bombs[x]->state = NO_RENDER;
+		else
+			g->bombs[x]->state = ACTIVE;
 	}
 	l->pos = move;
 	l->delay = g->timer + 0.5;
@@ -113,7 +111,7 @@ void	move_lizards(t_game *g)
 					- g->spider.pos.y));
 		if (dist <= 2.1)
 			l->state = ATTACKING;
-		else if (dist <= DETECT_RADIUS)
+		if (dist <= DETECT_RADIUS)
 			chase_lizard(g, l, &g->spider);
 		else
 			patrol_lizard(g, l);

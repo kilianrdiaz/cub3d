@@ -88,7 +88,7 @@ static void	position_sprite(t_game *g, t_sprite sp)
 	t_ray	ray;
 	t_tex	*tex;
 
-	if (sp.state == DEFUSED)
+	if (sp.state == DEFUSED || sp.state == NO_RENDER)
 		return ;
 	tex = g->bomb_tex;
 	if (sp.type != BOMB)

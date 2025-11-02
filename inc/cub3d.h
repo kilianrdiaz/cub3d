@@ -62,6 +62,7 @@ typedef enum e_state
 	MOVING,
 	ATTACKED,
 	ATTACKING,
+	NO_RENDER,
 	DEFUSED
 }					t_state;
 
