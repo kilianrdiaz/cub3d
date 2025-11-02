@@ -62,14 +62,14 @@ static void	draw_basic_tile(t_game *g, int color, t_rect r)
 	put_rect(g, r);
 }
 
-void	draw_tile(t_game *g, t_minimap *m, t_tile tile)
+void	draw_tile(t_game *g, t_minimap *m, t_pos tile)
 {
 	t_rect	r;
 
-	r.x = tile.info.ox + tile.x * tile.info.t;
-	r.y = tile.info.oy + tile.y * tile.info.t;
-	r.w = tile.info.t;
-	r.h = tile.info.t;
+	r.x = m->offset.x + tile.x * m->tile_size;
+	r.y = m->offset.y + tile.y * m->tile_size;
+	r.w = m->tile_size;
+	r.h = m->tile_size;
 	if (!m->revealed || !m->revealed[tile.y][tile.x])
 		draw_basic_tile(g, COL_UNK_FOG, r);
 	else if (g->map[tile.y][tile.x] == '1')

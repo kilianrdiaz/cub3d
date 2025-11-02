@@ -24,7 +24,7 @@
 # define GAME_WIDTH 1400
 # define GAME_HEIGHT 960
 
-# define MINIMAP_PLAYER_SIZE 10    // 🔹 radio del punto del jugador
+# define MINIMAP_PLAYER_SIZE 10 // 🔹 radio del punto del jugador
 
 # define SCALE_SPRITE 2.0
 
@@ -36,19 +36,19 @@
 # define LERP_SPEED 1
 
 // MINIMAPA
-# define COL_BG             0x000000
-# define COL_WALL           0xA9A9A9
-# define COL_FLOOR          0x000000
-# define COL_WALL_BORDER    0x404040
-# define COL_UNK_FOG        0x000000
-# define COL_PLAYER         0xFF2D2D
-# define COL_BOMB           0xFFB84D
-# define COL_LIZARD         0x5AFF7A
+# define COL_BG 0x000000
+# define COL_WALL 0xA9A9A9
+# define COL_FLOOR 0x000000
+# define COL_WALL_BORDER 0x404040
+# define COL_UNK_FOG 0x000000
+# define COL_PLAYER 0xFF2D2D
+# define COL_BOMB 0xFFB84D
+# define COL_LIZARD 0x5AFF7A
 
 # define REVEAL_STEP_RADIUS 3
 # define MINIMAP_SIZE_LIMIT 500
-# define MINIMAP_OFFSET_X   (WIDTH - MINIMAP_SIZE_LIMIT - 20)
-# define MINIMAP_OFFSET_Y   250
+# define MINIMAP_OFFSET_X (WIDTH - MINIMAP_SIZE_LIMIT - 20)
+# define MINIMAP_OFFSET_Y 250
 
 typedef struct s_coords
 {
@@ -165,49 +165,23 @@ typedef struct s_spidy
 	t_state			state;
 }					t_spidy;
 
-typedef struct s_sprite_info
-{
-	int		t;
-	int		ox;
-	int		oy;
-	int		color;
-}	t_sprite_info;
-
 typedef struct s_rect
 {
-	int	x;
-	int	y;
-	int	w;
-	int	h;
-	int	c;
-}				t_rect;
+	int				x;
+	int				y;
+	int				w;
+	int				h;
+	int				c;
+}					t_rect;
 
-typedef struct s_tileinfo
+typedef struct s_minimap
 {
-	int	t;
-	int	ox;
-	int	oy;
-}				t_tileinfo;
-
-typedef struct s_dims
-{
-	int	w;
-	int	h;
-}				t_dims;
-
-typedef struct s_tile
-{
-	int			x;
-	int			y;
-	t_tileinfo	info;
-}				t_tile;
-
-typedef struct	s_minimap
-{
-	char	**revealed;
-	int		width;
-	int		height;
-}				t_minimap;
+	char			**revealed;
+	int				width;
+	int				height;
+	int				tile_size;
+	t_pos			offset;
+}					t_minimap;
 
 typedef struct s_game
 {
@@ -297,16 +271,15 @@ void				display_score_panel(t_game *g, t_tex *score_panel,
 int					show_high_scores(t_game *g);
 
 // minimap rendering
-void			draw_minimap(t_game *g);
-void			draw_map_tiles(t_game *g, t_minimap *m, t_tileinfo info);
-void			draw_sprites_minimap(t_game *g, t_minimap *m,
-					t_sprite **arr, t_sprite_info *inf);
-void			draw_player_arrow(t_game *g, int tile, int ox, int oy);
-void			init_revealed_if_needed(t_minimap *m, int w, int h);
-void			reveal_radius(t_minimap *m, int cx, int cy, int r);
-void			update_revealed(t_minimap *m, int px, int py);
-void			put_rect(t_game *g, t_rect r);
-void			draw_tile(t_game *g, t_minimap *m, t_tile tile);
+void				draw_minimap(t_game *g);
+void				draw_map_tiles(t_game *g, t_minimap *m);
+void				draw_sprites_minimap(t_game *g, t_minimap *m);
+void				draw_player_arrow(t_game *g, int tile, int ox, int oy);
+void				init_revealed_if_needed(t_minimap *m, int w, int h);
+void				reveal_radius(t_minimap *m, int cx, int cy, int r);
+void				update_revealed(t_minimap *m, int px, int py);
+void				put_rect(t_game *g, t_rect r);
+void				draw_tile(t_game *g, t_minimap *m, t_pos tile);
 
 // input
 int					key_press(int key, t_game *g);

@@ -12,7 +12,7 @@
 
 #include "../../../inc/cub3d.h"
 
-static int show_sprite(t_game *g, t_sprite *sp)
+static int	show_sprite(t_game *g, t_sprite *sp)
 {
 	double	dist;
 
@@ -20,42 +20,52 @@ static int show_sprite(t_game *g, t_sprite *sp)
 		return (0);
 	if (sp->type != LIZARD)
 		return (1);
-	dist = sqrt(pow(g->spider.pos.x - sp->pos.x, 2)
-			+ pow(g->spider.pos.y - sp->pos.y, 2));
+	dist = sqrt(pow(g->spider.pos.x - sp->pos.x, 2) + pow(g->spider.pos.y
+				- sp->pos.y, 2));
 	if (dist <= 5)
 		return (1);
 	return (0);
 }
 
-static void	draw_single_sprite(t_game *g, t_minimap *m,
-		t_sprite *sp, t_sprite_info *inf)
+static void	draw_single_sprite(t_game *g, t_minimap *m, t_sprite *sp,
+		unsigned int color)
 {
-	t_rect		r;
+	t_rect	r;
+	t_pos	offset;
+	int		size_title;
 
 	if (!show_sprite(g, sp))
 		return ;
-	if (!m->revealed || sp->pos.x < 0 || sp->pos.y < 0
-		|| sp->pos.x >= m->width || sp->pos.y >= m->height
+	if (!m->revealed || sp->pos.x < 0 || sp->pos.y < 0 || sp->pos.x >= m->width
+		|| sp->pos.y >= m->height
 		|| !m->revealed[(int)sp->pos.y][(int)sp->pos.x])
 		return ;
-	r.x = inf->ox + (int)(sp->pos.x * inf->t + inf->t / 2);
-	r.y = inf->oy + (int)(sp->pos.y * inf->t + inf->t / 2);
-	r.w = (int)(inf->t * 0.5);
+	offset.x = m->offset.x;
+	offset.y = m->offset.y;
+	size_title = m->tile_size;
+	r.x = offset.x + (int)(sp->pos.x * size_title + size_title / 2);
+	r.y = offset.y + (int)(sp->pos.y * size_title + size_title / 2);
+	r.w = (int)(size_title * 0.5);
 	if (r.w < 2)
 		r.w = 2;
 	r.x -= r.w / 2;
 	r.y -= r.w / 2;
 	r.h = r.w;
-	r.c = inf->color;
+	r.c = color;
 	put_rect(g, r);
 }
 
-void	draw_sprites_minimap(t_game *g, t_minimap *m,
-		t_sprite **arr, t_sprite_info *inf)
+void	draw_sprites_minimap(t_game *g, t_minimap *m)
 {
-	int	i;
+	int				i;
+	unsigned int	color;
 
 	i = -1;
-	while (arr && arr[++i])
-		draw_single_sprite(g, m, arr[i], inf);
+	color = COL_BOMB;
+	while (g->bombs && g->bombs[++i])
+		draw_single_sprite(g, m, g->bombs[i], color);
+	i = -1;
+	color = COL_LIZARD;
+	while (g->lizards && g->lizards[++i])
+		draw_single_sprite(g, m, g->lizards[i], color);
 }

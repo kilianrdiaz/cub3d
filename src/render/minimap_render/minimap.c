@@ -12,74 +12,42 @@
 
 #include "../../../inc/cub3d.h"
 
-void	draw_map_tiles(t_game *g, t_minimap *m, t_tileinfo info)
+void	draw_map_tiles(t_game *g, t_minimap *m)
 {
-	int		y;
-	int		x;
-	t_tile	tile;
+	t_pos	pos;
 
-	y = -1;
-	while (g->map[++y])
+	pos.y = -1;
+	while (g->map[++pos.y])
 	{
-		x = -1;
-		while (g->map[y][++x])
-		{
-			tile.x = x;
-			tile.y = y;
-			tile.info = info;
-			draw_tile(g, m, tile);
-		}
+		pos.x = -1;
+		while (g->map[pos.y][++pos.x])
+			draw_tile(g, m, pos);
 	}
 }
 
-static void	draw_minimap_elements(t_game *g, t_minimap *m, t_tileinfo info,
-		t_dims dims)
+static void	draw_minimap_elements(t_game *g, t_minimap *m)
 {
-	int				ox;
-	int				oy;
-	t_sprite_info	inf;
-	t_rect			bg;
-
-	ox = MINIMAP_OFFSET_X + 6;
-	oy = MINIMAP_OFFSET_Y + 6;
-	bg.x = ox;
-	bg.y = oy;
-	bg.w = dims.w * info.t;
-	bg.h = dims.h * info.t;
-	bg.c = COL_BG;
-	put_rect(g, bg);
-	draw_map_tiles(g, m, info);
-	inf.t = info.t;
-	inf.ox = ox;
-	inf.oy = oy;
-	inf.color = COL_BOMB;
-	draw_sprites_minimap(g, m, g->bombs, &inf);
-	inf.color = COL_LIZARD;
-	draw_sprites_minimap(g, m, g->lizards, &inf);
-	draw_player_arrow(g, info.t, ox, oy);
+	draw_map_tiles(g, m);
+	draw_sprites_minimap(g, m);
+	draw_player_arrow(g, m->tile_size, m->offset.x, m->offset.y);
 }
 
 void	draw_minimap(t_game *g)
 {
-	t_minimap	*m;
-	int			h;
-	int			w;
-	int			t;
-	t_tileinfo	info;
+	int	h;
+	int	w;
 
-	m = &g->minimap;
-	h = 0;
-	while (g->map[h])
-		h++;
+	h = ft_memlen(g->map);
 	w = ft_strlen(g->map[0]);
-	if (!m->revealed || m->width != w || m->height != h)
-		init_revealed_if_needed(m, w, h);
-	reveal_radius(m, (int)g->spider.pos.x, (int)g->spider.pos.y, REVEAL_STEP_RADIUS);
-	t = fmin((MINIMAP_SIZE_LIMIT - 12) / w, (MINIMAP_SIZE_LIMIT - 12) / h);
-	if (t < 2)
-		t = 2;
-	info.t = t;
-	info.ox = MINIMAP_OFFSET_X + 6;
-	info.oy = MINIMAP_OFFSET_Y + 6;
-	draw_minimap_elements(g, m, info, (t_dims){w, h});
+	if (!g->minimap.revealed || g->minimap.width != w || g->minimap.height != h)
+		init_revealed_if_needed(&g->minimap, w, h);
+	reveal_radius(&g->minimap, (int)g->spider.pos.x, (int)g->spider.pos.y,
+		REVEAL_STEP_RADIUS);
+	g->minimap.tile_size = fmin((MINIMAP_SIZE_LIMIT - 12) / w,
+			(MINIMAP_SIZE_LIMIT - 12) / h);
+	if (g->minimap.tile_size < 2)
+		g->minimap.tile_size = 2;
+	g->minimap.offset.x = MINIMAP_OFFSET_X + 6;
+	g->minimap.offset.y = MINIMAP_OFFSET_Y + 6;
+	draw_minimap_elements(g, &g->minimap);
 }
