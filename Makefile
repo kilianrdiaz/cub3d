@@ -30,10 +30,10 @@ SRCS    = src/utils/parsing.c  \
 		  src/render/intro.c \
 		  src/render/display_scores.c \
 		  src/render/high_scores.c \
-		  src/render/minimap_render/minimap.c \
-		  src/render/minimap_render/draw_minimap.c \
-		  src/render/minimap_render/minimap_sprites.c \
-		  src/render/minimap_render/player.c \
+		  src/render/minimap/minimap.c \
+		  src/render/minimap/draw_minimap.c \
+		  src/render/minimap/minimap_sprites.c \
+		  src/render/minimap/player.c \
 		  src/moves/spider.c \
 		  src/moves/spider_attack.c \
 		  src/moves/lizards.c \
