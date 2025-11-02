@@ -107,6 +107,8 @@ void	render_text(t_game *g, char *str, t_pos pos)
 	int	advance;
 	int	i;
 
+	if (!str)
+		return ;
 	advance = (int)(g->font.char_w * g->font.scale);
 	i = -1;
 	while (str[++i])
