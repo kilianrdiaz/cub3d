@@ -62,11 +62,25 @@ static void	put_score_text(t_game *g, t_pos pos)
 	free(str);
 }
 
+void	draw_panel_separator(t_game *g)
+{
+	t_pos	p;
+
+	p.x = GAME_WIDTH - 1;
+	while (++p.x < GAME_WIDTH + 8)
+	{
+		p.y = -1;
+		while (++p.y < HEIGHT)
+			put_pixel(g, p.x, p.y, 0xFF555555);
+	}
+}
+
 void	render_stats(t_game *g)
 {
 	t_sprite	sp;
 	char		*str;
 
+	draw_panel_separator(g);
 	sp.pos.x = GAME_WIDTH + 150;
 	sp.pos.y = HEIGHT - 300;
 	sp.scale = 0.5;
