@@ -58,6 +58,12 @@ typedef struct s_coords
 	double			y;
 }					t_coords;
 
+typedef struct s_timeleft
+{
+	int				minutes;
+	int				seconds;
+}					t_timeleft;
+
 typedef enum e_state
 {
 	ACTIVE,
@@ -259,6 +265,8 @@ int					show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex *tex);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
+void				update_timer(t_game *g);
+void				put_timer(t_game *g, t_pos pos);
 void				render_stats(t_game *g);
 void				display_score_panel(t_game *g, t_tex *score_panel,
 						char **scores);

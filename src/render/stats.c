@@ -12,12 +12,6 @@
 
 #include "../../inc/cub3d.h"
 
-typedef struct s_timeleft
-{
-	int				minutes;
-	int				seconds;
-}					t_timeleft;
-
 static void	draw_text(t_game *g, t_tex tex, t_sprite sp)
 {
 	t_pos	p;
@@ -45,48 +39,6 @@ static void	draw_text(t_game *g, t_tex tex, t_sprite sp)
 					tex.color);
 		}
 	}
-}
-
-static t_timeleft	get_time_left(int timer)
-{
-	t_timeleft	t;
-	int			elapsed_seconds;
-	int			remaining;
-
-	elapsed_seconds = timer / 30;
-	remaining = TIMER - elapsed_seconds;
-	if (remaining < 0)
-		remaining = 0;
-	t.minutes = remaining / 60;
-	t.seconds = remaining % 60;
-	return (t);
-}
-
-static void	put_timer(t_game *g, t_pos pos)
-{
-	t_timeleft	t;
-	char		*str;
-	char		**buffer;
-
-	t = get_time_left(g->timer);
-	buffer = NULL;
-	str = ft_itoa(t.minutes);
-	ft_append_array((void ***)&buffer, str);
-	str = ft_strdup(":");
-	ft_append_array((void ***)&buffer, str);
-	str = ft_itoa(t.seconds);
-	ft_append_array((void ***)&buffer, str);
-	render_text(g, buffer[0], pos);
-	pos.x += (int)(g->font.char_w);
-	render_text(g, buffer[1], pos);
-	pos.x += (int)(g->font.char_w);
-	if (t.seconds < 10)
-	{
-		render_text(g, "0", pos);
-		pos.x += (int)(g->font.char_w * g->font.scale);
-	}
-	render_text(g, buffer[2], pos);
-	ft_free_array((void ***)&buffer);
 }
 
 static void	put_score_text(t_game *g, t_pos pos)

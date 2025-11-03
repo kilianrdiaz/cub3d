@@ -28,13 +28,14 @@ SRCS    = src/utils/parsing.c  \
 		  src/render/font.c \
 		  src/render/render.c \
 		  src/render/intro.c \
+		  src/render/timer.c \
+		  src/render/stats.c \
 		  src/render/display_scores.c \
 		  src/render/high_scores.c \
 		  src/render/minimap/minimap.c \
 		  src/render/minimap/draw_minimap.c \
 		  src/render/minimap/minimap_sprites.c \
 		  src/render/minimap/player.c \
-		  src/render/stats.c \
 		  src/moves/spider.c \
 		  src/moves/spider_attack.c \
 		  src/moves/lizards.c \

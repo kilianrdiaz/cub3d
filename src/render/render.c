@@ -50,7 +50,7 @@ static int	game(t_game *g)
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	if (g->spider.state == ATTACKING)
 		spider_attack(g);
-	g->timer++;
+	update_timer(g);
 	return (0);
 }
 
