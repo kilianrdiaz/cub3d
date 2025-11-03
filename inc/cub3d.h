@@ -50,6 +50,8 @@
 # define MINIMAP_OFFSET_X (WIDTH - MINIMAP_SIZE_LIMIT - 20)
 # define MINIMAP_OFFSET_Y 250
 
+# define TIMER 125
+
 typedef struct s_coords
 {
 	double			x;
@@ -257,6 +259,7 @@ int					show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex *tex);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
+void				render_stats(t_game *g);
 void				display_score_panel(t_game *g, t_tex *score_panel,
 						char **scores);
 int					show_high_scores(t_game *g);

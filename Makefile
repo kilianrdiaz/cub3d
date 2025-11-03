@@ -34,6 +34,7 @@ SRCS    = src/utils/parsing.c  \
 		  src/render/minimap/draw_minimap.c \
 		  src/render/minimap/minimap_sprites.c \
 		  src/render/minimap/player.c \
+		  src/render/stats.c \
 		  src/moves/spider.c \
 		  src/moves/spider_attack.c \
 		  src/moves/lizards.c \

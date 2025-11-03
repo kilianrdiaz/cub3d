@@ -32,7 +32,7 @@ static int	move_lizard_to(t_game *g, t_sprite *l, t_coords move)
 			g->bombs[x]->state = ACTIVE;
 	}
 	l->pos = move;
-	l->delay = g->timer + 0.5;
+	l->delay = g->timer + 5;
 	return (1);
 }
 

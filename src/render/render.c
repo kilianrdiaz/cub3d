@@ -46,10 +46,11 @@ static int	game(t_game *g)
 	move_lizards(g);
 	draw_hand(g, GAME_WIDTH / 2);
 	draw_minimap(g);
+	render_stats(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	if (g->spider.state == ATTACKING)
 		spider_attack(g);
-	g->timer += 0.1;
+	g->timer++;
 	return (0);
 }
 
