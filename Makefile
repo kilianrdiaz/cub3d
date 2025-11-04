@@ -6,7 +6,7 @@
 #    By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/15 14:52:33 by alejhern          #+#    #+#              #
-#    Updated: 2025/10/26 18:38:48 by kroyo-di         ###   ########.fr        #
+#    Updated: 2025/11/04 20:37:36 by kroyo-di         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,8 +42,10 @@ SRCS    = src/utils/parsing.c  \
 		  src/moves/key_hooks.c \
 		  src/moves/mark_score.c \
 		  src/close_program.c \
-		src/main.c 
-OBJ     = $(SRCS:.c=.o)
+		  src/main.c
+
+OBJ_DIR = obj
+OBJ     = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
 
 LIBFT_DIR = libft/
 LIBFT = $(LIBFT_DIR)libft.a
@@ -58,7 +60,6 @@ NAME    = cub3d
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
 
-
 # **************************************************************************** #
 #                                 RULES                                        #
 # **************************************************************************** #
@@ -68,7 +69,9 @@ all: $(LIBFT) $(MLX_LIB) $(NAME)
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
 
-%.o: %.c ./inc/cub3d.h Makefile
+# Compilación de .c a .o dentro de obj/
+$(OBJ_DIR)/%.o: src/%.c ./inc/cub3d.h Makefile
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(LIBFT):
@@ -88,10 +91,14 @@ $(MLX_LIB):
 clean:
 	@make -C $(LIBFT_DIR) clean
 	rm -rf $(OBJ_DIR)
+	@echo "🧹 Archivos objeto eliminados."
 
 fclean: clean
 	@make -C $(LIBFT_DIR) fclean
 	rm -rf $(MLX_DIR)
 	rm -f $(NAME)
+	@echo "🧼 Limpieza completa."
 
 re: fclean all
+
+.PHONY: all clean fclean re
