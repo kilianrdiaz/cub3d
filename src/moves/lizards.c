@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lizards.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 22:34:04 by alejhern          #+#    #+#             */
-/*   Updated: 2025/10/16 15:29:20 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/04 21:05:45 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,14 @@ void	move_lizards(t_game *g)
 		dist = (fabs(l->pos.x - g->spider.pos.x) + fabs(l->pos.y
 					- g->spider.pos.y));
 		if (dist <= 2.1)
-			l->state = ATTACKING;
+		{
+			if (g->timer >= l->delay)
+			{
+				l->state = ATTACKING;
+				l->delay = g->timer + 30; // 1 segundo entre ataques
+				player_take_damage(g, 20);
+			}
+		}
 		if (dist <= DETECT_RADIUS)
 			chase_lizard(g, l, &g->spider);
 		else

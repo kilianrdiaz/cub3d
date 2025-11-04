@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:03:30 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/10/07 11:13:52 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/04 21:04:26 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,12 @@ int	main(int argc, char **argv)
 	get_info_file(&g, argc, argv);
 	load_sprite_textures(&g);
 	load_font(&g, &g.font, "./textures/font.xpm");
+
+	// 🩸 Inicialización de vida del jugador
+	g.spider.max_hp = 100;
+	g.spider.hp = 100;
+	g.spider.last_hit_time = -9999;
+
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g);

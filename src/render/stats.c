@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stats.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 20:59:06 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/02 20:59:09 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/04 21:38:10 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,11 +75,44 @@ void	draw_panel_separator(t_game *g)
 	}
 }
 
+static void	draw_health_bar(t_game *g)
+{
+	int		bar_width;
+	int		bar_height;
+	int		x;
+	int		y;
+	double	ratio;
+	int		i;
+	int		j;
+
+	bar_width = 200;
+	bar_height = 25;
+	x = GAME_WIDTH + 200;
+	y = 80;
+	ratio = (double)g->spider.hp / g->spider.max_hp;
+
+	// Fondo de la barra (gris oscuro)
+	for (i = 0; i < bar_height; i++)
+		for (j = 0; j < bar_width; j++)
+			put_pixel(g, x + j, y + i, 0xFF222222);
+
+	// Parte roja (vida restante)
+	for (i = 0; i < bar_height; i++)
+		for (j = 0; j < (int)(bar_width * ratio); j++)
+			put_pixel(g, x + j, y + i, 0xFFCC0000);
+
+	// Mostrar texto “HP”
+	render_text(g, "HP", (t_pos){x - 150, y - 10});
+}
+
+
 void	render_stats(t_game *g)
 {
 	t_sprite	sp;
 	char		*str;
 
+	draw_health_bar(g);  // 🩸 Barra de vida arriba del panel
+	
 	draw_panel_separator(g);
 	sp.pos.x = GAME_WIDTH + 150;
 	sp.pos.y = HEIGHT - 300;
