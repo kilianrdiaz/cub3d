@@ -17,7 +17,7 @@ static int	close_intro(int keycode, t_game *g)
 	(void)keycode;
 	if (g->render_state == INTRO)
 	{
-		g->render_state = PLAYING;
+		g->render_state = LOAD_LEVEL;
 		ft_bzero(&g->keys, sizeof(t_keys));
 		clean_screen(g);
 		mlx_hook(g->win, 2, 1L << 0, key_press, g);

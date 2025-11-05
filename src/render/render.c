@@ -58,22 +58,23 @@ static int load_level(t_game *g)
 {
 	ft_free_array((void ***)&g->map);
 	get_info_file(g);
-	g->render_state = INTRO;
+	if (g->render_state == LOAD_LEVEL)
+		g->render_state = PLAYING;
 	return (0);
 }
 
 int	render(t_game *g)
 {
+	if (g->render_state == INTRO)
+		return (show_intro(g));
 	if (g->render_state == LOAD_LEVEL)
 		return (load_level(g));
-	else if (g->render_state == INTRO)
-		return (show_intro(g));
-	else if (g->render_state == PLAYING)
+	if (g->render_state == PLAYING)
 		return (game(g));
-	else if (g->render_state == HIGH_SCORE || g->render_state == WAITING_FOR_NAME
+	if (g->render_state == HIGH_SCORE || g->render_state == WAITING_FOR_NAME
 		|| g->render_state == SCORE_SAVED)
 		return (show_high_scores(g));
-	else if (g->render_state == GAME_OVER)
+	if (g->render_state == GAME_OVER)
 		close_program(g);
 	return (0);
 }

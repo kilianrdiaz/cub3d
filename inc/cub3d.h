@@ -76,8 +76,8 @@ typedef enum e_state
 
 typedef enum e_render
 {
-	LOAD_LEVEL,
 	INTRO,
+	LOAD_LEVEL,
 	PLAYING,
 	WIN,
 	WAITING_FOR_NAME,
