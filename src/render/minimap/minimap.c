@@ -18,7 +18,7 @@ static void	init_revealed_if_needed(t_minimap *m, int w, int h)
 
 	if (m->revealed && w == m->width && h == m->height)
 		return ;
-	m->revealed = malloc(sizeof(char *) * h);
+	m->revealed = ft_calloc(sizeof(char *), h + 1);
 	if (!m->revealed)
 		return ;
 	i = -1;
