@@ -76,6 +76,7 @@ typedef enum e_state
 
 typedef enum e_render
 {
+	LOAD_LEVEL,
 	INTRO,
 	PLAYING,
 	WIN,
@@ -195,6 +196,7 @@ typedef struct s_game
 	int				endian;
 	double			timer;
 	t_render		render_state;
+	char			**levels;
 	char			**map;
 	t_spidy			spider;
 	t_font			font;
@@ -246,8 +248,8 @@ t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
 void				update_scores(char **scores, int position);
 
 // parsing
-
-void				get_info_file(t_game *g, int argc, char **argv);
+int					check_files_extension(int argc, char **argv);
+void				get_info_file(t_game *g);
 void				load_map_textures(t_game *g, char **content);
 char				**get_map(char **content);
 void				create_spiderman(t_game *g);

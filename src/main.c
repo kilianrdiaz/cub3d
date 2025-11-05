@@ -63,11 +63,15 @@ int	main(int argc, char **argv)
 	t_game	g;
 
 	ft_bzero(&g, sizeof(t_game));
+	if (check_files_extension(argc, argv))
+		return (1);
+	g.levels = argv + 1;
 	create_mlx_window(&g);
 	g.map_text = ft_calloc(sizeof(t_tex), 6);
 	if (!g.map_text)
 		ft_error_exit("Error: Memory allocation failed for map textures\n");
-	get_info_file(&g, argc, argv);
+	for (int i = 0; i < 6; i++)
+		g.map_text[i].img = NULL;
 	load_sprite_textures(&g);
 	load_font(&g, &g.font, "./textures/font.xpm");
 	ft_bzero(&g.keys, sizeof(t_keys));

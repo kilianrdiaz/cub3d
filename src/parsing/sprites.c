@@ -12,21 +12,28 @@
 
 #include "../../inc/cub3d.h"
 
-static int	set_direction(t_game *g, char c)
+static void	set_direction(t_game *g, char c)
 {
 	if (c == 'N' || c == 'P')
-		return (g->spider.dir.x = 0, g->spider.dir.y = -1,
-			g->spider.plane.x = 0.66, g->spider.plane.y = 0, 0);
-	if (c == 'S')
-		return (g->spider.dir.x = 0, g->spider.dir.y = 1, g->spider.plane.x
-			= -0.66, g->spider.plane.y = 0, 0);
-	if (c == 'E')
-		return (g->spider.dir.x = 1, g->spider.dir.y = 0, g->spider.plane.x = 0,
-			g->spider.plane.y = 0.66, 0);
-	if (c == 'W')
-		return (g->spider.dir.x = -1, g->spider.dir.y = 0,
-			g->spider.plane.x = 0, g->spider.plane.y = -0.66, 0);
-	return (-1);
+	{
+		g->spider.dir = (t_coords){0, -1};
+		g->spider.plane = (t_coords){0.66, 0};
+	}
+	else if (c == 'S')
+	{
+		g->spider.dir = (t_coords){0, 1};
+		g->spider.plane = (t_coords){-0.66, 0};
+	}
+	else if (c == 'E')
+	{
+		g->spider.dir = (t_coords){1, 0};
+		g->spider.plane = (t_coords){0, 0.66};
+	}
+	else if (c == 'W')
+	{
+		g->spider.dir = (t_coords){-1, 0};
+		g->spider.plane = (t_coords){0, -0.66};
+	}
 }
 
 void	create_spiderman(t_game *g)
@@ -51,7 +58,8 @@ void	create_spiderman(t_game *g)
 			}
 		}
 	}
-	ft_error_exit("Error: No player start position found in map\n");
+	ft_putendl_fd("Error: No player start position found in map\n", 2);
+	g->render_state = HIGH_SCORE;
 }
 
 static void	create_sprite(t_game *g, t_pos p, char type)
