@@ -48,8 +48,6 @@ void	load_texture(t_game *g, t_tex *tex, char *path)
 {
 	if (!g || !tex || !path)
 		return ;
-	if (tex->img)
-		mlx_destroy_image(g->mlx, tex->img);
 	tex->img = mlx_xpm_file_to_image(g->mlx, path, &tex->width, &tex->height);
 	if (!tex->img)
 	{

@@ -70,8 +70,6 @@ int	main(int argc, char **argv)
 	g.map_text = ft_calloc(sizeof(t_tex), 6);
 	if (!g.map_text)
 		ft_error_exit("Error: Memory allocation failed for map textures\n");
-	for (int i = 0; i < 6; i++)
-		g.map_text[i].img = NULL;
 	load_sprite_textures(&g);
 	load_font(&g, &g.font, "./textures/font.xpm");
 	ft_bzero(&g.keys, sizeof(t_keys));

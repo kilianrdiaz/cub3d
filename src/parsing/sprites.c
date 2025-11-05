@@ -50,7 +50,6 @@ void	create_spiderman(t_game *g)
 			c = g->map[p.y][p.x];
 			if (c == 'N' || c == 'S' || c == 'E' || c == 'W' || c == 'P')
 			{
-				ft_bzero(&g->spider, sizeof(t_spidy));
 				g->spider.pos.x = p.x + 0.5;
 				g->spider.pos.y = p.y + 0.5;
 				set_direction(g, c);
