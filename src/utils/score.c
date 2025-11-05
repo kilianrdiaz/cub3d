@@ -21,10 +21,7 @@ char	**get_scores(void)
 
 	fd = open("scores.txt", O_RDONLY | O_CREAT, 0644);
 	if (fd == -1)
-	{
-		ft_putendl_fd("Error: Could not open scores.txt", 2);
-		return (NULL);
-	}
+		ft_perror_exit("Error: Could not open or create scores file\n");
 	scores = ft_calloc(sizeof(char *), 6);
 	if (!scores)
 		return (close(fd), NULL);
@@ -36,8 +33,12 @@ char	**get_scores(void)
 		scores[index++] = line;
 		line = get_next_line(fd);
 	}
-	close(fd);
-	return (scores);
+	while (line)
+	{
+		free(line);
+		line = get_next_line(fd);
+	}
+	return (close(fd), scores);
 }
 
 int	get_position(t_game *g, char **scores)
