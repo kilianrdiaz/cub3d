@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/10/29 21:48:16 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/04 21:11:06 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,6 +172,10 @@ typedef struct s_spidy
 	double			move_accum;
 	t_tex			*hand;
 	t_state			state;
+	// Damage_system
+	int     hp;
+    int     max_hp;
+    int     last_hit_time;
 }					t_spidy;
 
 typedef struct s_minimap
@@ -290,5 +294,6 @@ void				move_lizards(t_game *g);
 char				*set_name(t_game *g, t_sprite *alphabet, t_ray ray);
 
 void				close_program(t_game *g);
+void				player_take_damage(t_game *g, int amount);
 
 #endif

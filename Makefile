@@ -6,7 +6,7 @@
 #    By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/15 14:52:33 by alejhern          #+#    #+#              #
-#    Updated: 2025/11/04 20:37:36 by kroyo-di         ###   ########.fr        #
+#    Updated: 2025/11/04 21:08:18 by kroyo-di         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ SRCS    = src/utils/parsing.c  \
 		  src/moves/lizards.c \
 		  src/moves/key_hooks.c \
 		  src/moves/mark_score.c \
+		  src/moves/damage_system.c \
 		  src/close_program.c \
 		  src/main.c
 
