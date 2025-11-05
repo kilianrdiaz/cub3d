@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray_map.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 14:45:16 by alejhern          #+#    #+#             */
-/*   Updated: 2025/10/16 15:45:09 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/04 20:29:20 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex, int side)
 	ray->view -= floor(ray->view);
 	ray->src.x = (int)(ray->view * tex.width);
 	ray->src.x = clamp_int(ray->src.x, 0, tex.width - 1);
-	if ((!side == 0 && ray->left.x > 0) || (side && ray->left.y < 0))
+	if ((!side && ray->left.x > 0) || (side && ray->left.y < 0))
 		ray->src.x = tex.width - ray->src.x - 1;
 }
 
