@@ -65,7 +65,7 @@ int	main(int argc, char **argv)
 	ft_bzero(&g, sizeof(t_game));
 	if (check_files_extension(argc, argv))
 		return (1);
-	g.levels = argv + 1;
+	g.levels = argv;
 	create_mlx_window(&g);
 	g.map_text = ft_calloc(sizeof(t_tex), 6);
 	if (!g.map_text)

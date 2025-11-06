@@ -54,22 +54,6 @@ static int	game(t_game *g)
 	return (0);
 }
 
-static int	load_level(t_game *g)
-{
-	g->levels++;
-	if (!*g->levels)
-	{
-		g->render_state = HIGH_SCORE;
-		return (0);
-	}
-	ft_free_array((void ***)&g->map);
-	get_info_file(g);
-	if (g->render_state == LOAD_LEVEL)
-		g->render_state = PLAYING;
-	g->timer = 0;
-	return (0);
-}
-
 int	render(t_game *g)
 {
 	if (g->render_state == INTRO)
