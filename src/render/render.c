@@ -42,15 +42,15 @@ static int	game(t_game *g)
 	render_floor_and_ceiling(g);
 	render_wall(g);
 	render_sprites(g);
-	update_bombs(g);
 	move_lizards(g);
 	draw_hand(g, GAME_WIDTH / 2);
 	draw_minimap(g);
 	render_stats(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
+	update_timer(g);
+	update_bombs(g);
 	if (g->spider.state == ATTACKING)
 		spider_attack(g);
-	update_timer(g);
 	return (0);
 }
 

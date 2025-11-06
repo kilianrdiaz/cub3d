@@ -31,7 +31,10 @@ void	update_bombs(t_game *g)
 		}
 	}
 	if (g->bomb_count == 0)
+	{
 		g->render_state = LOAD_LEVEL;
+		g->timer = 0;
+	}
 }
 
 static int	check_if_is_lizard(t_game *g, int x, int y)

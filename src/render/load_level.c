@@ -84,13 +84,16 @@ static t_timeleft	set_message(t_game *g, char *msg)
 
 int	load_level(t_game *g)
 {
-	t_timeleft t;
+	t_timeleft	t;
 
 	if (g->timer == 0)
 	{
 		ft_free_array((void ***)&g->map);
-		g->levels++;
-		get_info_file(g);
+		++g->levels;
+		if (ft_memlen(g->levels))
+			get_info_file(g);
+		else
+			return (g->render_state = HIGH_SCORE, 0);
 	}
 	t = set_message(g, "DEFUSE THE BOMBS!");
 	g->timer++;
