@@ -14,7 +14,7 @@
 
 static int	move_lizard_to(t_game *g, t_sprite *l, t_coords move)
 {
-	int 	x;
+	int	x;
 
 	if (move.x < 0 || move.y < 0)
 		return (0);
@@ -25,8 +25,7 @@ static int	move_lizard_to(t_game *g, t_sprite *l, t_coords move)
 	{
 		if (g->bombs[x]->state == DEFUSED)
 			continue ;
-		if (g->bombs[x]->pos.x == move.x
-			&& g->bombs[x]->pos.y == move.y)
+		if (g->bombs[x]->pos.x == move.x && g->bombs[x]->pos.y == move.y)
 			g->bombs[x]->state = NO_RENDER;
 		else
 			g->bombs[x]->state = ACTIVE;

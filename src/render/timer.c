@@ -56,13 +56,13 @@ void	put_timer(t_game *g, t_pos pos)
 
 void	update_timer(t_game *g)
 {
-    t_timeleft    t;
+	t_timeleft	t;
 
-    t = get_time_left(g->timer);
-    if (t.minutes == 0 && t.seconds == 0)
-    {
-        g->render_state = HIGH_SCORE;
-        return ;
-    }
-    g->timer++;
+	t = get_time_left(g->timer);
+	if (t.minutes == 0 && t.seconds == 0)
+	{
+		g->render_state = HIGH_SCORE;
+		return ;
+	}
+	g->timer++;
 }
