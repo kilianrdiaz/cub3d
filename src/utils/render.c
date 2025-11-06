@@ -34,6 +34,20 @@ void	clean_screen(t_game *g)
 	}
 }
 
+unsigned int	get_pixel_color(t_tex tex, int x, int y)
+{
+	unsigned int	color;
+	char			*dst;
+
+	if (x < 0 || x >= tex.width || y < 0 || y >= tex.height)
+		return (0);
+	if (tex.color != COLOR_NONE)
+		return (tex.color);
+	dst = tex.addr + (y * tex.line_len + x * (tex.bpp / 8));
+	color = *(unsigned int *)dst;
+	return (color);
+}
+
 void	put_pixel(t_game *g, int x, int y, int color)
 {
 	char	*dst;

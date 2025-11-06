@@ -231,6 +231,7 @@ int					validate_line(char *line);
 int					ft_isspace(int c);
 int					check_loaded_textures(t_game *game);
 int					clamp_int(int v, int a, int b);
+unsigned int		get_pixel_color(t_tex tex, int x, int y);
 void				put_pixel(t_game *g, int x, int y, int color);
 void				clean_screen(t_game *g);
 void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);

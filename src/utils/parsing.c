@@ -21,10 +21,16 @@ int	ft_isspace(int c)
 
 int	check_loaded_textures(t_game *game)
 {
-	if (!game->map_text[NO].img || !game->map_text[SO].img
-		|| !game->map_text[WE].img || !game->map_text[EA].img
-		|| !game->map_text[F].img || !game->map_text[C].img)
-		return (0);
+	t_tex	tex;
+	int		i;
+
+	i = -1;
+	while (++i < 6)
+	{
+		tex = game->map_text[i];
+		if (!tex.img && tex.color == COLOR_NONE)
+			return (0);
+	}
 	return (1);
 }
 

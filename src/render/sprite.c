@@ -50,9 +50,7 @@ static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex *tex)
 		if (ray.src.x < 0 || ray.src.x >= tex[sp->state].width || ray.src.y < 0
 			|| ray.src.y >= tex[sp->state].height)
 			continue ;
-		ray.color = *(unsigned int *)(tex[sp->state].addr + ray.src.y
-				* tex[sp->state].line_len + ray.src.x * (tex[sp->state].bpp
-					/ 8));
+		ray.color = get_pixel_color(tex[sp->state], ray.src.x, ray.src.y);
 		if ((ray.color & 0x00FFFFFF) != 0) // Transparencia
 			put_pixel(g, ray.line_height, y, ray.color);
 	}
