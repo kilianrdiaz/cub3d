@@ -65,18 +65,19 @@ int	get_position(t_game *g, char **scores)
 	return (-1);
 }
 
-static void	add_buttons(t_game *g, t_sprite *alphabet, int index, t_pos pos)
+static void	add_buttons(t_game *g, t_sprite *alphabet, int index,
+		t_coords coords)
 {
-	int	line_buttons;
+	double	line_buttons;
 
-	line_buttons = pos.y;
-	pos.y += g->font.scale * g->font.char_h - 40;
-	alphabet[++index].pos = (t_coords){pos.x, line_buttons};
+	line_buttons = coords.y;
+	coords.y += g->font.scale * g->font.char_h - 40;
+	alphabet[++index].pos = (t_coords){coords.x, line_buttons};
 	g->font.scale = 0.75;
-	render_text(g, "DEL", alphabet[index].pos);
-	pos.x += g->font.char_w * 4 * g->font.scale + 10;
-	alphabet[++index].pos = (t_coords){pos.x, line_buttons};
-	render_text(g, "END", alphabet[index].pos);
+	render_text(g, "DEL", coords);
+	coords.x += g->font.char_w * 4 * g->font.scale + 10;
+	alphabet[++index].pos = (t_coords){coords.x, line_buttons};
+	render_text(g, "END", coords);
 	g->font.scale = 3.5;
 }
 
@@ -85,7 +86,7 @@ t_sprite	*print_alphabet(t_game *game, t_tex score_panel)
 	char		x;
 	int			index;
 	t_sprite	*alphabet;
-	t_pos		pos;
+	t_coords	pos;
 
 	game->font.scale = 3.5;
 	alphabet = ft_safe_calloc(sizeof(t_sprite), 28);
