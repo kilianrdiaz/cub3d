@@ -28,6 +28,15 @@ t_tex	get_texture_wall(t_game g, t_ray ray, int side)
 	}
 }
 
+int	clamp_int(int v, int a, int b)
+{
+	if (v < a)
+		return (a);
+	if (v > b)
+		return (b);
+	return (v);
+}
+
 void	calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex, int side)
 {
 	ray->line_height = (int)(HEIGHT / ray->row_distance);

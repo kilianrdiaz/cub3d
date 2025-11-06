@@ -12,15 +12,6 @@
 
 #include "../../inc/cub3d.h"
 
-int	clamp_int(int v, int a, int b)
-{
-	if (v < a)
-		return (a);
-	if (v > b)
-		return (b);
-	return (v);
-}
-
 void	clean_screen(t_game *g)
 {
 	t_pos	it;
@@ -39,10 +30,10 @@ unsigned int	get_pixel_color(t_tex tex, int x, int y)
 	unsigned int	color;
 	char			*dst;
 
-	if (x < 0 || x >= tex.width || y < 0 || y >= tex.height)
-		return (0);
 	if (tex.color != COLOR_NONE)
 		return (tex.color);
+	if (x < 0 || x >= tex.width || y < 0 || y >= tex.height)
+		return (0);
 	dst = tex.addr + (y * tex.line_len + x * (tex.bpp / 8));
 	color = *(unsigned int *)dst;
 	return (color);
