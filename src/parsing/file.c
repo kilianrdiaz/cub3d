@@ -43,8 +43,8 @@ int	check_files_extension(int argc, char **argv)
 		len = ft_strlen(argv[i]);
 		if (len < 4 || ft_strncmp(argv[i] + len - 4, ".cub", 4) != 0)
 		{
-			ft_printf_fd(STDERR_FILENO, "Error: Invalid file extension for %s,
-				expected .cub\n", argv[i]);
+			ft_printf_fd(2, "Error: Invalid file extension for %s, ", argv[i]);
+			ft_putendl_fd("Expected .cub", 2);
 			return (1);
 		}
 	}
