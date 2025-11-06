@@ -73,10 +73,10 @@ static void	add_buttons(t_game *g, t_sprite *alphabet, int index, t_pos pos)
 	pos.y += g->font.scale * g->font.char_h - 40;
 	alphabet[++index].pos = (t_coords){pos.x, line_buttons};
 	g->font.scale = 0.75;
-	render_text(g, "DEL", pos);
+	render_text(g, "DEL", alphabet[index].pos);
 	pos.x += g->font.char_w * 4 * g->font.scale + 10;
 	alphabet[++index].pos = (t_coords){pos.x, line_buttons};
-	render_text(g, "END", pos);
+	render_text(g, "END", alphabet[index].pos);
 	g->font.scale = 3.5;
 }
 
@@ -96,7 +96,7 @@ t_sprite	*print_alphabet(t_game *game, t_tex score_panel)
 	while (++x <= 'Z' && ++index < 26)
 	{
 		alphabet[index].pos = (t_coords){pos.x, pos.y};
-		render_text(game, &x, pos);
+		render_text(game, &x, alphabet[index].pos);
 		pos.x += game->font.char_w * game->font.scale + 10;
 		if ((x - 'A' + 1) % 9 == 0)
 		{

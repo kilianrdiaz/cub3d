@@ -51,13 +51,13 @@ static void	put_score_text(t_game *g, t_pos pos)
 	str = ft_itoa(g->score);
 	if (!str)
 		return ;
-	pos.x -= (int)(g->font.char_w * ft_strlen(str) / 2);
-	advance = (int)(g->font.char_w);
+	pos.x -= (g->font.char_w * ft_strlen(str) / 2);
+	advance = (g->font.char_w);
 	i = -1;
 	while (str[++i])
 	{
 		ch = str[i];
-		render_text(g, &ch, (t_pos){pos.x + i * advance, pos.y});
+		render_text(g, &ch, (t_coords){pos.x + i * advance, pos.y});
 	}
 	free(str);
 }
@@ -89,11 +89,11 @@ void	render_stats(t_game *g)
 	g->font.scale = 1.8;
 	sp.pos.y -= g->font.char_h * g->font.scale / 3;
 	str = ft_itoa(g->bomb_count);
-	render_text(g, str, (t_pos){sp.pos.x, sp.pos.y});
+	render_text(g, str, sp.pos);
 	free(str);
 	sp.pos.x = GAME_WIDTH + 150;
 	sp.pos.y += g->bomb_tex[ACTIVE].height * sp.scale + 50;
-	put_timer(g, (t_pos){sp.pos.x, sp.pos.y});
+	put_timer(g, sp.pos);
 	sp.pos.y += g->font.char_h * g->font.scale + 10;
 	sp.pos.x = GAME_WIDTH + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
 	put_score_text(g, (t_pos){sp.pos.x, sp.pos.y});

@@ -113,7 +113,7 @@ char	*set_name(t_game *g, t_sprite *alphabet, t_ray ray)
 	int			ch;
 	static char	name[7] = "------";
 	static int	index = 0;
-	t_pos		pos;
+	t_coords	pos;
 
 	update_web_target_position(g, alphabet);
 	g->font.scale = 2.5;

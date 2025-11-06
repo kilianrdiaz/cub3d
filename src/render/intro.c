@@ -41,7 +41,7 @@ static int	read_intro(t_game *g)
 	g->font.scale = 1.2;
 	while (line)
 	{
-		render_text(g, line, p);
+		render_text(g, line, (t_coords){p.x, p.y});
 		p.y += g->font.char_h * 0.8 + 10;
 		free(line);
 		line = get_next_line(fd);

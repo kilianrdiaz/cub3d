@@ -70,7 +70,7 @@ static char	*register_score(t_game *g, t_tex *score_panel)
 	load_texture(g, &target, "./textures/web_target.xpm");
 	draw_fullscreen_image(g, score_panel);
 	g->font.scale = 1.5;
-	render_text(g, "ENTER NAME", (t_pos){(WIDTH - score_panel->width) / 2,
+	render_text(g, "ENTER NAME", (t_coords){(WIDTH - score_panel->width) / 2,
 		(HEIGHT - score_panel->height) / 2});
 	alphabet = print_alphabet(g, *score_panel);
 	draw_hand(g, g->spider.pos.x);

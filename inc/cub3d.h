@@ -261,14 +261,16 @@ int					render(t_game *g);
 void				update_bombs(t_game *g);
 void				draw_hand(t_game *g, int x);
 void				render_sprites(t_game *g);
-void				render_text(t_game *g, char *str, t_pos pos);
+void				render_text(t_game *g, char *str, t_coords coords);
 void				load_font(t_game *g, t_font *f, char *path);
+int					load_level(t_game *g);
 int					show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex *tex);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
+t_timeleft			get_time_left(double timer, double time_limit);
+void				put_timer(t_game *g, t_coords coords);
 void				update_timer(t_game *g);
-void				put_timer(t_game *g, t_pos pos);
 void				render_stats(t_game *g);
 void				display_score_panel(t_game *g, t_tex *score_panel,
 						char **scores);
