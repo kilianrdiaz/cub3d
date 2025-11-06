@@ -26,9 +26,10 @@ static t_ray	ray_hand(t_tex hand, double spider_x)
 
 void	draw_hand(t_game *g, int x)
 {
-	t_pos	p;
-	t_tex	hand;
-	t_ray	l_ray;
+	t_pos			p;
+	t_tex			hand;
+	t_ray			l_ray;
+	unsigned int	color;
 
 	if (!g->spider.hand || !g->spider.hand[0].addr || !g->spider.hand[1].addr)
 		return ;
@@ -42,11 +43,10 @@ void	draw_hand(t_game *g, int x)
 		{
 			l_ray.src.x = (int)(p.x / SCALE_SPRITE);
 			l_ray.src.y = (int)(p.y / SCALE_SPRITE);
-			l_ray.color = *(unsigned int *)(hand.addr + l_ray.src.y
-					* hand.line_len + l_ray.src.x * (hand.bpp / 8));
-			if ((l_ray.color & 0x00FFFFFF) != 0)
+			color = get_pixel_color(hand, l_ray.src.x, l_ray.src.y);
+			if ((color & 0x00FFFFFF) != 0)
 				put_pixel(g, l_ray.d_start.x + p.x, l_ray.d_start.y + p.y,
-					l_ray.color);
+					color);
 		}
 	}
 }

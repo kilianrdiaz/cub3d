@@ -34,11 +34,12 @@ static t_ray	ray_web_target(t_game *g, t_tex web_target, float scale)
 
 static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 {
-	t_ray	ray;
-	float	scale;
-	t_pos	pos;
+	t_ray			ray;
+	double			scale;
+	t_pos			pos;
+	unsigned int	color;
 
-	scale = (g->font.char_h * g->font.scale) / (float)web_target->height;
+	scale = (g->font.char_h * g->font.scale) / (double)web_target->height;
 	ray = ray_web_target(g, *web_target, scale);
 	// 5. Dibujado con reescalado por muestreo sencillo
 	pos.y = -1;
@@ -49,12 +50,10 @@ static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 		{
 			ray.src.x = pos.x / scale;
 			ray.src.y = pos.y / scale;
-			ray.color = *((unsigned int *)(web_target->addr + (ray.src.y
-							* web_target->line_len + ray.src.x
-							* (web_target->bpp / 8))));
-			if ((ray.color & 0x00FFFFFF) != 0)
+			color = get_pixel_color(*web_target, ray.src.x, ray.src.y);
+			if ((color & 0x00FFFFFF) != 0)
 				put_pixel(g, ray.d_start.x + pos.x, ray.d_start.y + pos.y,
-					ray.color);
+					color);
 		}
 	}
 	return (ray);

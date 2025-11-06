@@ -222,7 +222,6 @@ typedef struct s_ray
 	t_pos			d_start;
 	t_pos			d_end;
 	t_pos			src;
-	unsigned int	color;
 }					t_ray;
 
 // utils

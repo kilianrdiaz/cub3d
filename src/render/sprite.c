@@ -35,8 +35,9 @@ static void	sort_sprites(t_sprite_order *order, int count)
 
 static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex *tex)
 {
-	int	d;
-	int	y;
+	int				d;
+	int				y;
+	unsigned int	color;
 
 	if (sp->state == DEFUSED)
 		return ;
@@ -50,9 +51,9 @@ static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex *tex)
 		if (ray.src.x < 0 || ray.src.x >= tex[sp->state].width || ray.src.y < 0
 			|| ray.src.y >= tex[sp->state].height)
 			continue ;
-		ray.color = get_pixel_color(tex[sp->state], ray.src.x, ray.src.y);
-		if ((ray.color & 0x00FFFFFF) != 0) // Transparencia
-			put_pixel(g, ray.line_height, y, ray.color);
+		color = get_pixel_color(tex[sp->state], ray.src.x, ray.src.y);
+		if ((color & 0x00FFFFFF) != 0) // Transparencia
+			put_pixel(g, ray.line_height, y, color);
 	}
 }
 
