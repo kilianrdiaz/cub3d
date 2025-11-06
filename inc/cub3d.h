@@ -60,8 +60,8 @@ typedef struct s_coords
 
 typedef struct s_timeleft
 {
-	int				minutes;
-	int				seconds;
+	unsigned int	minutes;
+	unsigned int	seconds;
 }					t_timeleft;
 
 typedef enum e_state
@@ -159,7 +159,7 @@ typedef struct s_sprite
 	int				width;
 	int				height;
 	int				screen_x;
-	double			delay;
+	unsigned int	delay;
 	double			scale;
 	t_state			state;
 	t_sprite_type	type;
@@ -194,7 +194,7 @@ typedef struct s_game
 	int				bpp;
 	int				line_len;
 	int				endian;
-	double			timer;
+	unsigned int	timer;
 	t_render		render_state;
 	char			**levels;
 	char			**map;
@@ -208,7 +208,7 @@ typedef struct s_game
 	t_tex			*map_text;
 	t_keys			keys;
 	t_minimap		minimap;
-	int				score;
+	unsigned int	score;
 }					t_game;
 
 typedef struct s_ray
@@ -269,7 +269,7 @@ int					show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex *tex);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
-t_timeleft			get_time_left(double timer, double time_limit);
+t_timeleft			get_time_left(unsigned int timer, unsigned int time_limit);
 void				put_timer(t_game *g, t_coords coords);
 void				update_timer(t_game *g);
 void				render_stats(t_game *g);

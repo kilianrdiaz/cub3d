@@ -12,7 +12,7 @@
 
 #include "../../inc/cub3d.h"
 
-t_timeleft	get_time_left(double timer, double time_limit)
+t_timeleft	get_time_left(unsigned int timer, unsigned int time_limit)
 {
 	t_timeleft	t;
 	int			elapsed_seconds;

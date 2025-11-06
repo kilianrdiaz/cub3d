@@ -56,7 +56,7 @@ int	get_position(t_game *g, char **scores)
 			return (position);
 		if (!line[1])
 			return (ft_free_array((void ***)&line), position);
-		if (g->score > ft_atoi(line[1]))
+		if (g->score > ft_atol(line[1]))
 			return (ft_free_array((void ***)&line), position);
 		ft_free_array((void ***)&line);
 	}
