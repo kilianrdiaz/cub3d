@@ -30,19 +30,21 @@ static char	**read_file(int fd)
 	return (content);
 }
 
-int check_files_extension(int argc, char **argv)
+int	check_files_extension(int argc, char **argv)
 {
-	int i;
+	int	i;
+	int	len;
 
 	if (argc < 2)
 		ft_error_exit("Error: No input files provided\n");
 	i = 0;
 	while (argv[++i])
 	{
-		int len = ft_strlen(argv[i]);
+		len = ft_strlen(argv[i]);
 		if (len < 4 || ft_strncmp(argv[i] + len - 4, ".cub", 4) != 0)
 		{
-			ft_printf_fd(STDERR_FILENO, "Error: Invalid file extension for %s, expected .cub\n", argv[i]);
+			ft_printf_fd(STDERR_FILENO, "Error: Invalid file extension for %s,
+				expected .cub\n", argv[i]);
 			return (1);
 		}
 	}
@@ -53,7 +55,7 @@ void	get_info_file(t_game *g)
 {
 	int		fd;
 	char	**content;
-	
+
 	fd = open(*g->levels, O_RDONLY);
 	if (fd == -1)
 		ft_error_exit("Error: Could not open file\n");
