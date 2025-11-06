@@ -12,6 +12,8 @@
 
 #include "../../inc/cub3d.h"
 
+#define NO_PLAYER "Error: No player start position found in map\n"
+
 static void	set_direction(t_game *g, char c)
 {
 	if (c == 'N' || c == 'P')
@@ -57,8 +59,7 @@ void	create_spiderman(t_game *g)
 			}
 		}
 	}
-	ft_putendl_fd("Error: No player start position found in map\n", 2);
-	g->render_state = HIGH_SCORE;
+	set_error_parsing(g, NO_PLAYER, NULL);
 }
 
 static void	create_sprite(t_game *g, t_pos p, char type)

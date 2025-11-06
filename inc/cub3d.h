@@ -228,6 +228,7 @@ typedef struct s_ray
 }					t_ray;
 
 // utils
+void				set_error_parsing(t_game *g, char *msg, char *path);
 void				load_texture(t_game *g, t_tex *tex, char *path);
 int					validate_line(char *line);
 int					ft_isspace(int c);

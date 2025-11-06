@@ -73,7 +73,7 @@ static t_timeleft	set_message(t_game *g, char *msg)
 	draw_hand(g, GAME_WIDTH / 2);
 	draw_minimap(g);
 	timer = g->timer;
-	g->timer = TIMER;
+	g->timer = 0;
 	render_stats(g);
 	g->timer = timer;
 	t = get_time_left(g->timer, TEXT_DURATION);
@@ -95,6 +95,8 @@ int	load_level(t_game *g)
 		else
 			return (g->render_state = HIGH_SCORE, 0);
 	}
+	if (g->render_state == HIGH_SCORE)
+		return (0);
 	t = set_message(g, "DEFUSE THE BOMBS!");
 	g->timer++;
 	if (t.minutes == 0 && t.seconds == 0)
