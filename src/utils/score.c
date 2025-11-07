@@ -81,7 +81,7 @@ static void	add_buttons(t_game *g, t_sprite *alphabet, int index,
 	g->font.scale = 3.5;
 }
 
-t_sprite	*print_alphabet(t_game *game, t_tex score_panel)
+t_sprite	*print_alphabet(t_game *game)
 {
 	char		x;
 	int			index;
@@ -90,8 +90,8 @@ t_sprite	*print_alphabet(t_game *game, t_tex score_panel)
 
 	game->font.scale = 3.5;
 	alphabet = ft_safe_calloc(sizeof(t_sprite), 28);
-	pos.x = (WIDTH - score_panel.width) / 2 - 60;
-	pos.y = (HEIGHT - score_panel.height) / 2 + 120;
+	pos.x = (WIDTH - 9 * (game->font.char_w * game->font.scale + 10)) / 2;
+	pos.y = (HEIGHT - 4 * (game->font.char_h * game->font.scale + 10)) / 2;
 	index = -1;
 	x = 'A' - 1;
 	while (++x <= 'Z' && ++index < 26)
@@ -101,7 +101,8 @@ t_sprite	*print_alphabet(t_game *game, t_tex score_panel)
 		pos.x += game->font.char_w * game->font.scale + 10;
 		if ((x - 'A' + 1) % 9 == 0)
 		{
-			pos.x = (WIDTH - score_panel.width) / 2 - 60;
+			pos.x = (WIDTH - 9 * (game->font.char_w * game->font.scale + 10))
+				/ 2;
 			pos.y += game->font.char_h * game->font.scale + 10;
 		}
 	}

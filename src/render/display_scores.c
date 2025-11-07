@@ -76,16 +76,17 @@ static void	put_line_scores(t_game *g, char *score, t_coords coords)
 	ft_free_array((void ***)&line);
 }
 
-void	display_score_panel(t_game *g, t_tex *score_panel, char **scores)
+void	display_score_panel(t_game *g, t_tex score_panel, char **scores)
 {
 	int			index;
 	t_coords	pos;
 
+	clean_screen(g);
 	g->font.scale = 3.0;
 	draw_fullscreen_image(g, score_panel);
 	pos.x = WIDTH / 2 - (ft_strlen("HIGH SCORES") * g->font.char_w
 			* g->font.scale) / 2;
-	pos.y = (HEIGHT - score_panel->height) / 3;
+	pos.y = 50;
 	render_text(g, "HIGH SCORES", (t_coords){(double)pos.x, (double)pos.y});
 	if (!scores)
 		return ;
@@ -98,6 +99,7 @@ void	display_score_panel(t_game *g, t_tex *score_panel, char **scores)
 		g->font.scale = 3.0;
 	}
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	mlx_destroy_image(g->mlx, score_panel->img);
+	if (score_panel.img)
+		mlx_destroy_image(g->mlx, score_panel.img);
 	mlx_key_hook(g->win, close_high_scores, g);
 }
