@@ -58,7 +58,7 @@ int	render(t_game *g)
 {
 	if (g->render_state == INTRO)
 		return (show_intro(g));
-	if (g->render_state == LOAD_LEVEL)
+	if (g->render_state == LOAD_LEVEL || g->render_state == NEW_LEVEL)
 		return (load_level(g));
 	if (g->render_state == PLAYING)
 		return (game(g));

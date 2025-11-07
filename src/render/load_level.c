@@ -82,14 +82,40 @@ static t_timeleft	set_message(t_game *g, char *msg)
 	return (t);
 }
 
-int	load_level(t_game *g)
+static void new_level_setup(t_game *g)
 {
 	t_timeleft	t;
+	char		*nb;
+	char		*msg;
 
-	if (g->timer == 0)
+	if (g->level == 1 && g->render_state == LOAD_LEVEL)
 	{
-		ft_free_array((void ***)&g->map);
+		t = set_message(g, "DEFUSE THE BOMBS!");
+		if (t.minutes == 0 && t.seconds == 0)
+		{
+			g->render_state = NEW_LEVEL;
+			g->timer = 0;
+		}
+		return ;
+	}
+	nb = ft_itoa(g->level);
+	msg = ft_strjoin("LEVEL ", nb);
+	t = set_message(g, msg);
+	free(nb);
+	free(msg);
+	if (t.minutes == 0 && t.seconds == 0)
+	{
+		g->render_state = PLAYING;
+		g->timer = 0;
+	}
+}
+
+int	load_level(t_game *g)
+{
+	if (!g->timer && g->render_state == LOAD_LEVEL)
+	{
 		++g->levels;
+		++g->level;
 		if (ft_memlen(g->levels))
 			get_info_file(g);
 		else
@@ -97,12 +123,7 @@ int	load_level(t_game *g)
 	}
 	if (g->render_state == HIGH_SCORE)
 		return (0);
-	t = set_message(g, "DEFUSE THE BOMBS!");
+	new_level_setup(g);
 	g->timer++;
-	if (t.minutes == 0 && t.seconds == 0)
-	{
-		g->render_state = PLAYING;
-		g->timer = 0;
-	}
 	return (0);
 }
