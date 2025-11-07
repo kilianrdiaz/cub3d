@@ -59,44 +59,40 @@ static t_coords	get_animation_coords(t_game *g, const char *msg,
 	return (ray.coords);
 }
 
-static void	new_level_setup(t_game *g)
+static void	put_message(t_game *g, char *msg, int render_state)
 {
 	t_timeleft	t;
-	char		*nb;
-	char		*msg;
 	t_coords	coords;
 
-	if (g->level == 1 && g->render_state == LOAD_LEVEL)
-	{
-		coords = get_animation_coords(g, "DEFUSE THE BOMBS!", TEXT_DURATION
-				- g->timer);
-		t = set_message(g, "DEFUSE THE BOMBS!", coords);
-		timeout_render(g, t, NEW_LEVEL);
-		return ;
-	}
-	nb = ft_itoa(g->level);
-	msg = ft_strjoin("LEVEL ", nb);
 	coords = get_animation_coords(g, msg, TEXT_DURATION - g->timer);
 	t = set_message(g, msg, coords);
-	free(nb);
-	free(msg);
-	timeout_render(g, t, PLAYING);
+	timeout_render(g, t, render_state);
 }
 
 int	load_level(t_game *g)
 {
+	char *level;
+	char *msg;
+
 	if (!g->timer && g->render_state == LOAD_LEVEL)
 	{
 		++g->levels;
 		++g->level;
 		if (ft_memlen(g->levels))
 			get_info_file(g);
-		else
-			return (g->render_state = HIGH_SCORE, 0);
 	}
-	if (g->render_state == HIGH_SCORE)
-		return (0);
-	new_level_setup(g);
+	if (!ft_memlen(g->levels))
+		put_message(g, "GAME OVER!", HIGH_SCORE);
+	else if (g->level == 1 && g->render_state == LOAD_LEVEL)
+		put_message(g, "DEFUSE THE BOMBS!", NEW_LEVEL);
+	else
+	{
+		level = ft_itoa(g->level);
+		msg = ft_strjoin("LEVEL ", level);
+		free(level);
+		put_message(g, msg, PLAYING);
+		free(msg);
+	}
 	g->timer++;
 	return (0);
 }
