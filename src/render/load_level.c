@@ -12,9 +12,6 @@
 
 #include "../../inc/cub3d.h"
 
-#define TEXT_DURATION 7.0
-#define TEXT_HOLD_TIME 1
-
 static double	lerp(double a, double b, double t)
 {
 	return (a + (b - a) * t);
@@ -34,14 +31,15 @@ static t_ray	get_ray_animation(const char *msg, double x, double char_w)
 	return (ray);
 }
 
-static void	render_text_animation(t_game *g, const char *msg, double secs_left)
+static t_coords	get_animation_coords(t_game *g, const char *msg,
+		double secs_left)
 {
 	t_ray	ray;
 	double	text_speed;
 
 	ray.row_distance = TEXT_DURATION - secs_left;
 	if (ray.row_distance < 0.0 || ray.row_distance > TEXT_DURATION)
-		return ;
+		return ((t_coords){-1, -1});
 	ray = get_ray_animation(msg, ray.row_distance, g->font.char_w
 			* g->font.scale);
 	text_speed = (TEXT_DURATION - TEXT_HOLD_TIME) / 2.0;
@@ -58,56 +56,31 @@ static void	render_text_animation(t_game *g, const char *msg, double secs_left)
 			/ text_speed;
 		ray.coords.x = lerp(ray.coords.x, ray.d_end.x, ray.row_distance);
 	}
-	render_text(g, (char *)msg, ray.coords);
+	return (ray.coords);
 }
 
-static t_timeleft	set_message(t_game *g, char *msg)
-{
-	t_timeleft	t;
-	double		timer;
-
-	clean_screen(g);
-	render_floor_and_ceiling(g);
-	render_wall(g);
-	render_sprites(g);
-	draw_hand(g, GAME_WIDTH / 2);
-	draw_minimap(g);
-	timer = g->timer;
-	g->timer = 0;
-	render_stats(g);
-	g->timer = timer;
-	t = get_time_left(g->timer, TEXT_DURATION);
-	render_text_animation(g, msg, t.minutes * 60 + t.seconds);
-	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	return (t);
-}
-
-static void new_level_setup(t_game *g)
+static void	new_level_setup(t_game *g)
 {
 	t_timeleft	t;
 	char		*nb;
 	char		*msg;
+	t_coords	coords;
 
 	if (g->level == 1 && g->render_state == LOAD_LEVEL)
 	{
-		t = set_message(g, "DEFUSE THE BOMBS!");
-		if (t.minutes == 0 && t.seconds == 0)
-		{
-			g->render_state = NEW_LEVEL;
-			g->timer = 0;
-		}
+		coords = get_animation_coords(g, "DEFUSE THE BOMBS!", TEXT_DURATION
+				- g->timer);
+		t = set_message(g, "DEFUSE THE BOMBS!", coords);
+		timeout_render(g, t, NEW_LEVEL);
 		return ;
 	}
 	nb = ft_itoa(g->level);
 	msg = ft_strjoin("LEVEL ", nb);
-	t = set_message(g, msg);
+	coords = get_animation_coords(g, msg, TEXT_DURATION - g->timer);
+	t = set_message(g, msg, coords);
 	free(nb);
 	free(msg);
-	if (t.minutes == 0 && t.seconds == 0)
-	{
-		g->render_state = PLAYING;
-		g->timer = 0;
-	}
+	timeout_render(g, t, PLAYING);
 }
 
 int	load_level(t_game *g)

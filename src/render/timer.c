@@ -12,7 +12,7 @@
 
 #include "../../inc/cub3d.h"
 
-t_timeleft	get_time_left(unsigned int timer, unsigned int time_limit)
+static t_timeleft	get_time_left(unsigned int timer, unsigned int time_limit)
 {
 	t_timeleft	t;
 	int			elapsed_seconds;
@@ -65,4 +65,37 @@ void	update_timer(t_game *g)
 		return ;
 	}
 	g->timer++;
+}
+
+t_timeleft	set_message(t_game *g, char *msg, t_coords coords)
+{
+	t_timeleft	t;
+	double		timer;
+
+	clean_screen(g);
+	render_floor_and_ceiling(g);
+	render_wall(g);
+	render_sprites(g);
+	draw_hand(g, GAME_WIDTH / 2);
+	draw_minimap(g);
+	timer = g->timer;
+	g->timer = 0;
+	render_stats(g);
+	g->timer = timer;
+	t = get_time_left(g->timer, TEXT_DURATION - g->timer);
+	if (coords.x < 0 && coords.y < 0)
+		return ((t_timeleft){0, 0});
+	else
+		render_text(g, msg, coords);
+	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
+	return (t);
+}
+
+void	timeout_render(t_game *g, t_timeleft t, int render_state)
+{
+	if (t.minutes == 0 && t.seconds == 0)
+	{
+		g->render_state = render_state;
+		g->timer = 0;
+	}
 }

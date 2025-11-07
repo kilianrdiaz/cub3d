@@ -51,6 +51,8 @@
 # define MINIMAP_OFFSET_Y 250
 
 # define TIMER 125
+# define TEXT_DURATION 60.0
+# define TEXT_HOLD_TIME 20
 
 typedef struct s_coords
 {
@@ -271,7 +273,8 @@ int					show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex *tex);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
-t_timeleft			get_time_left(unsigned int timer, unsigned int time_limit);
+t_timeleft			set_message(t_game *g, char *msg, t_coords coords);
+void				timeout_render(t_game *g, t_timeleft t, int render_state);
 void				put_timer(t_game *g, t_coords coords);
 void				update_timer(t_game *g);
 void				render_stats(t_game *g);
