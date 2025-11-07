@@ -33,7 +33,7 @@ static int	read_intro(t_game *g)
 	t_pos	p;
 
 	fd = open("./textures/intro.txt", O_RDONLY);
-	if (fd < 0)
+	if (fd == -1)
 		return (0);
 	p.x = 160;
 	p.y = 60;
@@ -56,10 +56,11 @@ int	show_intro(t_game *g)
 
 	g->render_state = INTRO;
 	load_texture(g, &intro, "./textures/intro.xpm");
-	draw_fullscreen_image(g, &intro);
+	draw_fullscreen_image(g, intro);
 	read_intro(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	mlx_key_hook(g->win, close_intro, g);
-	mlx_destroy_image(g->mlx, intro.img);
+	if (intro.img)
+		mlx_destroy_image(g->mlx, intro.img);
 	return (0);
 }
