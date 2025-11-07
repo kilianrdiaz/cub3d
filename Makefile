@@ -28,6 +28,7 @@ SRCS    = src/utils/parsing.c  \
 		  src/render/font.c \
 		  src/render/render.c \
 		  src/render/intro.c \
+		  src/render/load_level.c \
 		  src/render/timer.c \
 		  src/render/stats.c \
 		  src/render/display_scores.c \

@@ -12,6 +12,9 @@
 
 #include "../../inc/cub3d.h"
 
+#define NO_TEXTURE "Error: could not load texture %s\n"
+#define INVALID_SIZE "Error: texture %s has invalid size\n"
+
 int	ft_isspace(int c)
 {
 	if (c == 9 || c == 10 || c == 11 || c == 12 || c == 13 || c == 32)
@@ -50,23 +53,25 @@ int	validate_line(char *line)
 	return (1);
 }
 
+void	set_error_parsing(t_game *g, char *msg, char *path)
+{
+	if (g->render_state != HIGH_SCORE && g->render_state != WAITING_FOR_NAME
+		&& g->render_state != SCORE_SAVED && g->render_state != INTRO)
+		g->render_state = HIGH_SCORE;
+	if (msg)
+		ft_printf_fd(2, msg, path);
+}
+
 void	load_texture(t_game *g, t_tex *tex, char *path)
 {
 	if (!g || !tex || !path)
 		return ;
+	tex->color = COLOR_NONE;
 	tex->img = mlx_xpm_file_to_image(g->mlx, path, &tex->width, &tex->height);
 	if (!tex->img)
-	{
-		ft_printf_fd(STDERR_FILENO, "Error: could not load texture %s\n", path);
-		exit(1);
-	}
+		return (set_error_parsing(g, NO_TEXTURE, path));
 	tex->addr = mlx_get_data_addr(tex->img, &tex->bpp, &tex->line_len,
 			&tex->endian);
 	if (tex->width <= 0 || tex->height <= 0)
-	{
-		ft_printf_fd(STDERR_FILENO, "Error: texture %s has invalid size\n",
-			path);
-		exit(1);
-	}
-	tex->color = COLOR_NONE;
+		return (set_error_parsing(g, INVALID_SIZE, path));
 }

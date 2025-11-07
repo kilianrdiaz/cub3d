@@ -12,6 +12,10 @@
 
 #include "../../inc/cub3d.h"
 
+#define INVALID_LINE "Error: Invalid line in texture definitions\n"
+#define ERR_LINE_TEXT "Error en la línea de textura %s\n"
+#define NO_TEXTURE "Error: Not all textures/colors were defined\n"
+
 static t_tex	*get_tex_id(t_game *g, char *line)
 {
 	if (ft_strncmp(line, "NO ", 3) == 0)
@@ -26,8 +30,8 @@ static t_tex	*get_tex_id(t_game *g, char *line)
 		return (&g->map_text[F]);
 	else if (ft_strncmp(line, "C ", 2) == 0)
 		return (&g->map_text[C]);
-	if (!validate_line(line))
-		ft_error_exit("Error: Invalid line in texture definitions\n");
+	else if (!validate_line(line))
+		return (set_error_parsing(g, INVALID_LINE, NULL), NULL);
 	return (NULL);
 }
 
@@ -46,27 +50,27 @@ static unsigned int	get_color(char *r, char *g, char *b)
 	return ((red << 16) | (green << 8) | blue);
 }
 
-static void	load_color(t_tex *tex, char **splited)
+static unsigned int	get_rgb_color(char **splited)
 {
 	unsigned int	color;
-	char			*r;
-	char			*g;
-	char			*b;
+	char			**rgb;
+	char			*str;
+	int				x;
 
 	if (ft_memlen(splited) != 4)
-		ft_error_exit("Error en la carga de color");
-	r = ft_strtrim(splited[1], ",\n\r\t ");
-	g = ft_strtrim(splited[2], ",\n\r\t ");
-	b = ft_strtrim(splited[3], ",\n\r\t ");
-	if (!r || !g || !b)
-		ft_error_exit("Error en la carga de color");
-	color = get_color(r, g, b);
-	free(r);
-	free(g);
-	free(b);
-	if (color == COLOR_NONE)
-		ft_error_exit("Color RGB no válido");
-	tex->color = color;
+		return (COLOR_NONE);
+	rgb = NULL;
+	x = 0;
+	while (++x <= 3)
+	{
+		str = ft_strtrim(splited[x], ",\n\r\t ");
+		if (!str)
+			return (ft_free_array((void ***)&color), COLOR_NONE);
+		ft_append_array((void ***)&rgb, str);
+	}
+	color = get_color(rgb[0], rgb[1], rgb[2]);
+	ft_free_array((void ***)&rgb);
+	return (color);
 }
 
 void	load_map_textures(t_game *g, char **content)
@@ -84,14 +88,14 @@ void	load_map_textures(t_game *g, char **content)
 			continue ;
 		splited = ft_split(content[i], ' ');
 		if (!splited)
-			ft_error_exit("Error en la línea de textura");
+			return (set_error_parsing(g, ERR_LINE_TEXT, content[i]));
 		len_splited = ft_memlen((const void **)splited);
 		if (len_splited == 2)
 			load_texture(g, tex, splited[1]);
 		else if (len_splited == 4)
-			load_color(tex, splited);
+			tex->color = get_rgb_color(splited);
 		ft_free_array((void ***)&splited);
 	}
 	if (!check_loaded_textures(g))
-		ft_error_exit("Error: Not all textures/colors were defined");
+		return (set_error_parsing(g, NO_TEXTURE, NULL));
 }

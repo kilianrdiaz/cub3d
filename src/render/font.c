@@ -75,7 +75,7 @@ void	load_font(t_game *g, t_font *f, char *path)
 	create_char_bitmap(f);
 }
 
-void	put_char(t_game *g, char c, int x, int y)
+void	put_char(t_game *g, char c, t_coords coords)
 {
 	t_char_bitmap	*cb;
 	t_pos			d;
@@ -96,21 +96,25 @@ void	put_char(t_game *g, char c, int x, int y)
 		{
 			src.x = (int)(pos.x / g->font.scale);
 			if (cb->pixels[src.y * cb->width + src.x] != COLOR_NONE)
-				put_pixel(g, x + pos.x, y + pos.y, cb->pixels[src.y * cb->width
-					+ src.x]);
+				put_pixel(g, coords.x + pos.x, coords.y + pos.y,
+					cb->pixels[src.y * cb->width + src.x]);
 		}
 	}
 }
 
-void	render_text(t_game *g, char *str, t_pos pos)
+void	render_text(t_game *g, char *str, t_coords coords)
 {
-	int	advance;
-	int	i;
+	double	advance;
+	int		i;
 
 	if (!str)
 		return ;
-	advance = (int)(g->font.char_w * g->font.scale);
+	advance = (g->font.char_w * g->font.scale);
 	i = -1;
 	while (str[++i])
-		put_char(g, str[i], pos.x + i * advance, pos.y);
+	{
+		if (str[i] == ' ' || str[i] == '\n')
+			continue ;
+		put_char(g, str[i], (t_coords){coords.x + i * advance, coords.y});
+	}
 }

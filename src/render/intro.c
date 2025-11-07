@@ -17,7 +17,7 @@ static int	close_intro(int keycode, t_game *g)
 	(void)keycode;
 	if (g->render_state == INTRO)
 	{
-		g->render_state = PLAYING;
+		g->render_state = LOAD_LEVEL;
 		ft_bzero(&g->keys, sizeof(t_keys));
 		clean_screen(g);
 		mlx_hook(g->win, 2, 1L << 0, key_press, g);
@@ -33,7 +33,7 @@ static int	read_intro(t_game *g)
 	t_pos	p;
 
 	fd = open("./textures/intro.txt", O_RDONLY);
-	if (fd < 0)
+	if (fd == -1)
 		return (0);
 	p.x = 160;
 	p.y = 60;
@@ -41,7 +41,7 @@ static int	read_intro(t_game *g)
 	g->font.scale = 1.2;
 	while (line)
 	{
-		render_text(g, line, p);
+		render_text(g, line, (t_coords){p.x, p.y});
 		p.y += g->font.char_h * 0.8 + 10;
 		free(line);
 		line = get_next_line(fd);
@@ -56,10 +56,11 @@ int	show_intro(t_game *g)
 
 	g->render_state = INTRO;
 	load_texture(g, &intro, "./textures/intro.xpm");
-	draw_fullscreen_image(g, &intro);
+	draw_fullscreen_image(g, intro);
 	read_intro(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	mlx_key_hook(g->win, close_intro, g);
-	mlx_destroy_image(g->mlx, intro.img);
+	if (intro.img)
+		mlx_destroy_image(g->mlx, intro.img);
 	return (0);
 }

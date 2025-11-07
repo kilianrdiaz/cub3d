@@ -51,6 +51,8 @@
 # define MINIMAP_OFFSET_Y 250
 
 # define TIMER 125
+# define TEXT_DURATION 60.0
+# define TEXT_HOLD_TIME 20
 
 typedef struct s_coords
 {
@@ -60,8 +62,8 @@ typedef struct s_coords
 
 typedef struct s_timeleft
 {
-	int				minutes;
-	int				seconds;
+	unsigned int	minutes;
+	unsigned int	seconds;
 }					t_timeleft;
 
 typedef enum e_state
@@ -77,6 +79,8 @@ typedef enum e_state
 typedef enum e_render
 {
 	INTRO,
+	LOAD_LEVEL,
+	NEW_LEVEL,
 	PLAYING,
 	WIN,
 	WAITING_FOR_NAME,
@@ -158,7 +162,7 @@ typedef struct s_sprite
 	int				width;
 	int				height;
 	int				screen_x;
-	double			delay;
+	unsigned int	delay;
 	double			scale;
 	t_state			state;
 	t_sprite_type	type;
@@ -193,8 +197,10 @@ typedef struct s_game
 	int				bpp;
 	int				line_len;
 	int				endian;
-	double			timer;
+	unsigned int	timer;
 	t_render		render_state;
+	char			**levels;
+	unsigned int	level;
 	char			**map;
 	t_spidy			spider;
 	t_font			font;
@@ -206,7 +212,7 @@ typedef struct s_game
 	t_tex			*map_text;
 	t_keys			keys;
 	t_minimap		minimap;
-	int				score;
+	unsigned int	score;
 }					t_game;
 
 typedef struct s_ray
@@ -225,6 +231,7 @@ typedef struct s_ray
 }					t_ray;
 
 // utils
+void				set_error_parsing(t_game *g, char *msg, char *path);
 void				load_texture(t_game *g, t_tex *tex, char *path);
 int					validate_line(char *line);
 int					ft_isspace(int c);
@@ -242,12 +249,12 @@ void				calculate_distance_to_wall(t_game g, t_ray *ray, int *side);
 t_ray				ray_map(t_game g, int x);
 char				**get_scores(void);
 int					get_position(t_game *g, char **scores);
-t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
+t_sprite			*print_alphabet(t_game *game);
 void				update_scores(char **scores, int position);
 
 // parsing
-
-void				get_info_file(t_game *g, int argc, char **argv);
+int					check_files_extension(int argc, char **argv);
+void				get_info_file(t_game *g);
 void				load_map_textures(t_game *g, char **content);
 char				**get_map(char **content);
 void				create_spiderman(t_game *g);
@@ -259,16 +266,19 @@ int					render(t_game *g);
 void				update_bombs(t_game *g);
 void				draw_hand(t_game *g, int x);
 void				render_sprites(t_game *g);
-void				render_text(t_game *g, char *str, t_pos pos);
+void				render_text(t_game *g, char *str, t_coords coords);
 void				load_font(t_game *g, t_font *f, char *path);
+int					load_level(t_game *g);
 int					show_intro(t_game *g);
-void				draw_fullscreen_image(t_game *g, t_tex *tex);
+void				draw_fullscreen_image(t_game *g, t_tex tex);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
+t_timeleft			set_message(t_game *g, char *msg, t_coords coords);
+void				timeout_render(t_game *g, t_timeleft t, int render_state);
+void				put_timer(t_game *g, t_coords coords);
 void				update_timer(t_game *g);
-void				put_timer(t_game *g, t_pos pos);
 void				render_stats(t_game *g);
-void				display_score_panel(t_game *g, t_tex *score_panel,
+void				display_score_panel(t_game *g, t_tex score_panel,
 						char **scores);
 int					show_high_scores(t_game *g);
 
@@ -289,6 +299,7 @@ void				spider_attack(t_game *g);
 void				move_lizards(t_game *g);
 char				*set_name(t_game *g, t_sprite *alphabet, t_ray ray);
 
+void				free_level(t_game *g);
 void				close_program(t_game *g);
 
 #endif

@@ -12,6 +12,9 @@
 
 #include "../../inc/cub3d.h"
 
+#define NO_CLOSE "Error: Map is not closed/surrounded by walls"
+#define NO_MAP "Error: Could not load map"
+
 static int	is_map_str(char *s)
 {
 	int	i;
@@ -62,15 +65,16 @@ static int	flood_fill(char **map, t_pos pos, int rows, int **visited)
 static int	**get_visited_map(char **map)
 {
 	int	row;
+	int	*visited_row;
 	int	**visited;
 
 	visited = NULL;
 	row = -1;
 	while (map[++row])
-		ft_append_array((void ***)&visited,
-			ft_safe_calloc((ft_strlen(map[row])), sizeof(int)));
-	if (!visited)
-		ft_error_exit("Error: Memory allocation failed for visited map\n");
+	{
+		visited_row = ft_safe_calloc((ft_strlen(map[row])), sizeof(int));
+		ft_append_array((void ***)&visited, visited_row);
+	}
 	return (visited);
 }
 
@@ -79,26 +83,24 @@ static int	is_map_closed(char **map)
 	int		rows;
 	int		**visited;
 	t_pos	p;
-	int		result;
 
 	rows = ft_memlen((const void **)map);
-	result = 1;
 	p.y = -1;
 	visited = get_visited_map(map);
-	while (map[++p.y] && result)
+	while (map[++p.y])
 	{
 		p.x = -1;
-		while (map[p.y][++p.x] && result)
+		while (map[p.y][++p.x])
 		{
 			if (map[p.y][p.x] != '1' && map[p.y][p.x] != ' ')
 			{
 				if (!flood_fill(map, p, rows, visited))
-					result = 0;
+					return (0);
 			}
 		}
 	}
 	ft_free_array((void ***)&visited);
-	return (result);
+	return (1);
 }
 
 char	**get_map(char **content)
@@ -115,13 +117,14 @@ char	**get_map(char **content)
 	{
 		if (!validate_line(content[i]))
 			break ;
-		line = ft_strdup(content[i]);
-		if (!line)
-			ft_error_exit("Error: Memory allocation failed for map line\n");
+		line = ft_safe_strdup(content[i]);
 		ft_append_array((void ***)&map, line);
 		i++;
 	}
-	if (!map || !is_map_closed(map))
-		ft_error_exit("Error: Map is not closed/surrounded by walls\n");
+	if (map && !is_map_closed(map))
+	{
+		ft_putendl_fd(NO_CLOSE, 2);
+		ft_free_array((void ***)&map);
+	}
 	return (map);
 }
