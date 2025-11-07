@@ -12,22 +12,24 @@
 
 #include "../../inc/cub3d.h"
 
-void	draw_fullscreen_image(t_game *g, t_tex *tex)
+void	draw_fullscreen_image(t_game *g, t_tex tex)
 {
 	t_pos	p;
 	t_pos	src_pos;
 	char	*src;
 	int		color;
 
+	if (!tex.img)
+		return ;
 	p.y = -1;
 	while (++p.y < HEIGHT)
 	{
 		p.x = -1;
 		while (++p.x < WIDTH)
 		{
-			src_pos.x = p.x * tex->width / WIDTH;
-			src_pos.y = p.y * tex->height / HEIGHT;
-			src = tex->addr + (src_pos.y * tex->line_len + src_pos.x * (tex->bpp
+			src_pos.x = p.x * tex.width / WIDTH;
+			src_pos.y = p.y * tex.height / HEIGHT;
+			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x * (tex.bpp
 						/ 8));
 			color = *(unsigned int *)src;
 			put_pixel(g, p.x, p.y, color);

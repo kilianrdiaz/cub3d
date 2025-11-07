@@ -249,7 +249,7 @@ void				calculate_distance_to_wall(t_game g, t_ray *ray, int *side);
 t_ray				ray_map(t_game g, int x);
 char				**get_scores(void);
 int					get_position(t_game *g, char **scores);
-t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
+t_sprite			*print_alphabet(t_game *game);
 void				update_scores(char **scores, int position);
 
 // parsing
@@ -270,7 +270,7 @@ void				render_text(t_game *g, char *str, t_coords coords);
 void				load_font(t_game *g, t_font *f, char *path);
 int					load_level(t_game *g);
 int					show_intro(t_game *g);
-void				draw_fullscreen_image(t_game *g, t_tex *tex);
+void				draw_fullscreen_image(t_game *g, t_tex tex);
 void				render_floor_and_ceiling(t_game *g);
 void				render_wall(t_game *g);
 t_timeleft			set_message(t_game *g, char *msg, t_coords coords);
@@ -278,7 +278,7 @@ void				timeout_render(t_game *g, t_timeleft t, int render_state);
 void				put_timer(t_game *g, t_coords coords);
 void				update_timer(t_game *g);
 void				render_stats(t_game *g);
-void				display_score_panel(t_game *g, t_tex *score_panel,
+void				display_score_panel(t_game *g, t_tex score_panel,
 						char **scores);
 int					show_high_scores(t_game *g);
 
