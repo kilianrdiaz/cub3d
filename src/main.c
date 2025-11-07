@@ -67,6 +67,12 @@ int	main(int argc, char **argv)
 	g.map_text = ft_calloc(sizeof(t_tex), 6);
 	if (!g.map_text)
 		ft_error_exit("Error: Memory allocation failed for map textures\n");
+	g.map_text[NO].color = COLOR_NONE;
+	g.map_text[SO].color = COLOR_NONE;
+	g.map_text[WE].color = COLOR_NONE;
+	g.map_text[EA].color = COLOR_NONE;
+	g.map_text[F].color = COLOR_NONE;
+	g.map_text[C].color = COLOR_NONE;
 	get_info_file(&g, argc, argv);
 	load_sprite_textures(&g);
 	load_font(&g, &g.font, "./textures/font.xpm");
