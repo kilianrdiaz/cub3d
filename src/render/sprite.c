@@ -33,7 +33,7 @@ static void	sort_sprites(t_sprite_order *order, int count)
 	}
 }
 
-static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex *tex)
+static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex tex)
 {
 	int				d;
 	int				y;
@@ -42,26 +42,26 @@ static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex *tex)
 	if (sp->state == DEFUSED)
 		return ;
 	ray.src.x = (int)(256 * (ray.line_height - (-sp->width / 2 + sp->screen_x))
-			* tex[sp->state].width / sp->width) / 256;
+			* tex.width / sp->width) / 256;
 	y = ray.d_start.y - 1;
 	while (++y < ray.d_end.y)
 	{
 		d = (y - ray.d_start.y) * 256;
-		ray.src.y = ((d * tex[sp->state].height) / sp->height) / 256;
-		if (ray.src.x < 0 || ray.src.x >= tex[sp->state].width || ray.src.y < 0
-			|| ray.src.y >= tex[sp->state].height)
+		ray.src.y = ((d * tex.height) / sp->height) / 256;
+		if (ray.src.x < 0 || ray.src.x >= tex.width || ray.src.y < 0
+			|| ray.src.y >= tex.height)
 			continue ;
-		color = get_pixel_color(tex[sp->state], ray.src.x, ray.src.y);
+		color = get_pixel_color(tex, ray.src.x, ray.src.y);
 		if ((color & 0x00FFFFFF) != 0) // Transparencia
 			put_pixel(g, ray.line_height, y, color);
 	}
 }
 
-static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex *tex)
+static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex tex)
 {
 	// 1️⃣ Altura y ancho del sprite según la distancia (como las paredes)
-	sp->height = (tex[sp->state].height * sp->scale / sp->trans.y);
-	sp->width = (tex[sp->state].width * sp->scale / sp->trans.y);
+	sp->height = (tex.height * sp->scale / sp->trans.y);
+	sp->width = (tex.width * sp->scale / sp->trans.y);
 	// 2️⃣ Offset vertical para apoyarlo en el suelo
 	ray->view = (int)(HEIGHT / sp->trans.y * 0.5);
 	// 3️⃣ Límites verticales
@@ -85,13 +85,13 @@ static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex *tex)
 static void	position_sprite(t_game *g, t_sprite sp)
 {
 	t_ray	ray;
-	t_tex	*tex;
+	t_tex	tex;
 
 	if (sp.state == DEFUSED || sp.state == NO_RENDER)
 		return ;
-	tex = g->bomb_tex;
+	tex = g->bomb_tex[sp.state];
 	if (sp.type != BOMB)
-		tex = g->lizard_tex;
+		tex = g->lizard_tex[sp.state];
 	sp.pos.x = sp.pos.x + 0.5 - g->spider.pos.x;
 	sp.pos.y = sp.pos.y + 0.5 - g->spider.pos.y;
 	sp.inv_det = 1.0 / (g->spider.plane.x * g->spider.dir.y - g->spider.dir.x
@@ -100,7 +100,7 @@ static void	position_sprite(t_game *g, t_sprite sp)
 			* sp.pos.y);
 	sp.trans.y = sp.inv_det * (-g->spider.plane.y * sp.pos.x + g->spider.plane.x
 			* sp.pos.y);
-	if (sp.trans.y > 0.0)
+	if (sp.trans.y > 0.0 && tex.img && tex.addr)
 	{
 		ray_sprite(&sp, &ray, tex);
 		while (++ray.line_height < ray.d_end.x)
