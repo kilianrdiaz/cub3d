@@ -43,6 +43,14 @@ static void	clean_font(t_game *g, t_font *font)
 		mlx_destroy_image(g->mlx, font->img);
 }
 
+void	free_level(t_game *g)
+{
+	ft_free_array((void ***)&g->bombs);
+	ft_free_array((void ***)&g->lizards);
+	ft_free_array((void ***)&g->map);
+	ft_free_array((void ***)&g->minimap.revealed);
+}
+
 void	close_program(t_game *g)
 {
 	clean_texture(g, g->bomb_tex, sizeof(t_state));
@@ -60,9 +68,6 @@ void	close_program(t_game *g)
 		mlx_destroy_display(g->mlx);
 		free(g->mlx);
 	}
-	ft_free_array((void ***)&g->bombs);
-	ft_free_array((void ***)&g->lizards);
-	ft_free_array((void ***)&g->map);
-	ft_free_array((void ***)&g->minimap.revealed);
+	free_level(g);
 	exit(0);
 }

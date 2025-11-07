@@ -78,6 +78,7 @@ typedef enum e_render
 {
 	INTRO,
 	LOAD_LEVEL,
+	NEW_LEVEL,
 	PLAYING,
 	WIN,
 	WAITING_FOR_NAME,
@@ -197,6 +198,7 @@ typedef struct s_game
 	unsigned int	timer;
 	t_render		render_state;
 	char			**levels;
+	unsigned int	level;
 	char			**map;
 	t_spidy			spider;
 	t_font			font;
@@ -294,6 +296,7 @@ void				spider_attack(t_game *g);
 void				move_lizards(t_game *g);
 char				*set_name(t_game *g, t_sprite *alphabet, t_ray ray);
 
+void				free_level(t_game *g);
 void				close_program(t_game *g);
 
 #endif

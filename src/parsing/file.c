@@ -60,6 +60,7 @@ void	get_info_file(t_game *g)
 	int		fd;
 	char	**content;
 
+	free_level(g);
 	fd = open(*g->levels, O_RDONLY);
 	if (fd == -1)
 		return (set_error_parsing(g, O_FAILED, *g->levels));
