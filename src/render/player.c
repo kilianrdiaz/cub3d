@@ -31,9 +31,9 @@ void	draw_hand(t_game *g, int x)
 	t_ray			l_ray;
 	unsigned int	color;
 
-	if (!g->spider.hand || !g->spider.hand[0].addr || !g->spider.hand[1].addr)
-		return ;
 	hand = g->spider.hand[g->spider.state];
+	if (!g->spider.hand || !hand.img || !hand.addr)
+		return ;
 	l_ray = ray_hand(hand, x);
 	p.y = -1;
 	while (++p.y < l_ray.d_end.y)
