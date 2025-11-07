@@ -71,8 +71,8 @@ static void	put_message(t_game *g, char *msg, int render_state)
 
 int	load_level(t_game *g)
 {
-	char *level;
-	char *msg;
+	char	*level;
+	char	*msg;
 
 	if (!g->timer && g->render_state == LOAD_LEVEL)
 	{
