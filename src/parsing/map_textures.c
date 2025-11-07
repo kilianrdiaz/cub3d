@@ -18,21 +18,29 @@
 
 static t_tex	*get_tex_id(t_game *g, char *line)
 {
+	t_tex	*tex;
+
+	tex = NULL;
 	if (ft_strncmp(line, "NO ", 3) == 0)
-		return (&g->map_text[NO]);
+		tex = &g->map_text[NO];
 	else if (ft_strncmp(line, "SO ", 3) == 0)
-		return (&g->map_text[SO]);
+		tex = &g->map_text[SO];
 	else if (ft_strncmp(line, "WE ", 3) == 0)
-		return (&g->map_text[WE]);
+		tex = &g->map_text[WE];
 	else if (ft_strncmp(line, "EA ", 3) == 0)
-		return (&g->map_text[EA]);
+		tex = &g->map_text[EA];
 	else if (ft_strncmp(line, "F ", 2) == 0)
-		return (&g->map_text[F]);
+		tex = &g->map_text[F];
 	else if (ft_strncmp(line, "C ", 2) == 0)
-		return (&g->map_text[C]);
+		tex = &g->map_text[C];
 	else if (!validate_line(line))
 		return (set_error_parsing(g, INVALID_LINE, NULL), NULL);
-	return (NULL);
+	if (g->level > 1 && tex && tex->img)
+	{
+		mlx_destroy_image(g->mlx, tex->img);
+		tex->img = NULL;
+	}
+	return (tex);
 }
 
 static unsigned int	get_color(char *r, char *g, char *b)

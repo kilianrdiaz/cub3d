@@ -74,8 +74,11 @@ t_timeleft	set_message(t_game *g, char *msg, t_coords coords)
 	double		timer;
 
 	clean_screen(g);
-	render_floor_and_ceiling(g);
-	render_wall(g);
+	if (g->map)
+	{
+		render_floor_and_ceiling(g);
+		render_wall(g);
+	}
 	render_sprites(g);
 	draw_hand(g, GAME_WIDTH / 2);
 	draw_minimap(g);

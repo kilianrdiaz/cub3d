@@ -67,6 +67,7 @@ static void	put_message(t_game *g, char *msg, int render_state)
 	coords = get_animation_coords(g, msg, TEXT_DURATION - g->timer);
 	t = set_message(g, msg, coords);
 	timeout_render(g, t, render_state);
+	g->timer++;
 }
 
 int	load_level(t_game *g)
@@ -82,9 +83,9 @@ int	load_level(t_game *g)
 	}
 	if (g->render_state == GAME_OVER)
 		put_message(g, "GAME OVER!", HIGH_SCORE);
-	else if (g->level == 1 && g->render_state == LOAD_LEVEL)
-		put_message(g, "DEFUSE THE BOMBS!", NEW_LEVEL);
-	else
+	if (g->level == 1 && g->render_state == LOAD_LEVEL)
+		put_message(g, "DEFUSE BOMBS!", NEW_LEVEL);
+	if (g->render_state == NEW_LEVEL)
 	{
 		level = ft_itoa(g->level);
 		msg = ft_strjoin("LEVEL ", level);
@@ -92,6 +93,5 @@ int	load_level(t_game *g)
 		put_message(g, msg, PLAYING);
 		free(msg);
 	}
-	g->timer++;
 	return (0);
 }
