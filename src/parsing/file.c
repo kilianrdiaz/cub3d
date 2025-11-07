@@ -79,4 +79,6 @@ void	get_info_file(t_game *g)
 	create_sprites(g);
 	if (!g->bomb_count)
 		set_error_parsing(g, NO_BOMBS, *g->levels);
+	if (g->level > 1 && g->render_state == LOAD_LEVEL)
+		g->render_state = NEW_LEVEL;
 }
