@@ -60,6 +60,8 @@ void	get_info_file(t_game *g)
 	int		fd;
 	char	**content;
 
+	if (!ft_memlen(g->levels))
+		return (g->render_state = GAME_OVER, (void)0);
 	free_level(g);
 	fd = open(*g->levels, O_RDONLY);
 	if (fd == -1)

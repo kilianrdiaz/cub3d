@@ -78,10 +78,9 @@ int	load_level(t_game *g)
 	{
 		++g->levels;
 		++g->level;
-		if (ft_memlen(g->levels))
-			get_info_file(g);
+		get_info_file(g);
 	}
-	if (!ft_memlen(g->levels))
+	if (g->render_state == GAME_OVER)
 		put_message(g, "GAME OVER!", HIGH_SCORE);
 	else if (g->level == 1 && g->render_state == LOAD_LEVEL)
 		put_message(g, "DEFUSE THE BOMBS!", NEW_LEVEL);

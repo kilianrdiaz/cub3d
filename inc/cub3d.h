@@ -81,12 +81,13 @@ typedef enum e_render
 	INTRO,
 	LOAD_LEVEL,
 	NEW_LEVEL,
+	GAME_OVER,
 	PLAYING,
 	WIN,
 	WAITING_FOR_NAME,
 	SCORE_SAVED,
 	HIGH_SCORE,
-	GAME_OVER
+	END
 }					t_render;
 
 typedef enum e_map_texture

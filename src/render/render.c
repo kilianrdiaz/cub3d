@@ -60,14 +60,15 @@ int	render(t_game *g)
 {
 	if (g->render_state == INTRO)
 		return (show_intro(g));
-	if (g->render_state == LOAD_LEVEL || g->render_state == NEW_LEVEL)
+	if (g->render_state == LOAD_LEVEL || g->render_state == NEW_LEVEL
+		|| g->render_state == GAME_OVER)
 		return (load_level(g));
 	if (g->render_state == PLAYING)
 		return (game(g));
 	if (g->render_state == HIGH_SCORE || g->render_state == WAITING_FOR_NAME
 		|| g->render_state == SCORE_SAVED)
 		return (show_high_scores(g));
-	if (g->render_state == GAME_OVER)
+	if (g->render_state == END)
 		close_program(g);
 	return (0);
 }
