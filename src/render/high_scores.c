@@ -67,6 +67,7 @@ static char	*register_score(t_game *g, t_tex score_panel)
 	t_ray		ray;
 
 	clean_screen(g);
+	ft_bzero(&target, sizeof(t_tex));
 	load_texture(g, &target, "./textures/web_target.xpm");
 	draw_fullscreen_image(g, score_panel);
 	g->font.scale = 1.5;
@@ -76,7 +77,8 @@ static char	*register_score(t_game *g, t_tex score_panel)
 	ray = draw_web_target(g, &target);
 	result = set_name(g, alphabet, ray);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	mlx_destroy_image(g->mlx, target.img);
+	if (target.img)
+		mlx_destroy_image(g->mlx, target.img);
 	if (score_panel.img)
 		mlx_destroy_image(g->mlx, score_panel.img);
 	free(alphabet);
