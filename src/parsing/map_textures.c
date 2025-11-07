@@ -30,7 +30,7 @@ static t_tex	*get_tex_id(t_game *g, char *line)
 		return (&g->map_text[F]);
 	else if (ft_strncmp(line, "C ", 2) == 0)
 		return (&g->map_text[C]);
-	if (!validate_line(line))
+	else if (!validate_line(line))
 		return (set_error_parsing(g, INVALID_LINE, NULL), NULL);
 	return (NULL);
 }
