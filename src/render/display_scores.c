@@ -19,7 +19,7 @@ static int	close_high_scores(int keycode, t_game *g)
 	(void)keycode;
 	if (g->render_state == HIGH_SCORE)
 	{
-		g->render_state = GAME_OVER;
+		g->render_state = END;
 		ft_bzero(&g->keys, sizeof(t_keys));
 		clean_screen(g);
 		mlx_hook(g->win, 2, 1L << 0, key_press, g);

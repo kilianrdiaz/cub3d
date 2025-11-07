@@ -61,7 +61,8 @@ void	update_timer(t_game *g)
 	t = get_time_left(g->timer, TIMER);
 	if (t.minutes == 0 && t.seconds == 0)
 	{
-		g->render_state = HIGH_SCORE;
+		g->render_state = GAME_OVER;
+		g->timer = 0;
 		return ;
 	}
 	g->timer++;
@@ -79,7 +80,7 @@ t_timeleft	set_message(t_game *g, char *msg, t_coords coords)
 	draw_hand(g, GAME_WIDTH / 2);
 	draw_minimap(g);
 	timer = g->timer;
-	g->timer = 0;
+	g->timer = TIMER * 30;
 	render_stats(g);
 	g->timer = timer;
 	t = get_time_left(g->timer, TEXT_DURATION - g->timer);
