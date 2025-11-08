@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 20:59:06 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/08 16:33:11 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/08 17:04:39 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,37 +69,6 @@ void	draw_panel_separator(t_game *g)
 		while (++p.y < HEIGHT)
 			put_pixel(g, p.x, p.y, 0xFF555555);
 	}
-}
-
-static void	draw_health_bar(t_game *g)
-{
-	int		bar_width = 200;
-	int		bar_height = 25;
-	int		x = GAME_WIDTH + 80;
-	int		y = 60;
-	double	ratio;
-	int		fill;
-	int		i, j;
-
-	if (g->player_max_hp <= 0)
-		g->player_max_hp = 1;
-
-	ratio = (double)g->player_hp / (double)g->player_max_hp;
-	if (ratio < 0.0) ratio = 0.0;
-	if (ratio > 1.0) ratio = 1.0;
-	fill = (int)floor(bar_width * ratio);
-	if (fill < 0) fill = 0;
-	if (fill > bar_width) fill = bar_width;
-
-	for (i = 0; i < bar_height; i++)
-		for (j = 0; j < bar_width; j++)
-			put_pixel(g, x + j, y + i, 0xFF222222);
-
-	for (i = 0; i < bar_height; i++)
-		for (j = 0; j < fill; j++)
-			put_pixel(g, x + j, y + i, 0xFFCC0000);
-
-	render_text(g, "HP", (t_pos){x - 40, y + 5});
 }
 
 void	render_stats(t_game *g)

@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/05 22:43:05 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/08 20:10:29 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # define GAME_WIDTH 1400
 # define GAME_HEIGHT 960
 
-# define MINIMAP_PLAYER_SIZE 10 // 🔹 radio del punto del jugador
+# define MINIMAP_PLAYER_SIZE 10
 
 # define SCALE_SPRITE 2.0
 
@@ -47,8 +47,9 @@
 
 # define REVEAL_STEP_RADIUS 3
 # define MINIMAP_SIZE_LIMIT 500
-# define MINIMAP_OFFSET_X (WIDTH - MINIMAP_SIZE_LIMIT - 20)
-# define MINIMAP_OFFSET_Y 250
+# define MINIMAP_OFFSET_X (WIDTH - MINIMAP_SIZE_LIMIT + 80)
+# define MINIMAP_OFFSET_Y 200
+# define MINIMAP_TILE 25
 
 # define TIMER 125
 
@@ -174,14 +175,19 @@ typedef struct s_spidy
 	t_state			state;
 }					t_spidy;
 
-typedef struct s_minimap
+typedef struct	s_minimap
 {
-	char			**revealed;
-	int				width;
-	int				height;
-	int				tile_size;
-	t_pos			offset;
-}					t_minimap;
+    char    **revealed;
+    int     width;
+    int     height;
+    int     tile_size;
+    t_pos   offset;     // posición en pantalla (ya lo tienes)
+    int     cam_x;      // nuevo: desplazamiento interno X
+    int     cam_y;      // nuevo: desplazamiento interno Y
+    int     real_w;     // ancho total del minimapa en pixels
+    int     real_h;     // alto total del minimapa en pixels
+	int		visible_size;
+}				t_minimap;
 
 typedef struct s_game
 {
@@ -204,6 +210,7 @@ typedef struct s_game
 	t_tex			*bomb_tex;
 	t_tex			*lizard_tex;
 	t_tex			*map_text;
+	t_tex			*spidermask_tex;
 	t_keys			keys;
 	t_minimap		minimap;
 	int				score;
@@ -275,6 +282,7 @@ void				render_stats(t_game *g);
 void				display_score_panel(t_game *g, t_tex *score_panel,
 						char **scores);
 int					show_high_scores(t_game *g);
+void				draw_health_bar(t_game *g);
 
 // minimap rendering
 void				draw_minimap(t_game *g);

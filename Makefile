@@ -6,7 +6,7 @@
 #    By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/15 14:52:33 by alejhern          #+#    #+#              #
-#    Updated: 2025/11/04 21:08:18 by kroyo-di         ###   ########.fr        #
+#    Updated: 2025/11/08 17:04:25 by kroyo-di         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRCS    = src/utils/parsing.c  \
 		  src/render/stats.c \
 		  src/render/display_scores.c \
 		  src/render/high_scores.c \
+		  src/render/display_health.c \
 		  src/render/minimap/minimap.c \
 		  src/render/minimap/draw_minimap.c \
 		  src/render/minimap/minimap_sprites.c \

@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 18:48:47 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/10/29 21:38:44 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/08 20:12:06 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,39 @@ void	draw_player_arrow(t_game *g, t_minimap m)
 	double	sa;
 	int		cx;
 	t_pos	t[3];
+	int		camx;
+	int		camy;
+	double	ts;
+
+	ts = m.tile_size;
+	camx = g->minimap.cam_x;
+	camy = g->minimap.cam_y;
 
 	ang = atan2(g->spider.dir.y, g->spider.dir.x);
 	ca = cos(ang);
 	sa = sin(ang);
-	cx = m.offset.x + (int)(g->spider.pos.x * m.tile_size) - (int)round(ca
-			* (m.tile_size / 2.0));
-	t[0].x = cx + (int)round(ca * m.tile_size);
-	t[0].y = m.offset.y + (int)(g->spider.pos.y * m.tile_size) - (int)round(sa
-			* (m.tile_size / 2.0)) + (int)round(sa * m.tile_size);
-	t[1].x = cx - (int)round(sa * (m.tile_size / 2));
-	t[1].y = m.offset.y + (int)(g->spider.pos.y * m.tile_size) - (int)round(sa
-			* (m.tile_size / 2.0)) + (int)round(ca * (m.tile_size / 2));
-	t[2].x = cx + (int)round(sa * (m.tile_size / 2));
-	t[2].y = m.offset.y + (int)(g->spider.pos.y * m.tile_size) - (int)round(sa
-			* (m.tile_size / 2.0)) - (int)round(ca * (m.tile_size / 2));
+
+	/* Centro de la base de la flecha */
+	cx = m.offset.x + (int)(g->spider.pos.x * ts)
+		- camx - (int)round(ca * (ts / 2.0));
+
+	/* Punto frontal */
+	t[0].x = cx + (int)round(ca * ts);
+	t[0].y = m.offset.y + (int)(g->spider.pos.y * ts)
+		- camy - (int)round(sa * (ts / 2.0))
+		+ (int)round(sa * ts);
+
+	/* Lado izquierdo */
+	t[1].x = cx - (int)round(sa * (ts / 2.0));
+	t[1].y = m.offset.y + (int)(g->spider.pos.y * ts)
+		- camy - (int)round(sa * (ts / 2.0))
+		+ (int)round(ca * (ts / 2.0));
+
+	/* Lado derecho */
+	t[2].x = cx + (int)round(sa * (ts / 2.0));
+	t[2].y = m.offset.y + (int)(g->spider.pos.y * ts)
+		- camy - (int)round(sa * (ts / 2.0))
+		- (int)round(ca * (ts / 2.0));
+
 	draw_filled_triangle(g, t);
 }
