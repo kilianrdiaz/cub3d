@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:03:30 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/04 21:04:26 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/08 16:29:18 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,14 @@ static void	load_sprite_textures(t_game *g)
 		ft_error_exit("Error: Memory allocation failed for spider textures\n");
 	load_texture(g, &g->spider.hand[ACTIVE], "./textures/spiderhand_01.xpm");
 	load_texture(g, &g->spider.hand[MOVING], "./textures/spiderhand_02.xpm");
-	load_texture(g, &g->spider.hand[ATTACKING],
-		"./textures/spiderhand_attack.xpm");
+	load_texture(g, &g->spider.hand[ATTACKING], "./textures/spiderhand_attack.xpm");
+
 	g->bomb_tex = ft_calloc(sizeof(t_tex), sizeof(t_state));
 	if (!g->bomb_tex)
 		ft_error_exit("Error: Memory allocation failed for bomb textures\n");
 	load_texture(g, &g->bomb_tex[ACTIVE], "./textures/bomb.xpm");
 	load_texture(g, &g->bomb_tex[ATTACKED], "./textures/bomb_attacked.xpm");
+
 	g->lizard_tex = ft_calloc(sizeof(t_tex), sizeof(t_state));
 	if (!g->lizard_tex)
 		ft_error_exit("Error: Memory allocation failed for lizard textures\n");
@@ -39,23 +40,27 @@ static void	create_mlx_window(t_game *g)
 {
 	g->mlx = mlx_init();
 	if (!g->mlx)
-	{
-		ft_printf_fd(STDERR_FILENO, "mlx_init failed\n");
-		exit(1);
-	}
+		ft_error_exit("mlx_init failed\n");
+
 	g->win = mlx_new_window(g->mlx, WIDTH, HEIGHT, "Cub3D");
 	if (!g->win)
-	{
-		ft_printf_fd(STDERR_FILENO, "mlx_new_window failed\n");
-		exit(1);
-	}
+		ft_error_exit("mlx_new_window failed\n");
+
 	g->img = mlx_new_image(g->mlx, WIDTH, HEIGHT);
 	if (!g->img)
-	{
-		ft_printf_fd(STDERR_FILENO, "mlx_new_image failed\n");
-		exit(1);
-	}
+		ft_error_exit("mlx_new_image failed\n");
+
 	g->addr = mlx_get_data_addr(g->img, &g->bpp, &g->line_len, &g->endian);
+}
+
+void	init_font(t_font *f)
+{
+	for (int i = 0; i < 128; i++)
+	{
+		f->chars[i].pixels = NULL;
+		f->chars[i].width = 0;
+		f->chars[i].height = 0;
+	}
 }
 
 int	main(int argc, char **argv)
@@ -64,23 +69,27 @@ int	main(int argc, char **argv)
 
 	ft_bzero(&g, sizeof(t_game));
 	create_mlx_window(&g);
+
 	g.map_text = ft_calloc(sizeof(t_tex), 6);
 	if (!g.map_text)
 		ft_error_exit("Error: Memory allocation failed for map textures\n");
+
 	get_info_file(&g, argc, argv);
 	load_sprite_textures(&g);
+
+	init_font(&g.font);
 	load_font(&g, &g.font, "./textures/font.xpm");
 
-	// 🩸 Inicialización de vida del jugador
-	g.spider.max_hp = 100;
-	g.spider.hp = 100;
-	g.spider.last_hit_time = -9999;
+	g.player_max_hp = 100;
+	g.player_hp = 100;
+	g.player_last_hit_time = -9999;
 
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g);
 	mlx_loop_hook(g.mlx, render, &g);
 	mlx_loop(g.mlx);
+
 	close_program(&g);
 	return (0);
 }

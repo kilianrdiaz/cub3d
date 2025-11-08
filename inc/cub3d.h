@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/04 21:11:06 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/05 22:43:05 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define CUB3D_H
 
 # include "../libft/libft.h"
-# include "../minilibx-linux/mlx.h"
+# include "../minilibx-linux/mlx.h"	
 # include <math.h>
 
 # define COLOR_NONE 0xFF000000
@@ -172,10 +172,6 @@ typedef struct s_spidy
 	double			move_accum;
 	t_tex			*hand;
 	t_state			state;
-	// Damage_system
-	int     hp;
-    int     max_hp;
-    int     last_hit_time;
 }					t_spidy;
 
 typedef struct s_minimap
@@ -211,6 +207,10 @@ typedef struct s_game
 	t_keys			keys;
 	t_minimap		minimap;
 	int				score;
+		// Damage_system
+	int     player_hp;
+    int     player_max_hp;
+    int     player_last_hit_time;
 }					t_game;
 
 typedef struct s_ray

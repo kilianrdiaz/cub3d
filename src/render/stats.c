@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 20:59:06 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/04 21:38:10 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/08 16:33:11 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,15 @@ static void	draw_text(t_game *g, t_tex tex, t_sprite sp)
 		p.x = -1;
 		while (++p.x < tex.width * sp.scale)
 		{
-			// Convertir coordenadas escaladas -> coordenadas reales de textura
 			src_pos.x = (int)(p.x / sp.scale);
 			src_pos.y = (int)(p.y / sp.scale);
-			// Proteger límites
 			if (src_pos.x < 0 || src_pos.x >= tex.width || src_pos.y < 0
 				|| src_pos.y >= tex.height)
 				continue ;
-			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x * (tex.bpp
-						/ 8));
+			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x * (tex.bpp / 8));
 			tex.color = *(unsigned int *)src;
-			if ((tex.color & 0x00FFFFFF) != 0) // transparencia
-				put_pixel(g, (int)sp.pos.x + p.x, (int)sp.pos.y + p.y,
-					tex.color);
+			if ((tex.color & 0x00FFFFFF) != 0)
+				put_pixel(g, (int)sp.pos.x + p.x, (int)sp.pos.y + p.y, tex.color);
 		}
 	}
 }
@@ -77,56 +73,59 @@ void	draw_panel_separator(t_game *g)
 
 static void	draw_health_bar(t_game *g)
 {
-	int		bar_width;
-	int		bar_height;
-	int		x;
-	int		y;
+	int		bar_width = 200;
+	int		bar_height = 25;
+	int		x = GAME_WIDTH + 80;
+	int		y = 60;
 	double	ratio;
-	int		i;
-	int		j;
+	int		fill;
+	int		i, j;
 
-	bar_width = 200;
-	bar_height = 25;
-	x = GAME_WIDTH + 200;
-	y = 80;
-	ratio = (double)g->spider.hp / g->spider.max_hp;
+	if (g->player_max_hp <= 0)
+		g->player_max_hp = 1;
 
-	// Fondo de la barra (gris oscuro)
+	ratio = (double)g->player_hp / (double)g->player_max_hp;
+	if (ratio < 0.0) ratio = 0.0;
+	if (ratio > 1.0) ratio = 1.0;
+	fill = (int)floor(bar_width * ratio);
+	if (fill < 0) fill = 0;
+	if (fill > bar_width) fill = bar_width;
+
 	for (i = 0; i < bar_height; i++)
 		for (j = 0; j < bar_width; j++)
 			put_pixel(g, x + j, y + i, 0xFF222222);
 
-	// Parte roja (vida restante)
 	for (i = 0; i < bar_height; i++)
-		for (j = 0; j < (int)(bar_width * ratio); j++)
+		for (j = 0; j < fill; j++)
 			put_pixel(g, x + j, y + i, 0xFFCC0000);
 
-	// Mostrar texto “HP”
-	render_text(g, "HP", (t_pos){x - 150, y - 10});
+	render_text(g, "HP", (t_pos){x - 40, y + 5});
 }
-
 
 void	render_stats(t_game *g)
 {
 	t_sprite	sp;
 	char		*str;
 
-	draw_health_bar(g);  // 🩸 Barra de vida arriba del panel
-	
+	draw_health_bar(g);
 	draw_panel_separator(g);
+
 	sp.pos.x = GAME_WIDTH + 150;
 	sp.pos.y = HEIGHT - 300;
 	sp.scale = 0.5;
 	draw_text(g, g->bomb_tex[ACTIVE], sp);
+
 	sp.pos.x += g->bomb_tex[ACTIVE].width * sp.scale + 50;
 	g->font.scale = 1.8;
 	sp.pos.y -= g->font.char_h * g->font.scale / 3;
 	str = ft_itoa(g->bomb_count);
 	render_text(g, str, (t_pos){sp.pos.x, sp.pos.y});
 	free(str);
+
 	sp.pos.x = GAME_WIDTH + 150;
 	sp.pos.y += g->bomb_tex[ACTIVE].height * sp.scale + 50;
 	put_timer(g, (t_pos){sp.pos.x, sp.pos.y});
+
 	sp.pos.y += g->font.char_h * g->font.scale + 10;
 	sp.pos.x = GAME_WIDTH + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
 	put_score_text(g, (t_pos){sp.pos.x, sp.pos.y});
