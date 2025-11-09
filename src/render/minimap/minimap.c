@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:38:36 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/08 20:11:56 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/09 15:13:44 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void draw_minimap(t_game *g)
     int         h;
     int         w;
     t_minimap   *m;
+	int         bar_width;
 
     m = &g->minimap;
     h = ft_memlen(g->map);
@@ -83,9 +84,12 @@ void draw_minimap(t_game *g)
     m->real_h = h * m->tile_size;
 
     // offset dentro de la franja negra
-    m->offset.x = MINIMAP_OFFSET_X + m->tile_size;
-    m->offset.y = MINIMAP_OFFSET_Y + m->tile_size;
+       bar_width = WIDTH - GAME_WIDTH;
 
+    m->visible_size = 300; // tu tamaño actual
+
+    m->offset.x = GAME_WIDTH + (bar_width / 2) - (m->visible_size / 2);
+    m->offset.y = (HEIGHT / 2) - (m->visible_size - 100);
     // límite máximo visible (cuadrado 300x300)
     m->visible_size = 300;
 
