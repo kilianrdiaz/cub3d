@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 17:19:21 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/09 17:47:36 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,7 +287,7 @@ int					render(t_game *g);
 void				update_bombs(t_game *g);
 void				draw_hand(t_game *g, int x);
 void				render_sprites(t_game *g);
-void				render_text(t_game *g, char *str, t_pos pos);
+void				render_text(t_game *g, char *str, t_pos coords);
 void				load_font(t_game *g, t_font *f, char *path);
 int					show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex *tex);
