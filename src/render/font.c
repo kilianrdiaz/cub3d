@@ -66,10 +66,15 @@ void	load_font(t_game *g, t_font *f, char *path)
 	f->img = mlx_xpm_file_to_image(g->mlx, path, &f->char_w, &f->char_h);
 	if (!f->img)
 	{
-		write(2, "Error: font image not found\n", 28);
-		exit(1);
+		ft_printf_fd(2, "Error: could not load font %s\n", path);
+		return ;
 	}
 	f->addr = mlx_get_data_addr(f->img, &f->bpp, &f->line_len, &f->endian);
+	if (!f->addr)
+	{
+		ft_printf_fd(2, "Error: font %s has invalid size\n", path);
+		return ;
+	}
 	f->char_h = f->char_h / NUM_ROWS;
 	f->char_w = f->char_w / 9; // fila más larga = 9 letras
 	create_char_bitmap(f);
@@ -107,7 +112,7 @@ void	render_text(t_game *g, char *str, t_coords coords)
 	double	advance;
 	int		i;
 
-	if (!str)
+	if (!g->font.img || !g->font.scale || !g->font.addr || !str)
 		return ;
 	advance = (g->font.char_w * g->font.scale);
 	i = -1;
