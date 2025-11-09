@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/08 20:10:29 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/09 14:44:10 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@
 # define MINIMAP_SIZE_LIMIT 500
 # define MINIMAP_OFFSET_X (WIDTH - MINIMAP_SIZE_LIMIT + 80)
 # define MINIMAP_OFFSET_Y 200
-# define MINIMAP_TILE 25
+# define MINIMAP_TILE 20
 
 # define TIMER 125
 
