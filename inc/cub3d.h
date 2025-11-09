@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 14:44:10 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/09 16:47:09 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,15 @@
 # define MINIMAP_TILE 20
 
 # define TIMER 125
+
+typedef struct s_bar
+{
+	int		x;
+	int		y;
+	int		w;
+	int		h;
+	int		fill;
+}			t_bar;
 
 typedef struct s_coords
 {
@@ -181,11 +190,11 @@ typedef struct	s_minimap
     int     width;
     int     height;
     int     tile_size;
-    t_pos   offset;     // posición en pantalla (ya lo tienes)
-    int     cam_x;      // nuevo: desplazamiento interno X
-    int     cam_y;      // nuevo: desplazamiento interno Y
-    int     real_w;     // ancho total del minimapa en pixels
-    int     real_h;     // alto total del minimapa en pixels
+    t_pos   offset;
+    int     cam_x;
+    int     cam_y;
+    int     real_w;
+    int     real_h;
 	int		visible_size;
 }				t_minimap;
 

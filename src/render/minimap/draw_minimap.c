@@ -5,12 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/29 21:38:07 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/08 20:04:46 by kroyo-di         ###   ########.fr       */
+/*   Created: 2025/11/09 16:00:05 by kroyo-di          #+#    #+#             */
+/*   Updated: 2025/11/09 16:02:19 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/cub3d.h"
+
+static int	is_outside(int sx, int sy, t_minimap *m, int ts)
+{
+	if (sx + ts < m->offset.x || sx > m->offset.x + m->visible_size)
+		return (1);
+	if (sy + ts < m->offset.y || sy > m->offset.y + m->visible_size)
+		return (1);
+	return (0);
+}
 
 void	put_rect(t_game *g, t_sprite r, unsigned int color)
 {
@@ -48,38 +57,29 @@ void	draw_border(t_game *g, t_sprite r, unsigned int color)
 	}
 }
 
-void draw_tile(t_game *g, t_pos tile)
+void	draw_tile(t_game *g, t_pos t)
 {
-    t_sprite    r;
-    t_minimap   *m;
-    int         screen_x;
-    int         screen_y;
+	int			sx;
+	int			sy;
+	t_sprite	r;
+	t_minimap	*m;
 
-    m = &g->minimap;
-    r.width = m->tile_size;
-    r.height = m->tile_size;
-
-    // posición en pantalla restando la cámara
-    screen_x = m->offset.x + tile.x * m->tile_size - m->cam_x;
-    screen_y = m->offset.y + tile.y * m->tile_size - m->cam_y;
-
-    // recorte: fuera del área visible del minimapa (cuadrado 100x100)
-    if (screen_x + r.width < m->offset.x || screen_x > m->offset.x + m->visible_size)
-        return;
-    if (screen_y + r.height < m->offset.y || screen_y > m->offset.y + m->visible_size)
-        return;
-
-    r.pos.x = screen_x;
-    r.pos.y = screen_y;
-
-    if (!m->revealed || !m->revealed[tile.y][tile.x])
-        put_rect(g, r, COL_UNK_FOG);
-    else if (g->map[tile.y][tile.x] == '1')
-    {
-        put_rect(g, r, COL_WALL);
-        draw_border(g, r, COL_WALL_BORDER);
-    }
-    else
-        put_rect(g, r, COL_FLOOR);
+	m = &g->minimap;
+	r.width = m->tile_size;
+	r.height = m->tile_size;
+	sx = m->offset.x + t.x * m->tile_size - m->cam_x;
+	sy = m->offset.y + t.y * m->tile_size - m->cam_y;
+	if (is_outside(sx, sy, m, m->tile_size))
+		return ;
+	r.pos.x = sx;
+	r.pos.y = sy;
+	if (!m->revealed || !m->revealed[t.y][t.x])
+		put_rect(g, r, COL_UNK_FOG);
+	else if (g->map[t.y][t.x] == '1')
+	{
+		put_rect(g, r, COL_WALL);
+		draw_border(g, r, COL_WALL_BORDER);
+	}
+	else
+		put_rect(g, r, COL_FLOOR);
 }
-
