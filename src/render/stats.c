@@ -41,24 +41,15 @@ static void	draw_text(t_game *g, t_tex tex, t_sprite sp)
 	}
 }
 
-static void	put_score_text(t_game *g, t_pos pos)
+static void	put_score_text(t_game *g, t_coords pos)
 {
-	int		advance;
-	int		i;
 	char	*str;
-	char	ch;
 
 	str = ft_itoa(g->score);
 	if (!str)
 		return ;
 	pos.x -= (g->font.char_w * ft_strlen(str) / 2);
-	advance = (g->font.char_w);
-	i = -1;
-	while (str[++i])
-	{
-		ch = str[i];
-		render_text(g, &ch, (t_coords){pos.x + i * advance, pos.y});
-	}
+	render_text(g, str, pos);
 	free(str);
 }
 
@@ -96,5 +87,5 @@ void	render_stats(t_game *g)
 	put_timer(g, sp.pos);
 	sp.pos.y += g->font.char_h * g->font.scale + 10;
 	sp.pos.x = GAME_WIDTH + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
-	put_score_text(g, (t_pos){sp.pos.x, sp.pos.y});
+	put_score_text(g, sp.pos);
 }
