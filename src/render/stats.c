@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 20:59:06 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/09 18:09:33 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/09 19:45:20 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,26 @@ void	draw_panel_separator(t_game *g)
 	}
 }
 
+static void	draw_lives(t_game *g)
+{
+	t_sprite sp;
+
+	sp.pos.x = GAME_WIDTH + 80;
+	sp.pos.y = 100;
+	sp.scale = 0.25;
+	draw_text(g, g->spidermask_tex[0], sp);
+
+	sp.pos.x = GAME_WIDTH + 290;
+	sp.pos.y = 55;
+	sp.scale = 0.15;
+	draw_text(g, g->spidermask_tex[0], sp);
+
+	sp.pos.x = GAME_WIDTH + 370;
+	sp.pos.y = 55;
+	sp.scale = 0.15;
+	draw_text(g, g->spidermask_tex[0], sp);
+}
+
 void	render_stats(t_game *g)
 {
 	t_sprite	sp;
@@ -99,8 +119,5 @@ void	render_stats(t_game *g)
 	sp.pos.x = GAME_WIDTH + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
 	put_score_text(g, (t_pos){sp.pos.x, sp.pos.y});
 
-	sp.pos.x = GAME_WIDTH + 180;
-	sp.pos.y = 140;
-	sp.scale = 0.2;
-	draw_text(g, g->spidermask_tex[0], sp);
+	draw_lives(g);
 }

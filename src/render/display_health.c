@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:46:16 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 17:19:08 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/09 19:43:53 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,42 +34,41 @@ static void	bar_border(t_game *g, t_bar *b)
 }
 
 /* ---- RELLENO DE UNA LÍNEA ---- */
-static void	bar_fill_line(t_game *g, t_bar *b, int color)
+static void	bar_fill_line(t_game *g, t_bar *b, int y, int color)
 {
 	int	i;
 
 	i = 1;
 	while (i < b->fill - 1)
 	{
-		put_pixel(g, b->x + i, b->y, color);
+		put_pixel(g, b->x + i, y, color);
 		i++;
 	}
 }
 
-/* ---- RELLENO COMPLETO ---- */
+/* ---- RELLENO COMPLETO (CON PROFUNDIDAD) ---- */
 static void	bar_fill(t_game *g, t_bar *b)
 {
-	int	j;
+	int	y;
+	int	fill_height;
 
-	b->y += 1;
-	bar_fill_line(g, b, COL_HIGHLIGHT);
-	j = 1;
-	while (++j < 13)
+	/* Controlar proporciones relativas */
+	fill_height = b->h - 2;
+	y = 1;
+	while (y <= fill_height)
 	{
-		b->y = b->y + 1;
-		bar_fill_line(g, b, COL_FILL);
-	}
-	j = 0;
-	while (j++ < 3)
-	{
-		b->y = b->y + 1;
-		bar_fill_line(g, b, COL_FILL_MID);
-	}
-	j = 0;
-	while (j++ < 2)
-	{
-		b->y = b->y + 1;
-		bar_fill_line(g, b, COL_FILL_DARK);
+		int color;
+
+		if (y < fill_height * 0.2)
+			color = COL_HIGHLIGHT; /* Parte superior brillante */
+		else if (y < fill_height * 0.6)
+			color = COL_FILL; /* Zona media */
+		else if (y < fill_height * 0.85)
+			color = COL_FILL_MID; /* Parte inferior más oscura */
+		else
+			color = COL_FILL_DARK; /* Sombra final */
+		bar_fill_line(g, b, b->y + y, color);
+		y++;
 	}
 }
 
@@ -83,7 +82,7 @@ static void	bar_bg(t_game *g, t_bar *b)
 	while (i < b->h)
 	{
 		j = 0;
-		while (j < b->w + 4)
+		while (j < b->w)
 		{
 			put_pixel(g, b->x + j, b->y + i, COL_BAR_BG);
 			j++;
@@ -98,9 +97,9 @@ void	draw_health_bar(t_game *g)
 	t_bar	b;
 	double	ratio;
 
-	b.w = 200;
-	b.h = 20;
-	b.x = GAME_WIDTH + 200;
+	b.w = 300;
+	b.h = 30; /* Puedes cambiar libremente la altura ahora */
+	b.x = GAME_WIDTH + 150;
 	b.y = 140;
 	if (g->player_max_hp <= 0)
 		g->player_max_hp = 1;
@@ -114,8 +113,8 @@ void	draw_health_bar(t_game *g)
 		b.fill = 0;
 	if (b.fill > b.w)
 		b.fill = b.w;
+
 	bar_bg(g, &b);
-	bar_border(g, &b);
 	bar_fill(g, &b);
-	b.x += b.fill + 2;
+	bar_border(g, &b);
 }
