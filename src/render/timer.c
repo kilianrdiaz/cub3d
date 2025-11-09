@@ -12,13 +12,17 @@
 
 #include "../../inc/cub3d.h"
 
+#ifndef FRAMES_PER_SECOND
+# define FRAMES_PER_SECOND 10
+#endif
+
 static t_timeleft	get_time_left(unsigned int timer, unsigned int time_limit)
 {
 	t_timeleft	t;
 	int			elapsed_seconds;
 	int			remaining;
 
-	elapsed_seconds = timer / 30;
+	elapsed_seconds = timer / FRAMES_PER_SECOND;
 	remaining = time_limit - elapsed_seconds;
 	if (remaining < 0)
 		remaining = 0;

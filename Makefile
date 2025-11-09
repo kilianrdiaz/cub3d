@@ -61,11 +61,16 @@ NAME    = cub3d
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
 
+VICTUS = -DFRAMES_PER_SECOND=30
+
 # **************************************************************************** #
 #                                 RULES                                        #
 # **************************************************************************** #
 
 all: $(LIBFT) $(MLX_LIB) $(NAME)
+
+victus: CFLAGS += $(VICTUS)
+victus: all
 
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
@@ -91,15 +96,15 @@ $(MLX_LIB):
 
 clean:
 	@make -C $(LIBFT_DIR) clean
+	@make -C $(MLX_DIR) clean
 	rm -rf $(OBJ_DIR)
 	@echo "🧹 Archivos objeto eliminados."
 
 fclean: clean
 	@make -C $(LIBFT_DIR) fclean
-	rm -rf $(MLX_DIR)
 	rm -f $(NAME)
 	@echo "🧼 Limpieza completa."
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re victus
