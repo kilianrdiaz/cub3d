@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 16:47:09 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/09 17:19:21 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,14 @@
 # define COL_PLAYER 0xFF2D2D
 # define COL_BOMB 0xFFB84D
 # define COL_LIZARD 0x5AFF7A
+
+#define COL_BORDER     0xFFB0B0B0
+#define COL_HIGHLIGHT  0xFFFFFFFF
+#define COL_FILL       0xFFA00000
+#define COL_FILL_MID   0xFF800000
+#define COL_FILL_DARK  0xFF500000
+#define COL_SHADE      0xFF707070
+#define COL_BAR_BG     0xFF202020
 
 # define REVEAL_STEP_RADIUS 3
 # define MINIMAP_SIZE_LIMIT 500
