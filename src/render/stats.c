@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 20:59:06 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/08 17:04:39 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/09 18:09:33 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,9 @@ void	render_stats(t_game *g)
 	sp.pos.y += g->font.char_h * g->font.scale + 10;
 	sp.pos.x = GAME_WIDTH + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
 	put_score_text(g, (t_pos){sp.pos.x, sp.pos.y});
+
+	sp.pos.x = GAME_WIDTH + 180;
+	sp.pos.y = 140;
+	sp.scale = 0.2;
+	draw_text(g, g->spidermask_tex[0], sp);
 }

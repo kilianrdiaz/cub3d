@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:03:30 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 14:56:11 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/09 18:08:51 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ static void	load_sprite_textures(t_game *g)
 	load_texture(g, &g->lizard_tex[MOVING], "./textures/lizard_step.xpm");
 
 	g->spidermask_tex = ft_calloc(sizeof(t_tex), 2);
-	if (!g->lizard_tex)
+	if (!g->spidermask_tex)
 		ft_error_exit("Error: Memory allocation failed for mask textures\n");
-	load_texture(g, &g->lizard_tex[0], "./textures/lizard.xpm");
+	load_texture(g, &g->spidermask_tex[0], "./textures/web_target.xpm");
 	
 }
 
