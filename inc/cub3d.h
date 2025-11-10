@@ -13,8 +13,9 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 
-# include "../libft/libft.h"
-# include "../minilibx-linux/mlx.h"
+# include "../libs/libft/libft.h"
+# include "../libs/minilibx-linux/mlx.h"
+
 # include <math.h>
 
 # define COLOR_NONE 0xFF000000

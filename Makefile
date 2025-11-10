@@ -48,18 +48,19 @@ SRCS    = src/utils/parsing.c  \
 OBJ_DIR = obj
 OBJ     = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
 
-LIBFT_DIR = libft/
-LIBFT = $(LIBFT_DIR)libft.a
+LIBFT_DIR = libs/libft/
+LIBFT_LIB = $(LIBFT_DIR)libft.a
 LIBFT_REPO = https://github.com/alejhern/libft.git
+LIBFT   = -L$(LIBFT_DIR) -lft
 
 MLX_REPO = https://github.com/42Paris/minilibx-linux.git
-MLX_DIR = minilibx-linux
+MLX_DIR = libs/minilibx-linux
 MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX     = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 
 NAME    = cub3d
 CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
+CFLAGS  = -Wall -Wextra -Werror -Iinc -g
 
 VICTUS = -DFRAMES_PER_SECOND=30
 
@@ -67,7 +68,7 @@ VICTUS = -DFRAMES_PER_SECOND=30
 #                                 RULES                                        #
 # **************************************************************************** #
 
-all: $(LIBFT) $(MLX_LIB) $(NAME)
+all: $(LIBFT_LIB) $(MLX_LIB) $(NAME)
 
 victus: CFLAGS += $(VICTUS)
 victus: all
@@ -80,7 +81,7 @@ $(OBJ_DIR)/%.o: src/%.c ./inc/cub3d.h Makefile
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(LIBFT):
+$(LIBFT_LIB):
 	@if [ ! -d "$(LIBFT_DIR)" ]; then \
 		git clone $(LIBFT_REPO) $(LIBFT_DIR); \
 	fi
@@ -92,7 +93,6 @@ $(MLX_LIB):
 		git clone $(MLX_REPO) $(MLX_DIR); \
 	fi
 	$(MAKE) -C $(MLX_DIR)
-	@echo "✅ MiniLibX compilada."
 
 clean:
 	@make -C $(LIBFT_DIR) clean
@@ -101,7 +101,7 @@ clean:
 	@echo "🧹 Archivos objeto eliminados."
 
 fclean: clean
-	@make -C $(LIBFT_DIR) fclean
+	rm -rf libs
 	rm -f $(NAME)
 	@echo "🧼 Limpieza completa."
 
