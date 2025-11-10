@@ -215,6 +215,7 @@ typedef struct s_game
 	t_keys			keys;
 	t_minimap		minimap;
 	unsigned int	score;
+	void			*audio;
 }					t_game;
 
 typedef struct s_ray
