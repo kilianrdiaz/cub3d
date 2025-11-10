@@ -12,6 +12,31 @@
 
 #include "../inc/cub3d.h"
 
+void	draw_fullscreen_image(t_game *g, t_tex tex)
+{
+	t_pos	p;
+	t_pos	src_pos;
+	char	*src;
+	int		color;
+
+	if (!tex.img)
+		return ;
+	p.y = -1;
+	while (++p.y < HEIGHT)
+	{
+		p.x = -1;
+		while (++p.x < WIDTH)
+		{
+			src_pos.x = p.x * tex.width / WIDTH;
+			src_pos.y = p.y * tex.height / HEIGHT;
+			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x * (tex.bpp
+						/ 8));
+			color = *(unsigned int *)src;
+			put_pixel(g, p.x, p.y, color);
+		}
+	}
+}
+
 static void	load_sprite_textures(t_game *g)
 {
 	g->spider.hand = ft_calloc(sizeof(t_tex), sizeof(t_state));
@@ -58,6 +83,16 @@ static void	create_mlx_window(t_game *g)
 	g->addr = mlx_get_data_addr(g->img, &g->bpp, &g->line_len, &g->endian);
 }
 
+static void	unset_map_textures(t_tex *tex)
+{
+	tex[NO].color = COLOR_NONE;
+	tex[SO].color = COLOR_NONE;
+	tex[WE].color = COLOR_NONE;
+	tex[EA].color = COLOR_NONE;
+	tex[F].color = COLOR_NONE;
+	tex[C].color = COLOR_NONE;
+}
+
 int	main(int argc, char **argv)
 {
 	t_game	g;
@@ -70,12 +105,7 @@ int	main(int argc, char **argv)
 	g.map_text = ft_calloc(sizeof(t_tex), 6);
 	if (!g.map_text)
 		ft_error_exit("Error: Memory allocation failed for map textures\n");
-	g.map_text[NO].color = COLOR_NONE;
-	g.map_text[SO].color = COLOR_NONE;
-	g.map_text[WE].color = COLOR_NONE;
-	g.map_text[EA].color = COLOR_NONE;
-	g.map_text[F].color = COLOR_NONE;
-	g.map_text[C].color = COLOR_NONE;
+	unset_map_textures(g.map_text);
 	load_sprite_textures(&g);
 	load_font(&g, &g.font, "./textures/font.xpm");
 	ft_bzero(&g.keys, sizeof(t_keys));

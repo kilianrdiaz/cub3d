@@ -50,7 +50,7 @@ static int	read_intro(t_game *g)
 	return (1);
 }
 
-int	show_intro(t_game *g)
+void	show_intro(t_game *g)
 {
 	t_tex	intro;
 
@@ -62,5 +62,4 @@ int	show_intro(t_game *g)
 	mlx_key_hook(g->win, close_intro, g);
 	if (intro.img)
 		mlx_destroy_image(g->mlx, intro.img);
-	return (0);
 }

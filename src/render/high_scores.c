@@ -107,7 +107,7 @@ static void	save_scores(char **scores)
 	close(fd);
 }
 
-int	show_high_scores(t_game *g)
+void	show_high_scores(t_game *g)
 {
 	char	**scores;
 	int		position;
@@ -119,7 +119,9 @@ int	show_high_scores(t_game *g)
 	position = get_position(g, scores);
 	if (position != -1 && g->render_state != SCORE_SAVED)
 		g->render_state = WAITING_FOR_NAME;
-	if (g->render_state == WAITING_FOR_NAME)
+	if (g->render_state == HIGH_SCORE || g->render_state == SCORE_SAVED)
+		display_score_panel(g, score_panel, scores);
+	else
 	{
 		new_score = register_score(g, score_panel);
 		if (new_score)
@@ -129,9 +131,6 @@ int	show_high_scores(t_game *g)
 			save_scores(scores);
 			g->render_state = SCORE_SAVED;
 		}
-		ft_free_array((void ***)&scores);
-		return (0);
 	}
-	display_score_panel(g, score_panel, scores);
-	return (ft_free_array((void ***)&scores), 0);
+	ft_free_array((void ***)&scores);
 }

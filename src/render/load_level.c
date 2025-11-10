@@ -70,7 +70,7 @@ static void	put_message(t_game *g, char *msg, int render_state)
 	g->timer++;
 }
 
-int	load_level(t_game *g)
+void	load_level(t_game *g)
 {
 	char	*level;
 	char	*msg;
@@ -93,5 +93,4 @@ int	load_level(t_game *g)
 		put_message(g, msg, PLAYING);
 		free(msg);
 	}
-	return (0);
 }

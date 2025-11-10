@@ -12,32 +12,7 @@
 
 #include "../../inc/cub3d.h"
 
-void	draw_fullscreen_image(t_game *g, t_tex tex)
-{
-	t_pos	p;
-	t_pos	src_pos;
-	char	*src;
-	int		color;
-
-	if (!tex.img)
-		return ;
-	p.y = -1;
-	while (++p.y < HEIGHT)
-	{
-		p.x = -1;
-		while (++p.x < WIDTH)
-		{
-			src_pos.x = p.x * tex.width / WIDTH;
-			src_pos.y = p.y * tex.height / HEIGHT;
-			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x * (tex.bpp
-						/ 8));
-			color = *(unsigned int *)src;
-			put_pixel(g, p.x, p.y, color);
-		}
-	}
-}
-
-static int	game(t_game *g)
+static void	game(t_game *g)
 {
 	update_player_position(g);
 	clean_screen(g);
@@ -53,22 +28,22 @@ static int	game(t_game *g)
 	update_bombs(g);
 	if (g->spider.state == ATTACKING)
 		spider_attack(g);
-	return (0);
 }
 
 int	render(t_game *g)
 {
 	if (g->render_state == INTRO)
-		return (show_intro(g));
-	if (g->render_state == LOAD_LEVEL || g->render_state == NEW_LEVEL
+		show_intro(g);
+	else if (g->render_state == LOAD_LEVEL || g->render_state == NEW_LEVEL
 		|| g->render_state == GAME_OVER)
-		return (load_level(g));
-	if (g->render_state == PLAYING)
-		return (game(g));
-	if (g->render_state == HIGH_SCORE || g->render_state == WAITING_FOR_NAME
+		load_level(g);
+	else if (g->render_state == PLAYING)
+		game(g);
+	else if (g->render_state == HIGH_SCORE
+		|| g->render_state == WAITING_FOR_NAME
 		|| g->render_state == SCORE_SAVED)
-		return (show_high_scores(g));
-	if (g->render_state == END)
+		show_high_scores(g);
+	else if (g->render_state == END)
 		close_program(g);
 	return (0);
 }
