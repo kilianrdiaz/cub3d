@@ -117,7 +117,7 @@ void	render_sprites(t_game *g)
 	t_pos			count;
 	t_sprite		**sprites;
 
-	sprites = get_sprites(g);
+	sprites = get_sprites(*g);
 	if (!sprites)
 		return ;
 	count.x = ft_memlen((void **)sprites);

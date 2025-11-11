@@ -245,7 +245,7 @@ void				put_pixel(t_game *g, int x, int y, int color);
 void				clean_screen(t_game *g);
 void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
 t_tex				get_texture_wall(t_game g, t_ray ray, int dist);
-t_sprite			**get_sprites(t_game *g);
+t_sprite			**get_sprites(t_game g);
 void				calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex,
 						int dist);
 void				calculate_distance_to_wall(t_game g, t_ray *ray, int *side);
