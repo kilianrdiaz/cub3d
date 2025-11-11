@@ -35,19 +35,41 @@ static void	audio_init(void **audio_ptr)
 	if (ma_engine_init(NULL, &audio->engine) != MA_SUCCESS)
 	{
 		ft_putendl_fd("Error inicializando el motor de audio", 2);
-		free(audio);
-		return ;
+		return (clean_audio(audio));
 	}
-	if (ma_sound_init_from_file(&audio->engine, "bg.wav", MA_SOUND_FLAG_LOOPING,
-			NULL, NULL, &audio->bg_music) != MA_SUCCESS)
-	{
+	if (ma_sound_init_from_file(&audio->engine, "audios/bg.wav",
+			MA_SOUND_FLAG_LOOPING, NULL, NULL, &audio->bg_music) != MA_SUCCESS)
 		ft_putendl_fd("Error cargando bg.wav", 2);
-		ma_engine_uninit(&audio->engine);
-		free(audio);
-		return ;
-	}
+	if (ma_sound_init_from_file(&audio->engine, "audios/lizard.wav", 0, NULL,
+			NULL, &audio->lizard) != MA_SUCCESS)
+		ft_putendl_fd("Error cargando lizard.wav", 2);
+	if (ma_sound_init_from_file(&audio->engine, "audios/web.wav", 0, NULL, NULL,
+			&audio->spiderweb) != MA_SUCCESS)
+		ft_putendl_fd("Error cargando spiderweb.wav", 2);
 	ma_sound_start(&audio->bg_music);
 	*audio_ptr = audio; // Guardamos el puntero en g->audio
+}
+
+static void	manage_sound_effects(t_game *g)
+{
+	t_audio		*audio;
+	t_sprite	**sprite_list;
+	int			i;
+
+	audio = (t_audio *)g->audio;
+	if (!audio)
+		return ;
+	if (g->spider.state == ATTACKING)
+		ma_sound_start(&audio->spiderweb);
+	sprite_list = get_sprites(*g);
+	i = -1;
+	while (sprite_list && sprite_list[++i])
+	{
+		if (sprite_list[i]->type == LIZARD
+			&& sprite_list[i]->state == ATTACKING)
+			ma_sound_start(&audio->lizard);
+	}
+	free(sprite_list);
 }
 
 static void	game(t_game *g)
@@ -73,6 +95,7 @@ int	render(t_game *g)
 	t_audio	*audio;
 
 	audio_init(&g->audio);
+	manage_sound_effects(g);
 	audio = (t_audio *)g->audio;
 	if (g->render_state == INTRO)
 		show_intro(g);
