@@ -10,8 +10,21 @@
 #                                                                              #
 # **************************************************************************** #
 # **************************************************************************** #
-#                                 VARIABLES                                    #
+#                                   CUB3D                                      #
 # **************************************************************************** #
+
+# ================================
+# ⚙️ COMPILACIÓN
+# ================================
+CC      = cc
+CFLAGS  = -Wall -Wextra -Werror -g -Iinc
+NAME    = cub3d
+VICTUS  = -DFRAMES_PER_SECOND=30
+
+# ================================
+# 📂 DIRECTORIOS Y FUENTES
+# ================================
+OBJ_DIR = obj
 
 SRCS    = src/utils/parsing.c  \
 		  src/utils/render.c    \
@@ -43,11 +56,6 @@ SRCS    = src/utils/parsing.c  \
 		  src/close_program.c \
 		  src/main.c
 
-RENDER_DEFAULT       = src/render/render.c
-RENDER_WITH_AUDIO    = src/render/render_with_audio.c
-
-OBJ_DIR = obj
-
 # ================================
 # 🧱 LIBFT
 # ================================
@@ -67,29 +75,25 @@ MLX     = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 # ================================
 # 🎵 MINIAUDIO (header-only)
 # ================================
-MINIAUDIO_DIR = libs/miniaudio
+MINIAUDIO_DIR  = libs/miniaudio
 MINIAUDIO_REPO = https://github.com/mackron/miniaudio.git
-MINIAUDIO_LIB = $(MINIAUDIO_DIR)/miniaudio.h
-MINIAUDIO_INC = -I$(MINIAUDIO_DIR)
-
-# ================================
-# ⚙️ COMPILACIÓN
-# ================================
-CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -g -Iinc
-NAME    = cub3d
-VICTUS  = -DFRAMES_PER_SECOND=30
+MINIAUDIO_LIB  = $(MINIAUDIO_DIR)/miniaudio.h
+MINIAUDIO_INC  = -I$(MINIAUDIO_DIR)
 
 # ================================
 #   OBJETOS DINÁMICOS
 # ================================
-OBJ_RENDER = $(OBJ_DIR)/render/render.o        # por defecto
-OBJ        = $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRCS)) $(OBJ_RENDER)
+OBJ_RENDER     = $(OBJ_DIR)/render/render.o
+OBJ_RENDER_SRC ?= src/render/render.c
+OBJ             = $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRCS)) $(OBJ_RENDER)
 
 # **************************************************************************** #
-#                                 REGLAS                                        #
+#                                 REGLAS                                       #
 # **************************************************************************** #
 
+# -----------------------------
+# Compilación normal
+# -----------------------------
 all: $(LIBFT_LIB) $(MLX_LIB) $(NAME)
 
 # -----------------------------
@@ -97,10 +101,10 @@ all: $(LIBFT_LIB) $(MLX_LIB) $(NAME)
 # -----------------------------
 miniaudio: $(MINIAUDIO_LIB)
 	@echo "🔊 Compilando con audio..."
-	$(MAKE) OBJ_RENDER=$(OBJ_DIR)/render/render_with_audio.o CFLAGS+="$(CFLAGS)" all
+	$(MAKE) OBJ_RENDER_SRC=src/render/render_with_audio.c CFLAGS+="$(CFLAGS) $(MINIAUDIO_INC)" $(NAME)
 
 # -----------------------------
-# Victus
+# Victus (modo optimizado)
 # -----------------------------
 victus: CFLAGS += $(VICTUS)
 victus: miniaudio
@@ -118,47 +122,41 @@ $(OBJ_DIR)/%.o: src/%.c ./inc/cub3d.h Makefile
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# render.o normal
-$(OBJ_DIR)/render/render.o: $(RENDER_DEFAULT) ./inc/cub3d.h Makefile
+# render.o (usa el SRC dinámico correcto)
+$(OBJ_DIR)/render/render.o: $(OBJ_RENDER_SRC) ./inc/cub3d.h Makefile
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
-
-# render_with_audio.o
-$(OBJ_DIR)/render/render_with_audio.o: $(RENDER_WITH_AUDIO) ./inc/cub3d.h ./inc/audio.h Makefile
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(MINIAUDIO_INC) -c $< -o $@
+	@echo "🎨 Compilando render desde: $(OBJ_RENDER_SRC)"
+	$(CC) $(CFLAGS) -c $(OBJ_RENDER_SRC) -o $@
 
 # ===========================
 #   🧰 LIBRERÍAS EXTERNAS
 # ===========================
-
 $(LIBFT_LIB):
 	@if [ ! -d "$(LIBFT_DIR)" ]; then \
-	    echo "📥 Clonando Libft..."; \
-	    git clone $(LIBFT_REPO) $(LIBFT_DIR); \
+		echo "📥 Clonando Libft..."; \
+		git clone $(LIBFT_REPO) $(LIBFT_DIR); \
 	fi
 	@make -C $(LIBFT_DIR)
 
 $(MLX_LIB):
 	@if [ ! -d "$(MLX_DIR)" ]; then \
-	    echo "📥 Clonando MiniLibX..."; \
-	    git clone $(MLX_REPO) $(MLX_DIR); \
+		echo "📥 Clonando MiniLibX..."; \
+		git clone $(MLX_REPO) $(MLX_DIR); \
 	fi
-	@make -C $(MLX_DIR)
+	@echo "⚙️  Compilando MiniLibX (sin -Werror)..."
+	@$(MAKE) -C $(MLX_DIR)
 
 $(MINIAUDIO_LIB):
 	@if [ ! -f "$(MINIAUDIO_LIB)" ]; then \
-	    echo "📥 Clonando Miniaudio..."; \
-	    git clone $(MINIAUDIO_REPO) $(MINIAUDIO_DIR); \
+		echo "📥 Clonando Miniaudio..."; \
+		git clone $(MINIAUDIO_REPO) $(MINIAUDIO_DIR); \
 	fi
 
 # ===========================
 #   🧹 LIMPIEZA
 # ===========================
-
 clean:
 	@make -C $(LIBFT_DIR) clean
-	@make -C $(MLX_DIR) clean
 	rm -rf $(OBJ_DIR)
 	@echo "🧹 Archivos objeto eliminados."
 
