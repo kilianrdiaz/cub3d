@@ -21,6 +21,7 @@ typedef struct s_audio
 	ma_sound	bg_music;
 	ma_sound	lizard;
 	ma_sound	spiderweb;
+	ma_sound	game_over;
 }				t_audio;
 
 #endif

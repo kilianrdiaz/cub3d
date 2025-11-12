@@ -19,6 +19,9 @@ static void	clean_audio(t_audio *audio)
 		return ;
 	ma_sound_stop(&audio->bg_music);
 	ma_sound_uninit(&audio->bg_music);
+	ma_sound_uninit(&audio->lizard);
+	ma_sound_uninit(&audio->spiderweb);
+	ma_sound_uninit(&audio->game_over);
 	ma_engine_uninit(&audio->engine);
 	free(audio);
 }
@@ -46,6 +49,9 @@ static void	audio_init(void **audio_ptr)
 	if (ma_sound_init_from_file(&audio->engine, "audios/web.wav", 0, NULL, NULL,
 			&audio->spiderweb) != MA_SUCCESS)
 		ft_putendl_fd("Error cargando spiderweb.wav", 2);
+	if (ma_sound_init_from_file(&audio->engine, "audios/gameover.wav", 0, NULL,
+			NULL, &audio->game_over) != MA_SUCCESS)
+		ft_putendl_fd("Error cargando gameover.wav", 2);
 	ma_sound_start(&audio->bg_music);
 	*audio_ptr = audio; // Guardamos el puntero en g->audio
 }
@@ -58,6 +64,10 @@ static void	manage_sound_effects(t_game *g)
 
 	audio = (t_audio *)g->audio;
 	if (!audio)
+		return ;
+	if (g->render_state == GAME_OVER && g->timer < 10)
+		return (ma_sound_start(&audio->game_over), (void)0);
+	else if (g->render_state == GAME_OVER)
 		return ;
 	if (g->spider.state == ATTACKING)
 		ma_sound_start(&audio->spiderweb);
