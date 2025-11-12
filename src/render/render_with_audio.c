@@ -26,6 +26,15 @@ static void	clean_audio(t_audio *audio)
 	free(audio);
 }
 
+static void	load_audio(ma_engine *engine, ma_sound *sound,
+		const char *file_path, ma_uint32 flags)
+{
+	if (ma_sound_init_from_file(engine, file_path, flags, NULL, NULL,
+			sound) != MA_SUCCESS)
+		ft_printf_fd(STDERR_FILENO, "Error loading audio file: %s\n",
+			file_path);
+}
+
 static void	audio_init(void **audio_ptr)
 {
 	t_audio	*audio;
@@ -40,19 +49,12 @@ static void	audio_init(void **audio_ptr)
 		ft_putendl_fd("Error inicializando el motor de audio", 2);
 		return (clean_audio(audio));
 	}
-	if (ma_sound_init_from_file(&audio->engine, "audios/bg.wav",
-			MA_SOUND_FLAG_LOOPING, NULL, NULL, &audio->bg_music) != MA_SUCCESS)
-		ft_putendl_fd("Error cargando bg.wav", 2);
-	if (ma_sound_init_from_file(&audio->engine, "audios/lizard.wav", 0, NULL,
-			NULL, &audio->lizard) != MA_SUCCESS)
-		ft_putendl_fd("Error cargando lizard.wav", 2);
-	if (ma_sound_init_from_file(&audio->engine, "audios/web.wav", 0, NULL, NULL,
-			&audio->spiderweb) != MA_SUCCESS)
-		ft_putendl_fd("Error cargando spiderweb.wav", 2);
-	if (ma_sound_init_from_file(&audio->engine, "audios/gameover.wav", 0, NULL,
-			NULL, &audio->game_over) != MA_SUCCESS)
-		ft_putendl_fd("Error cargando gameover.wav", 2);
+	load_audio(&audio->engine, &audio->bg_music, "audios/bg.wav",
+		MA_SOUND_FLAG_LOOPING);
 	ma_sound_start(&audio->bg_music);
+	load_audio(&audio->engine, &audio->lizard, "audios/lizard.wav", 0);
+	load_audio(&audio->engine, &audio->spiderweb, "audios/web.wav", 0);
+	load_audio(&audio->engine, &audio->game_over, "audios/gameover.wav", 0);
 	*audio_ptr = audio; // Guardamos el puntero en g->audio
 }
 
@@ -67,7 +69,7 @@ static void	manage_sound_effects(t_game *g)
 		return ;
 	if (g->render_state == GAME_OVER && g->timer < 10)
 		return (ma_sound_start(&audio->game_over), (void)0);
-	else if (g->render_state == GAME_OVER)
+	else if (g->render_state >= GAME_OVER )
 		return ;
 	if (g->spider.state == ATTACKING)
 		ma_sound_start(&audio->spiderweb);
@@ -80,24 +82,6 @@ static void	manage_sound_effects(t_game *g)
 			ma_sound_start(&audio->lizard);
 	}
 	free(sprite_list);
-}
-
-static void	game(t_game *g)
-{
-	update_player_position(g);
-	clean_screen(g);
-	render_floor_and_ceiling(g);
-	render_wall(g);
-	render_sprites(g);
-	move_lizards(g);
-	draw_hand(g, GAME_WIDTH / 2);
-	draw_minimap(g);
-	render_stats(g);
-	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	update_timer(g);
-	update_bombs(g);
-	if (g->spider.state == ATTACKING)
-		spider_attack(g);
 }
 
 int	render(t_game *g)
@@ -113,7 +97,7 @@ int	render(t_game *g)
 		|| g->render_state == GAME_OVER)
 		load_level(g);
 	else if (g->render_state == PLAYING)
-		game(g);
+		g->game_func(g);
 	else if (g->render_state == HIGH_SCORE
 		|| g->render_state == WAITING_FOR_NAME
 		|| g->render_state == SCORE_SAVED)
