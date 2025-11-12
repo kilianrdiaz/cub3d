@@ -39,6 +39,12 @@ void	draw_fullscreen_image(t_game *g, t_tex tex)
 
 static void	load_sprite_textures(t_game *g)
 {
+	g->map_text[NO].color = COLOR_NONE;
+	g->map_text[SO].color = COLOR_NONE;
+	g->map_text[WE].color = COLOR_NONE;
+	g->map_text[EA].color = COLOR_NONE;
+	g->map_text[F].color = COLOR_NONE;
+	g->map_text[C].color = COLOR_NONE;
 	g->spider.hand = ft_calloc(sizeof(t_tex), sizeof(t_state));
 	if (!g->spider.hand)
 		ft_error_exit("Error: Memory allocation failed for spider textures\n");
@@ -83,14 +89,27 @@ static void	create_mlx_window(t_game *g)
 	g->addr = mlx_get_data_addr(g->img, &g->bpp, &g->line_len, &g->endian);
 }
 
-static void	unset_map_textures(t_tex *tex)
+static void	game(void *param)
 {
-	tex[NO].color = COLOR_NONE;
-	tex[SO].color = COLOR_NONE;
-	tex[WE].color = COLOR_NONE;
-	tex[EA].color = COLOR_NONE;
-	tex[F].color = COLOR_NONE;
-	tex[C].color = COLOR_NONE;
+	t_game	*g;
+
+	g = (t_game *)param;
+	clean_screen(g);
+	render_floor_and_ceiling(g);
+	render_wall(g);
+	render_sprites(g);
+	draw_hand(g, GAME_WIDTH / 2);
+	draw_minimap(g);
+	render_stats(g);
+	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
+	if (g->render_state != PLAYING)
+		return ;
+	move_lizards(g);
+	update_player_position(g);
+	update_timer(g);
+	update_bombs(g);
+	if (g->spider.state == ATTACKING)
+		spider_attack(g);
 }
 
 int	main(int argc, char **argv)
@@ -105,12 +124,12 @@ int	main(int argc, char **argv)
 	g.map_text = ft_calloc(sizeof(t_tex), 6);
 	if (!g.map_text)
 		ft_error_exit("Error: Memory allocation failed for map textures\n");
-	unset_map_textures(g.map_text);
 	load_sprite_textures(&g);
 	load_font(&g, &g.font, "./textures/font.xpm");
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g);
+	g.game_func = game;
 	mlx_loop_hook(g.mlx, render, &g);
 	mlx_loop(g.mlx);
 	close_program(&g);

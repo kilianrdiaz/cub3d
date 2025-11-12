@@ -12,24 +12,6 @@
 
 #include "../../inc/cub3d.h"
 
-static void	game(t_game *g)
-{
-	update_player_position(g);
-	clean_screen(g);
-	render_floor_and_ceiling(g);
-	render_wall(g);
-	render_sprites(g);
-	move_lizards(g);
-	draw_hand(g, GAME_WIDTH / 2);
-	draw_minimap(g);
-	render_stats(g);
-	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	update_timer(g);
-	update_bombs(g);
-	if (g->spider.state == ATTACKING)
-		spider_attack(g);
-}
-
 int	render(t_game *g)
 {
 	if (g->render_state == INTRO)
@@ -38,7 +20,7 @@ int	render(t_game *g)
 		|| g->render_state == GAME_OVER)
 		load_level(g);
 	else if (g->render_state == PLAYING)
-		game(g);
+		g->game_func(g);
 	else if (g->render_state == HIGH_SCORE
 		|| g->render_state == WAITING_FOR_NAME
 		|| g->render_state == SCORE_SAVED)

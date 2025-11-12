@@ -82,9 +82,9 @@ typedef enum e_render
 	INTRO,
 	LOAD_LEVEL,
 	NEW_LEVEL,
-	GAME_OVER,
 	PLAYING,
 	WIN,
+	GAME_OVER,
 	WAITING_FOR_NAME,
 	SCORE_SAVED,
 	HIGH_SCORE,
@@ -194,13 +194,13 @@ typedef struct s_game
 	void			*mlx;
 	void			*win;
 	void			*img;
-	int				bomb_count;
 	char			*addr;
 	int				bpp;
 	int				line_len;
 	int				endian;
-	unsigned int	timer;
 	t_render		render_state;
+	unsigned int	timer;
+	int				bomb_count;
 	char			**levels;
 	unsigned int	level;
 	char			**map;
@@ -215,6 +215,7 @@ typedef struct s_game
 	t_keys			keys;
 	t_minimap		minimap;
 	unsigned int	score;
+	void			(*game_func)(void *);
 	void			*audio;
 }					t_game;
 
