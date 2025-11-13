@@ -69,7 +69,7 @@ static void	manage_sound_effects(t_game *g)
 		return ;
 	if (g->render_state == GAME_OVER && g->timer < 10)
 		return (ma_sound_start(&audio->game_over), (void)0);
-	else if (g->render_state >= GAME_OVER )
+	else if (g->render_state >= GAME_OVER)
 		return ;
 	if (g->spider.state == ATTACKING)
 		ma_sound_start(&audio->spiderweb);
