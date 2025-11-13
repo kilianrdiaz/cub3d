@@ -15,7 +15,6 @@
 
 # include "../libs/libft/libft.h"
 # include "../libs/minilibx-linux/mlx.h"
-
 # include <math.h>
 
 # define COLOR_NONE 0xFF000000
@@ -215,8 +214,8 @@ typedef struct s_game
 	t_keys			keys;
 	t_minimap		minimap;
 	unsigned int	score;
-	void			(*game_func)(void *);
 	void			*audio;
+	void			(*game_loop)(void *);
 }					t_game;
 
 typedef struct s_ray
@@ -265,7 +264,7 @@ void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
 
 // rendering
-
+void				game(t_game *g);
 int					render(t_game *g);
 void				update_bombs(t_game *g);
 void				draw_hand(t_game *g, int x);

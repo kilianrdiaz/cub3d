@@ -14,18 +14,6 @@
 
 int	render(t_game *g)
 {
-	if (g->render_state == INTRO)
-		show_intro(g);
-	else if (g->render_state == LOAD_LEVEL || g->render_state == NEW_LEVEL
-		|| g->render_state == GAME_OVER)
-		load_level(g);
-	else if (g->render_state == PLAYING)
-		g->game_func(g);
-	else if (g->render_state == HIGH_SCORE
-		|| g->render_state == WAITING_FOR_NAME
-		|| g->render_state == SCORE_SAVED)
-		show_high_scores(g);
-	else if (g->render_state == END)
-		close_program(g);
+	g->game_loop(g);
 	return (0);
 }
