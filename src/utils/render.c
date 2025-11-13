@@ -12,6 +12,9 @@
 
 #include "../../inc/cub3d.h"
 
+#define LERP_SPEED 1
+#define VIEW_BOMB 5
+
 void	clean_screen(t_game *g)
 {
 	t_pos	it;
@@ -85,9 +88,9 @@ void	recalc_sprite_scale(t_game *g, t_sprite *sp, double dist)
 	int		max_dist;
 	int		int_dist;
 
-	max_dist = 8;
+	max_dist = VIEW_BOMB;
 	if (sp->type == LIZARD)
-		max_dist = 10;
+		max_dist = DETECT_RADIUS;
 	dist = sqrt(pow(g->spider.pos.x - sp->pos.x, 2) + pow(g->spider.pos.y
 				- sp->pos.y, 2));
 	if (dist > max_dist)

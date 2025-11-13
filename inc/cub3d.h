@@ -31,10 +31,7 @@
 
 # define MOVE_SPEED 0.1
 # define ROT_SPEED 0.1
-# define DETECT_RADIUS 10.0
-# define MOVE_SPEED_LIZARD 1
-
-# define LERP_SPEED 1
+# define DETECT_RADIUS 7.0
 
 // MINIMAPA
 # define COL_BG 0x000000

@@ -12,6 +12,8 @@
 
 #include "../inc/cub3d.h"
 
+#define MOVE_SPEED_LIZARD 1
+
 static int	move_lizard_to(t_game *g, t_sprite *l, t_coords move)
 {
 	int	x;
@@ -108,7 +110,7 @@ void	move_lizards(t_game *g)
 			l->state = ACTIVE;
 		dist = (fabs(l->pos.x - g->spider.pos.x) + fabs(l->pos.y
 					- g->spider.pos.y));
-		if (dist <= 2.1)
+		if (dist <= 1.1)
 			l->state = ATTACKING;
 		if (dist <= DETECT_RADIUS)
 			chase_lizard(g, l, &g->spider);
