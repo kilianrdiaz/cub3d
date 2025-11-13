@@ -57,8 +57,8 @@ void	draw_panel_separator(t_game *g)
 {
 	t_pos	p;
 
-	p.x = GAME_WIDTH - 1;
-	while (++p.x < GAME_WIDTH + 8)
+	p.x = GAME_W - 1;
+	while (++p.x < GAME_W + 8)
 	{
 		p.y = -1;
 		while (++p.y < HEIGHT)
@@ -72,7 +72,7 @@ void	render_stats(t_game *g)
 	char		*str;
 
 	draw_panel_separator(g);
-	sp.pos.x = GAME_WIDTH + 150;
+	sp.pos.x = GAME_W + 150;
 	sp.pos.y = HEIGHT - 300;
 	sp.scale = 0.5;
 	draw_text(g, g->bomb_tex[ACTIVE], sp);
@@ -82,10 +82,10 @@ void	render_stats(t_game *g)
 	str = ft_itoa(g->bomb_count);
 	render_text(g, str, sp.pos);
 	free(str);
-	sp.pos.x = GAME_WIDTH + 150;
+	sp.pos.x = GAME_W + 150;
 	sp.pos.y += g->bomb_tex[ACTIVE].height * sp.scale + 50;
 	put_timer(g, sp.pos);
 	sp.pos.y += g->font.char_h * g->font.scale + 10;
-	sp.pos.x = GAME_WIDTH + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
+	sp.pos.x = GAME_W + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
 	put_score_text(g, sp.pos);
 }

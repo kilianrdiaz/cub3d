@@ -72,13 +72,13 @@ static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex tex)
 	if (ray->d_end.y >= HEIGHT)
 		ray->d_end.y = HEIGHT - 1;
 	// 4️⃣ Límites horizontales
-	sp->screen_x = (int)((GAME_WIDTH / 2) * (1 + sp->trans.x / sp->trans.y));
+	sp->screen_x = (int)((GAME_W / 2) * (1 + sp->trans.x / sp->trans.y));
 	ray->d_start.x = -sp->width / 2 + sp->screen_x;
 	ray->d_end.x = ray->d_start.x + sp->width;
 	if (ray->d_start.x < 0)
 		ray->d_start.x = 0;
-	if (ray->d_end.x >= GAME_WIDTH)
-		ray->d_end.x = GAME_WIDTH - 1;
+	if (ray->d_end.x >= GAME_W)
+		ray->d_end.x = GAME_W - 1;
 	ray->line_height = ray->d_start.x - 1;
 }
 
@@ -105,7 +105,7 @@ static void	position_sprite(t_game *g, t_sprite sp)
 		ray_sprite(&sp, &ray, tex);
 		while (++ray.line_height < ray.d_end.x)
 			if (sp.trans.y > 0 && ray.line_height >= 0
-				&& ray.line_height < GAME_WIDTH
+				&& ray.line_height < GAME_W
 				&& sp.trans.y < g->zbuffer[ray.line_height])
 				draw_sprite(g, &sp, ray, tex);
 	}

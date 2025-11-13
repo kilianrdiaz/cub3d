@@ -22,7 +22,7 @@
 
 # define WIDTH 1920
 # define HEIGHT 960
-# define GAME_WIDTH 1400
+# define GAME_W 1400
 # define GAME_HEIGHT 960
 
 # define MINIMAP_PLAYER_SIZE 10 // 🔹 radio del punto del jugador
@@ -272,8 +272,7 @@ void				load_font(t_game *g, t_font *f, char *path);
 void				load_level(t_game *g);
 void				show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex tex);
-void				render_floor_and_ceiling(t_game *g);
-void				render_wall(t_game *g);
+void				render_map(t_game *g);
 t_timeleft			set_message(t_game *g, char *msg, t_coords coords);
 void				timeout_render(t_game *g, t_timeleft t, int render_state);
 void				put_timer(t_game *g, t_coords coords);

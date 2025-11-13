@@ -89,7 +89,7 @@ t_ray	ray_map(t_game g, int x)
 	t_ray	ray;
 
 	ft_bzero(&ray, sizeof(t_ray));
-	ray.view = 2 * x / (double)GAME_WIDTH - 1;
+	ray.view = 2 * x / (double)GAME_W - 1;
 	ray.left.x = g.spider.dir.x + g.spider.plane.x * ray.view;
 	ray.left.y = g.spider.dir.y + g.spider.plane.y * ray.view;
 	// Posición inicial en el mapa (celda del jugador)

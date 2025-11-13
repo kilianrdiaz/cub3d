@@ -95,10 +95,9 @@ static void	game(void *param)
 
 	g = (t_game *)param;
 	clean_screen(g);
-	render_floor_and_ceiling(g);
-	render_wall(g);
+	render_map(g);
 	render_sprites(g);
-	draw_hand(g, GAME_WIDTH / 2);
+	draw_hand(g, GAME_W / 2);
 	draw_minimap(g);
 	render_stats(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);

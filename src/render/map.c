@@ -19,7 +19,7 @@ static void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 	unsigned int	color;
 
 	x = -1;
-	while (++x < GAME_WIDTH)
+	while (++x < GAME_W)
 	{
 		map.x = (int)ray->side_dist.x;
 		map.y = (int)ray->side_dist.y;
@@ -59,7 +59,7 @@ static void	draw_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int x)
 	}
 }
 
-void	render_wall(t_game *g)
+static void	render_walls(t_game *g)
 {
 	t_ray	ray;
 	t_tex	tex;
@@ -67,7 +67,7 @@ void	render_wall(t_game *g)
 	int		x;
 
 	x = -1;
-	while (++x < GAME_WIDTH)
+	while (++x < GAME_W)
 	{
 		ray = ray_map(*g, x);
 		if (ray.left.x < 0)
@@ -88,12 +88,14 @@ void	render_wall(t_game *g)
 	}
 }
 
-void	render_floor_and_ceiling(t_game *g)
+void	render_map(t_game *g)
 {
 	t_ray	ray;
 	int		y;
 	int		p;
 
+	if (!g->map_text || !g->map)
+		return ;
 	y = HEIGHT / 2;
 	while (++y < HEIGHT)
 	{
@@ -108,10 +110,9 @@ void	render_floor_and_ceiling(t_game *g)
 		ray.row_distance = ray.view / (double)p;
 		ray.side_dist.x = g->spider.pos.x + ray.row_distance * ray.left.x;
 		ray.side_dist.y = g->spider.pos.y + ray.row_distance * ray.left.y;
-		ray.coords.x = ray.row_distance * (ray.right.x - ray.left.x)
-			/ (double)GAME_WIDTH;
-		ray.coords.y = ray.row_distance * (ray.right.y - ray.left.y)
-			/ (double)GAME_WIDTH;
+		ray.coords.x = ray.row_distance * (ray.right.x - ray.left.x) / GAME_W;
+		ray.coords.y = ray.row_distance * (ray.right.y - ray.left.y) / GAME_W;
 		draw_floor_and_ceiling(g, &ray, y);
 	}
+	render_walls(g);
 }
