@@ -55,6 +55,7 @@ static void	audio_init(void **audio_ptr)
 	load_audio(&audio->engine, &audio->lizard, "audios/lizard.wav", 0);
 	load_audio(&audio->engine, &audio->spiderweb, "audios/web.wav", 0);
 	load_audio(&audio->engine, &audio->game_over, "audios/gameover.wav", 0);
+	load_audio(&audio->engine, &audio->win, "audios/win.wav", 0);
 	ma_sound_start(&audio->game);
 	*audio_ptr = audio; // Guardamos el puntero en g->audio
 }
