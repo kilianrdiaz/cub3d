@@ -17,11 +17,12 @@ static void	clean_audio(t_audio *audio)
 {
 	if (!audio)
 		return ;
-	ma_sound_stop(&audio->bg_music);
-	ma_sound_uninit(&audio->bg_music);
+	ma_sound_stop(&audio->game);
+	ma_sound_uninit(&audio->game);
 	ma_sound_uninit(&audio->lizard);
 	ma_sound_uninit(&audio->spiderweb);
 	ma_sound_uninit(&audio->game_over);
+	ma_sound_uninit(&audio->win);
 	ma_engine_uninit(&audio->engine);
 	free(audio);
 }
@@ -49,27 +50,23 @@ static void	audio_init(void **audio_ptr)
 		ft_putendl_fd("Error inicializando el motor de audio", 2);
 		return (clean_audio(audio));
 	}
-	load_audio(&audio->engine, &audio->bg_music, "audios/bg.wav",
-		MA_SOUND_FLAG_LOOPING);
-	ma_sound_start(&audio->bg_music);
+	load_audio(&audio->engine, &audio->game,
+		"audios/escape-from-the-sewers.wav", MA_SOUND_FLAG_LOOPING);
 	load_audio(&audio->engine, &audio->lizard, "audios/lizard.wav", 0);
 	load_audio(&audio->engine, &audio->spiderweb, "audios/web.wav", 0);
 	load_audio(&audio->engine, &audio->game_over, "audios/gameover.wav", 0);
+	ma_sound_start(&audio->game);
 	*audio_ptr = audio; // Guardamos el puntero en g->audio
 }
 
-static void	manage_sound_effects(t_game *g)
+static void	game_effects(t_game *g, t_audio *audio)
 {
-	t_audio		*audio;
 	t_sprite	**sprite_list;
 	int			i;
 
-	audio = (t_audio *)g->audio;
 	if (!audio)
 		return ;
-	if (g->render_state == GAME_OVER && g->timer < 10)
-		return (ma_sound_start(&audio->game_over), (void)0);
-	else if (g->render_state >= GAME_OVER)
+	if (g->render_state != PLAYING)
 		return ;
 	if (g->spider.state == ATTACKING)
 		ma_sound_start(&audio->spiderweb);
@@ -89,8 +86,12 @@ int	render(t_game *g)
 	t_audio	*audio;
 
 	audio_init(&g->audio);
-	manage_sound_effects(g);
 	audio = (t_audio *)g->audio;
+	if (g->render_state == GAME_OVER && g->timer < TEXT_DURATION / 2)
+		ma_sound_start(&audio->game_over);
+	if (g->render_state == WIN && g->timer < TEXT_DURATION / 2)
+		ma_sound_start(&audio->win);
+	game_effects(g, audio);
 	if (g->render_state == END)
 		clean_audio(audio);
 	g->game_loop(g);

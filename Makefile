@@ -119,12 +119,12 @@ $(NAME): $(OBJ)
 # -----------------------------
 # Compilación de cada objeto
 # -----------------------------
-$(OBJ_DIR)/%.o: src/%.c ./inc/cub3d.h Makefile
+$(OBJ_DIR)/%.o: src/%.c ./inc/cub3d.h ./inc/audio.h Makefile
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # render.o (usa el SRC dinámico correcto)
-$(OBJ_DIR)/render/render.o: $(OBJ_RENDER_SRC) ./inc/cub3d.h Makefile
+$(OBJ_DIR)/render/render.o: $(OBJ_RENDER_SRC) ./inc/cub3d.h ./inc/audio.h Makefile
 	@mkdir -p $(dir $@)
 	@echo "🎨 Compilando render desde: $(OBJ_RENDER_SRC)"
 	$(CC) $(CFLAGS) -c $(OBJ_RENDER_SRC) -o $@
