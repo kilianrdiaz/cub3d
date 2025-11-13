@@ -74,16 +74,11 @@ void	draw_panel_separator(t_game *g)
 static void	draw_lives(t_game *g)
 {
 	t_sprite	sp;
-	int			tex_index;
 
-	if (lizard_on_player(g))
-		tex_index = 1;
-	else
-		tex_index = 0;
 	sp.pos.x = GAME_WIDTH + 80;
 	sp.pos.y = 100;
 	sp.scale = 0.25;
-	draw_text(g, g->lives.spidermask_tex[tex_index], sp);
+	draw_text(g, g->lives.spidermask_tex[g->spider.spider_sense], sp);
 	if (g->lives.lives_left > 1)
 	{
 		sp.pos.x = GAME_WIDTH + 370;

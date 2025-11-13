@@ -99,9 +99,9 @@ void	draw_health_bar(t_game *g)
 	b.h = 30;
 	b.x = GAME_WIDTH + 150;
 	b.y = 140;
-	if (g->player_max_hp <= 0)
-		g->player_max_hp = 1;
-	ratio = (double)g->player_hp / (double)g->player_max_hp;
+	if (g->lives.player_max_hp <= 0)
+		g->lives.player_max_hp = 1;
+	ratio = (double)g->lives.player_hp / (double)g->lives.player_max_hp;
 	if (ratio < 0.0)
 		ratio = 0.0;
 	if (ratio > 1.0)

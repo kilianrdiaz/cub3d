@@ -20,28 +20,14 @@ static void	reset_player_after_death(t_game *g)
 		ft_printf("💀 Vida perdida. Vidas restantes: %d\n", g->lives.lives_left);
 		if (g->lives.lives_left > 0)
 		{
-			g->player_hp = g->player_max_hp;
-			g->player_last_hit_time = g->timer + 30;
+			g->lives.player_hp = g->lives.player_max_hp;
+			g->lives.player_last_hit_time = g->timer + 30;
 		}
 		else
 			ft_printf("GAME OVER 💀\n");
+		}
 	}
-}
-
-void	player_take_damage(t_game *g, int amount)
-{
-	if (g->player_max_hp <= 0)
-		g->player_max_hp = 100;
-	if (g->timer - g->player_last_hit_time < 30)
-		return ;
-	g->player_last_hit_time = g->timer;
-	g->player_hp -= amount;
-	if (g->player_hp < 0)
-		g->player_hp = 0;
-	if (g->player_hp <= 0)
-		reset_player_after_death(g);
-}
-
+	
 int	lizard_on_player(t_game *g)
 {
 	int	i;
@@ -51,10 +37,24 @@ int	lizard_on_player(t_game *g)
 	i = 0;
 	while (g->lizards[i])
 	{
-		if ((int)g->lizards[i]->pos.x == (int)g->spider.pos.x
-			&& (int)g->lizards[i]->pos.y == (int)g->spider.pos.y)
+		if (g->lizards[i]->dist < 0.8)
 			return (1);
 		i++;
 	}
 	return (0);
 }
+
+void	player_take_damage(t_game *g, int amount)
+{
+	if (g->lives.player_max_hp <= 0)
+		g->lives.player_max_hp = 100;
+	if (!lizard_on_player(g))
+		return ;
+	g->lives.player_last_hit_time = g->timer;
+	g->lives.player_hp -= amount;
+	if (g->lives.player_hp < 0)
+		g->lives.player_hp = 0;
+	if (g->lives.player_hp <= 0)
+		reset_player_after_death(g);
+}
+

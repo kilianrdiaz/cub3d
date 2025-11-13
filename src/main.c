@@ -60,16 +60,6 @@ static void	create_mlx_window(t_game *g)
 	g->addr = mlx_get_data_addr(g->img, &g->bpp, &g->line_len, &g->endian);
 }
 
-void	init_font(t_font *f)
-{
-	for (int i = 0; i < 128; i++)
-	{
-		f->chars[i].pixels = NULL;
-		f->chars[i].width = 0;
-		f->chars[i].height = 0;
-	}
-}
-
 int	main(int argc, char **argv)
 {
 	t_game	g;
@@ -84,13 +74,12 @@ int	main(int argc, char **argv)
 	get_info_file(&g, argc, argv);
 	load_sprite_textures(&g);
 
-	init_font(&g.font);
 	load_font(&g, &g.font, "./textures/font.xpm");
 
-	g.player_max_hp = 100;
-	g.player_hp = 100;
-	g.player_last_hit_time = -9999;
+	g.lives.player_max_hp = 100;
+	g.lives.player_hp = 100;
 	g.lives.lives_left = 3;
+	g.lives.mask_sprite.delay = 0;
 
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);

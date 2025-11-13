@@ -14,16 +14,25 @@
 
 static int	show_sprite(t_game *g, t_sprite *sp)
 {
-	double	dx;
-	double	dy;
-	double	dist;
-
 	if (!sp || sp->state == DEFUSED)
 		return (0);
-	dx = g->spider.pos.x - sp->pos.x;
-	dy = g->spider.pos.y - sp->pos.y;
-	dist = sqrt(dx * dx + dy * dy);
-	return (dist <= REVEAL_STEP_RADIUS);
+	if (sp->type != LIZARD)
+		return (1);
+	if (sp->dist <= 5)
+	{
+		if (g->lives.mask_sprite.delay < g->timer)
+		{
+			g->lives.mask_sprite.delay = g->timer + 7;
+			g->spider.spider_sense = 1;
+		}
+		if (g->lives.mask_sprite.delay == g->timer)
+		{
+			g->spider.spider_sense = !g->spider.spider_sense;
+			g->lives.mask_sprite.delay = g->timer + 7;
+		}
+		return (1);
+	}
+	return (0);
 }
 
 static int	in_bounds(int sx, int sy, t_minimap *m)

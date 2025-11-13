@@ -128,10 +128,9 @@ void	render_sprites(t_game *g)
 	count.y = -1;
 	while (sprites[++count.y])
 	{
+		recalc_sprite_scale(g, sprites[count.y]);
 		order[count.y].index = count.y;
-		order[count.y].dist = pow(g->spider.pos.x - sprites[count.y]->pos.x, 2)
-			+ pow(g->spider.pos.y - sprites[count.y]->pos.y, 2);
-		recalc_sprite_scale(g, sprites[count.y], sqrt(order[count.y].dist));
+		order[count.y].dist = sprites[count.y]->dist;
 	}
 	sort_sprites(order, count.x);
 	count.y = -1;

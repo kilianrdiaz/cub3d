@@ -172,6 +172,7 @@ typedef struct s_sprite
 {
 	t_coords		pos;
 	t_coords		trans;
+	double			dist;
 	double			inv_det;
 	int				width;
 	int				height;
@@ -190,12 +191,17 @@ typedef struct s_spidy
 	double			move_accum;
 	t_tex			*hand;
 	t_state			state;
+	int				spider_sense;
 }					t_spidy;
 
 typedef struct s_lives
 {
 	int				lives_left;
 	t_tex			*spidermask_tex;
+	t_sprite		mask_sprite;
+	int				player_hp;
+	int				player_max_hp;
+	int				player_last_hit_time;
 }					t_lives;
 
 typedef struct s_minimap
@@ -210,6 +216,7 @@ typedef struct s_minimap
 	int				real_w;
 	int				real_h;
 	int				visible_size;
+	int				tex_index;
 }					t_minimap;
 
 typedef struct s_game
@@ -236,9 +243,6 @@ typedef struct s_game
 	t_keys			keys;
 	t_minimap		minimap;
 	int				score;
-	int				player_hp;
-	int				player_max_hp;
-	int				player_last_hit_time;
 	t_lives			lives;
 }					t_game;
 
@@ -266,7 +270,7 @@ int					check_loaded_textures(t_game *game);
 int					clamp_int(int v, int a, int b);
 void				put_pixel(t_game *g, int x, int y, int color);
 void				clean_screen(t_game *g);
-void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
+void				recalc_sprite_scale(t_game *g, t_sprite *sp);
 t_tex				get_texture_wall(t_game g, t_ray ray, int dist);
 t_sprite			**get_sprites(t_game *g);
 void				calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex,

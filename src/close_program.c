@@ -48,6 +48,7 @@ void	close_program(t_game *g)
 	clean_texture(g, g->bomb_tex, sizeof(t_state));
 	clean_texture(g, g->lizard_tex, sizeof(t_state));
 	clean_texture(g, g->spider.hand, sizeof(t_state));
+	clean_texture(g, g->lives.spidermask_tex, 2);
 	clean_font(g, &g->font);
 	clean_texture(g, g->map_text, 6);
 	clean_screen(g);
