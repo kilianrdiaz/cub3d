@@ -20,7 +20,7 @@ static void	game_loop(void *param)
 	if (g->render_state == INTRO)
 		show_intro(g);
 	else if (g->render_state == LOAD_LEVEL || g->render_state == NEW_LEVEL
-		|| g->render_state == GAME_OVER)
+		|| g->render_state == GAME_OVER || g->render_state == WIN)
 		load_level(g);
 	else if (g->render_state == PLAYING)
 		game(g);

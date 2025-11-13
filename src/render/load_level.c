@@ -81,6 +81,8 @@ void	load_level(t_game *g)
 		++g->level;
 		get_info_file(g);
 	}
+	if (g->render_state == WIN)
+		put_message(g, "WELL DONE! YOU ESCAPED!", HIGH_SCORE);
 	if (g->render_state == GAME_OVER)
 		put_message(g, "GAME OVER!", HIGH_SCORE);
 	if (g->level == 1 && g->render_state == LOAD_LEVEL)

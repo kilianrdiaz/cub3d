@@ -57,11 +57,7 @@ void	set_error_parsing(t_game *g, char *msg, char *path)
 {
 	if (g->render_state != HIGH_SCORE && g->render_state != WAITING_FOR_NAME
 		&& g->render_state != SCORE_SAVED && g->render_state != INTRO)
-	{
-		g->render_state = GAME_OVER;
-		if (g->level == 1)
-			g->render_state = HIGH_SCORE;
-	}
+		g->render_state = HIGH_SCORE;
 	if (msg)
 		ft_printf_fd(2, msg, path);
 }
