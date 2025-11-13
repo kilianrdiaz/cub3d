@@ -18,10 +18,12 @@
 typedef struct s_audio
 {
 	ma_engine	engine;
-	ma_sound	bg_music;
+	ma_sound	main;
+	ma_sound	game;
 	ma_sound	lizard;
 	ma_sound	spiderweb;
 	ma_sound	game_over;
+	ma_sound	win;
 }				t_audio;
 
 #endif
