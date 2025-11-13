@@ -79,7 +79,7 @@ t_timeleft	set_message(t_game *g, char *msg, t_coords coords)
 
 	timer = g->timer;
 	g->timer = TIMER * 30;
-	g->game_func(g);
+	game(g);
 	g->timer = timer;
 	t = get_time_left(g->timer, TEXT_DURATION - g->timer);
 	if (coords.x < 0 && coords.y < 0)

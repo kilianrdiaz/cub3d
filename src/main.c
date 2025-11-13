@@ -12,29 +12,24 @@
 
 #include "../inc/cub3d.h"
 
-void	draw_fullscreen_image(t_game *g, t_tex tex)
+static void	game_loop(void *param)
 {
-	t_pos	p;
-	t_pos	src_pos;
-	char	*src;
-	int		color;
+	t_game	*g;
 
-	if (!tex.img)
-		return ;
-	p.y = -1;
-	while (++p.y < HEIGHT)
-	{
-		p.x = -1;
-		while (++p.x < WIDTH)
-		{
-			src_pos.x = p.x * tex.width / WIDTH;
-			src_pos.y = p.y * tex.height / HEIGHT;
-			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x * (tex.bpp
-						/ 8));
-			color = *(unsigned int *)src;
-			put_pixel(g, p.x, p.y, color);
-		}
-	}
+	g = (t_game *)param;
+	if (g->render_state == INTRO)
+		show_intro(g);
+	else if (g->render_state == LOAD_LEVEL || g->render_state == NEW_LEVEL
+		|| g->render_state == GAME_OVER)
+		load_level(g);
+	else if (g->render_state == PLAYING)
+		game(g);
+	else if (g->render_state == HIGH_SCORE
+		|| g->render_state == WAITING_FOR_NAME
+		|| g->render_state == SCORE_SAVED)
+		show_high_scores(g);
+	else if (g->render_state == END)
+		close_program(g);
 }
 
 static void	load_sprite_textures(t_game *g)
@@ -89,28 +84,6 @@ static void	create_mlx_window(t_game *g)
 	g->addr = mlx_get_data_addr(g->img, &g->bpp, &g->line_len, &g->endian);
 }
 
-static void	game(void *param)
-{
-	t_game	*g;
-
-	g = (t_game *)param;
-	clean_screen(g);
-	render_map(g);
-	render_sprites(g);
-	draw_hand(g, GAME_W / 2);
-	draw_minimap(g);
-	render_stats(g);
-	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	if (g->render_state != PLAYING)
-		return ;
-	move_lizards(g);
-	update_player_position(g);
-	update_timer(g);
-	update_bombs(g);
-	if (g->spider.state == ATTACKING)
-		spider_attack(g);
-}
-
 int	main(int argc, char **argv)
 {
 	t_game	g;
@@ -128,7 +101,7 @@ int	main(int argc, char **argv)
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g);
-	g.game_func = game;
+	g.game_loop = game_loop;
 	mlx_loop_hook(g.mlx, render, &g);
 	mlx_loop(g.mlx);
 	close_program(&g);
