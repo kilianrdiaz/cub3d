@@ -16,3 +16,4 @@ minilib
 *.o
 *.d
 .venv
+obj

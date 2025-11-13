@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 17:47:36 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/13 20:35:14 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define CUB3D_H
 
 # include "../libft/libft.h"
-# include "../minilibx-linux/mlx.h"	
+# include "../minilibx-linux/mlx.h"
 # include <math.h>
 
 # define COLOR_NONE 0xFF000000
@@ -45,13 +45,13 @@
 # define COL_BOMB 0xFFB84D
 # define COL_LIZARD 0x5AFF7A
 
-#define COL_BORDER     0xFFB0B0B0
-#define COL_HIGHLIGHT  0xFFFFFFFF
-#define COL_FILL       0xFFA00000
-#define COL_FILL_MID   0xFF800000
-#define COL_FILL_DARK  0xFF500000
-#define COL_SHADE      0xFF707070
-#define COL_BAR_BG     0xFF202020
+# define COL_BORDER 0xFFB0B0B0
+# define COL_HIGHLIGHT 0xFFFFFFFF
+# define COL_FILL 0xFFA00000
+# define COL_FILL_MID 0xFF800000
+# define COL_FILL_DARK 0xFF500000
+# define COL_SHADE 0xFF707070
+# define COL_BAR_BG 0xFF202020
 
 # define REVEAL_STEP_RADIUS 3
 # define MINIMAP_SIZE_LIMIT 500
@@ -63,12 +63,12 @@
 
 typedef struct s_bar
 {
-	int		x;
-	int		y;
-	int		w;
-	int		h;
-	int		fill;
-}			t_bar;
+	int				x;
+	int				y;
+	int				w;
+	int				h;
+	int				fill;
+}					t_bar;
 
 typedef struct s_coords
 {
@@ -192,19 +192,25 @@ typedef struct s_spidy
 	t_state			state;
 }					t_spidy;
 
-typedef struct	s_minimap
+typedef struct s_lives
 {
-    char    **revealed;
-    int     width;
-    int     height;
-    int     tile_size;
-    t_pos   offset;
-    int     cam_x;
-    int     cam_y;
-    int     real_w;
-    int     real_h;
-	int		visible_size;
-}				t_minimap;
+	int				lives_left;
+	t_tex			*spidermask_tex;
+}					t_lives;
+
+typedef struct s_minimap
+{
+	char			**revealed;
+	int				width;
+	int				height;
+	int				tile_size;
+	t_pos			offset;
+	int				cam_x;
+	int				cam_y;
+	int				real_w;
+	int				real_h;
+	int				visible_size;
+}					t_minimap;
 
 typedef struct s_game
 {
@@ -227,14 +233,13 @@ typedef struct s_game
 	t_tex			*bomb_tex;
 	t_tex			*lizard_tex;
 	t_tex			*map_text;
-	t_tex			*spidermask_tex;
 	t_keys			keys;
 	t_minimap		minimap;
 	int				score;
-		// Damage_system
-	int     player_hp;
-    int     player_max_hp;
-    int     player_last_hit_time;
+	int				player_hp;
+	int				player_max_hp;
+	int				player_last_hit_time;
+	t_lives			lives;
 }					t_game;
 
 typedef struct s_ray
@@ -272,6 +277,7 @@ char				**get_scores(void);
 int					get_position(t_game *g, char **scores);
 t_sprite			*print_alphabet(t_game *game, t_tex score_panel);
 void				update_scores(char **scores, int position);
+int					lizard_on_player(t_game *g);
 
 // parsing
 

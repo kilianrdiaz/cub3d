@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:46:16 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 19:43:53 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/13 19:46:33 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,22 +51,20 @@ static void	bar_fill(t_game *g, t_bar *b)
 {
 	int	y;
 	int	fill_height;
+	int	color;
 
-	/* Controlar proporciones relativas */
 	fill_height = b->h - 2;
 	y = 1;
 	while (y <= fill_height)
 	{
-		int color;
-
 		if (y < fill_height * 0.2)
-			color = COL_HIGHLIGHT; /* Parte superior brillante */
+			color = COL_HIGHLIGHT;
 		else if (y < fill_height * 0.6)
-			color = COL_FILL; /* Zona media */
+			color = COL_FILL;
 		else if (y < fill_height * 0.85)
-			color = COL_FILL_MID; /* Parte inferior más oscura */
+			color = COL_FILL_MID;
 		else
-			color = COL_FILL_DARK; /* Sombra final */
+			color = COL_FILL_DARK;
 		bar_fill_line(g, b, b->y + y, color);
 		y++;
 	}
@@ -98,7 +96,7 @@ void	draw_health_bar(t_game *g)
 	double	ratio;
 
 	b.w = 300;
-	b.h = 30; /* Puedes cambiar libremente la altura ahora */
+	b.h = 30;
 	b.x = GAME_WIDTH + 150;
 	b.y = 140;
 	if (g->player_max_hp <= 0)
@@ -113,7 +111,6 @@ void	draw_health_bar(t_game *g)
 		b.fill = 0;
 	if (b.fill > b.w)
 		b.fill = b.w;
-
 	bar_bg(g, &b);
 	bar_fill(g, &b);
 	bar_border(g, &b);

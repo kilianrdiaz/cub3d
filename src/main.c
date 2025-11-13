@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:03:30 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 19:22:20 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/13 20:13:01 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,11 @@ static void	load_sprite_textures(t_game *g)
 	load_texture(g, &g->lizard_tex[ATTACKING], "./textures/lizard_attack.xpm");
 	load_texture(g, &g->lizard_tex[MOVING], "./textures/lizard_step.xpm");
 
-	g->spidermask_tex = ft_calloc(sizeof(t_tex), 2);
-	if (!g->spidermask_tex)
+	g->lives.spidermask_tex = ft_calloc(sizeof(t_tex), 2);
+	if (!g->lives.spidermask_tex)
 		ft_error_exit("Error: Memory allocation failed for mask textures\n");
-	load_texture(g, &g->spidermask_tex[0], "./textures/spidermask.xpm");
+	load_texture(g, &g->lives.spidermask_tex[0], "./textures/spidermask.xpm");
+	load_texture(g, &g->lives.spidermask_tex[1], "./textures/spidermask_danger.xpm");
 	
 }
 
@@ -89,6 +90,7 @@ int	main(int argc, char **argv)
 	g.player_max_hp = 100;
 	g.player_hp = 100;
 	g.player_last_hit_time = -9999;
+	g.lives.lives_left = 3;
 
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);

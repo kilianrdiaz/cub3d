@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 20:59:06 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/09 19:45:20 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/13 20:33:46 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,22 +73,31 @@ void	draw_panel_separator(t_game *g)
 
 static void	draw_lives(t_game *g)
 {
-	t_sprite sp;
+	t_sprite	sp;
+	int			tex_index;
 
+	if (lizard_on_player(g))
+		tex_index = 1;
+	else
+		tex_index = 0;
 	sp.pos.x = GAME_WIDTH + 80;
 	sp.pos.y = 100;
 	sp.scale = 0.25;
-	draw_text(g, g->spidermask_tex[0], sp);
-
-	sp.pos.x = GAME_WIDTH + 290;
-	sp.pos.y = 55;
-	sp.scale = 0.15;
-	draw_text(g, g->spidermask_tex[0], sp);
-
-	sp.pos.x = GAME_WIDTH + 370;
-	sp.pos.y = 55;
-	sp.scale = 0.15;
-	draw_text(g, g->spidermask_tex[0], sp);
+	draw_text(g, g->lives.spidermask_tex[tex_index], sp);
+	if (g->lives.lives_left > 1)
+	{
+		sp.pos.x = GAME_WIDTH + 370;
+		sp.pos.y = 55;
+		sp.scale = 0.15;
+		draw_text(g, g->lives.spidermask_tex[0], sp);
+	}
+	if (g->lives.lives_left > 2)
+	{
+		sp.pos.x = GAME_WIDTH + 290;
+		sp.pos.y = 55;
+		sp.scale = 0.15;
+		draw_text(g, g->lives.spidermask_tex[0], sp);
+	}
 }
 
 void	render_stats(t_game *g)
@@ -98,26 +107,21 @@ void	render_stats(t_game *g)
 
 	draw_health_bar(g);
 	draw_panel_separator(g);
-
 	sp.pos.x = GAME_WIDTH + 150;
 	sp.pos.y = HEIGHT - 300;
 	sp.scale = 0.5;
 	draw_text(g, g->bomb_tex[ACTIVE], sp);
-
 	sp.pos.x += g->bomb_tex[ACTIVE].width * sp.scale + 50;
 	g->font.scale = 1.8;
 	sp.pos.y -= g->font.char_h * g->font.scale / 3;
 	str = ft_itoa(g->bomb_count);
 	render_text(g, str, (t_pos){sp.pos.x, sp.pos.y});
 	free(str);
-
 	sp.pos.x = GAME_WIDTH + 150;
 	sp.pos.y += g->bomb_tex[ACTIVE].height * sp.scale + 50;
 	put_timer(g, (t_pos){sp.pos.x, sp.pos.y});
-
 	sp.pos.y += g->font.char_h * g->font.scale + 10;
 	sp.pos.x = GAME_WIDTH + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
 	put_score_text(g, (t_pos){sp.pos.x, sp.pos.y});
-
 	draw_lives(g);
 }
