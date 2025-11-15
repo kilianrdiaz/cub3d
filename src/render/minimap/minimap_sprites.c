@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:03:03 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 17:11:23 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 18:00:47 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 
 static int	show_sprite(t_game *g, t_sprite *sp)
 {
-	if (!sp || sp->state == DEFUSED)
+	if (!sp)
 		return (0);
-	if (sp->type == BOMB && sp->dist > 5)
-		return (0);
+	if (sp->dist <= 5)
+		sp->found = 1;
+	if (sp->type == BOMB && sp->state != DEFUSED && sp->found)
+		return (1);
 	if (sp->type == LIZARD)
 	{
 		if (sp->dist <= 5)
@@ -35,9 +37,8 @@ static int	show_sprite(t_game *g, t_sprite *sp)
 			return (1);
 		}
 		g->spider.spider_sense = 0;
-		return (0);
 	}
-	return (1);
+	return (0);
 }
 
 static int	in_bounds(int sx, int sy, t_minimap *m)

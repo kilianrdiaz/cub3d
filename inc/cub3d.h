@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 17:05:16 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 17:54:26 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,6 +177,7 @@ typedef struct s_sprite
 	int				width;
 	int				height;
 	int				screen_x;
+	int				found;
 	double			delay;
 	double			scale;
 	t_state			state;

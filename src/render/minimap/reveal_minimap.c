@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/15 17:04:05 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 17:04:58 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 17:42:48 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,4 +73,23 @@ void	init_revealed_if_needed(t_minimap *m, int w, int h)
 	}
 	m->width = w;
 	m->height = h;
+}
+
+int	get_map_max_width(char **map)
+{
+	int	max;
+	int	len;
+	int	i;
+
+	if (!map)
+		return (0);
+	max = 0;
+	i = -1;
+	while (map[++i])
+	{
+		len = ft_strlen(map[i]);
+		if (len > max)
+			max = len;
+	}
+	return (max);
 }

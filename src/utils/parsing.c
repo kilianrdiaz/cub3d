@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:48:02 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 16:45:09 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 17:42:42 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,23 +63,4 @@ void	load_texture(t_game *g, t_tex *tex, char *path)
 		exit(1);
 	}
 	tex->color = COLOR_NONE;
-}
-
-int	get_map_max_width(char **map)
-{
-	int	max;
-	int	len;
-	int	i;
-
-	if (!map)
-		return (0);
-	max = 0;
-	i = -1;
-	while (map[++i])
-	{
-		len = ft_strlen(map[i]);
-		if (len > max)
-			max = len;
-	}
-	return (max);
 }
