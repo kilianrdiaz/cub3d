@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:03:03 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 16:03:54 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 17:11:23 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,23 +16,28 @@ static int	show_sprite(t_game *g, t_sprite *sp)
 {
 	if (!sp || sp->state == DEFUSED)
 		return (0);
-	if (sp->type != LIZARD)
-		return (1);
-	if (sp->dist <= 5)
+	if (sp->type == BOMB && sp->dist > 5)
+		return (0);
+	if (sp->type == LIZARD)
 	{
-		if (g->lives.mask_sprite.delay < g->timer)
+		if (sp->dist <= 5)
 		{
-			g->lives.mask_sprite.delay = g->timer + 7;
-			g->spider.spider_sense = 1;
+			if (g->lives.mask_sprite.delay < g->timer)
+			{
+				g->lives.mask_sprite.delay = g->timer + 7;
+				g->spider.spider_sense = 1;
+			}
+			if (g->lives.mask_sprite.delay == g->timer)
+			{
+				g->spider.spider_sense = !g->spider.spider_sense;
+				g->lives.mask_sprite.delay = g->timer + 7;
+			}
+			return (1);
 		}
-		if (g->lives.mask_sprite.delay == g->timer)
-		{
-			g->spider.spider_sense = !g->spider.spider_sense;
-			g->lives.mask_sprite.delay = g->timer + 7;
-		}
-		return (1);
+		g->spider.spider_sense = 0;
+		return (0);
 	}
-	return (0);
+	return (1);
 }
 
 static int	in_bounds(int sx, int sy, t_minimap *m)

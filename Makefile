@@ -6,7 +6,7 @@
 #    By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/15 14:52:33 by alejhern          #+#    #+#              #
-#    Updated: 2025/11/09 17:19:30 by kroyo-di         ###   ########.fr        #
+#    Updated: 2025/11/15 17:05:48 by kroyo-di         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,7 @@ SRCS    = src/utils/parsing.c  \
 		  src/render/minimap/draw_minimap.c \
 		  src/render/minimap/minimap_sprites.c \
 		  src/render/minimap/player.c \
+		  src/render/minimap/reveal_minimap.c \
 		  src/moves/spider.c \
 		  src/moves/spider_attack.c \
 		  src/moves/lizards.c \

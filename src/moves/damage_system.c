@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 20:25:37 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/13 20:27:33 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 17:21:00 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ static void	reset_player_after_death(t_game *g)
 		}
 		else
 			ft_printf("GAME OVER 💀\n");
-		}
 	}
-	
+}
+
 int	lizard_on_player(t_game *g)
 {
 	int	i;
@@ -57,4 +57,3 @@ void	player_take_damage(t_game *g, int amount)
 	if (g->lives.player_hp <= 0)
 		reset_player_after_death(g);
 }
-

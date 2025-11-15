@@ -6,31 +6,11 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:38:36 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 20:00:23 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 17:04:20 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/cub3d.h"
-
-static void	init_revealed_if_needed(t_minimap *m, int w, int h)
-{
-	int	i;
-
-	if (m->revealed && w == m->width && h == m->height)
-		return ;
-	m->revealed = ft_calloc(sizeof(char *), h + 1);
-	if (!m->revealed)
-		return ;
-	i = -1;
-	while (++i < h)
-	{
-		m->revealed[i] = ft_calloc(sizeof(char), w);
-		if (!m->revealed[i])
-			break ;
-	}
-	m->width = w;
-	m->height = h;
-}
 
 static void	reveal_radius(t_minimap *m, int cx, int cy, int r)
 {
@@ -90,7 +70,7 @@ void	draw_minimap(t_game *g)
 
 	m = &g->minimap;
 	h = ft_memlen(g->map);
-	w = ft_strlen(g->map[0]);
+	w = get_map_max_width(g->map);
 	if (!m->revealed || m->width != w || m->height != h)
 		init_revealed_if_needed(m, w, h);
 	reveal_radius(m, (int)g->spider.pos.x, (int)g->spider.pos.y,

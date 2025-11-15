@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/13 20:35:14 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 17:05:16 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -290,6 +290,7 @@ void				load_map_textures(t_game *g, char **content);
 char				**get_map(char **content);
 void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
+int					get_map_max_width(char **map);
 
 // rendering
 
@@ -317,6 +318,7 @@ void				draw_sprites_minimap(t_game *g);
 void				draw_player_arrow(t_game *g, t_minimap m);
 void				put_rect(t_game *g, t_sprite r, unsigned int color);
 void				draw_tile(t_game *g, t_pos tile);
+void				init_revealed_if_needed(t_minimap *m, int w, int h);
 
 // input
 int					key_press(int key, t_game *g);
