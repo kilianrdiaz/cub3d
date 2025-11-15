@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:46:16 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 18:36:35 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 20:22:36 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,16 @@ static void	bar_border(t_game *g, t_sprite *live)
 	while (i < live->width)
 	{
 		put_pixel(g, live->pos.x + i, live->pos.y, COL_BORDER);
-		put_pixel(g, live->pos.x + i, live->pos.y + live->height - 1, COL_BORDER);
+		put_pixel(g, live->pos.x + i, live->pos.y + live->height - 1,
+			COL_BORDER);
 		i++;
 	}
 	i = 0;
 	while (i < live->height)
 	{
 		put_pixel(g, live->pos.x, live->pos.y + i, COL_BORDER);
-		put_pixel(g, live->pos.x + live->width - 1, live->pos.y + i, COL_BORDER);
+		put_pixel(g, live->pos.x + live->width - 1, live->pos.y + i,
+			COL_BORDER);
 		i++;
 	}
 }
@@ -98,28 +100,20 @@ void	draw_health_bar(t_game *g)
 	/* Tamaño */
 	live.width = 300;
 	live.height = 30;
-
 	/* Posición */
-	live.pos.x = GAME_WIDTH + 150;
+	live.pos.x = GAME_W + 150;
 	live.pos.y = 140;
-
-	/* Calcular proporción */
-	if (g->lives.player_max_hp <= 0)
-		g->lives.player_max_hp = 1;
-
-	ratio = (double)g->lives.player_hp / (double)g->lives.player_max_hp;
+	ratio = (double)g->lives.player_hp / 100;
 	if (ratio < 0.0)
 		ratio = 0.0;
 	if (ratio > 1.0)
 		ratio = 1.0;
-
 	/* Usamos screen_x para almacenar fill */
 	live.screen_x = (int)(ratio * (double)live.width);
 	if (live.screen_x < 0)
 		live.screen_x = 0;
 	if (live.screen_x > live.width)
 		live.screen_x = live.width;
-
 	/* Dibujar */
 	bar_bg(g, &live);
 	bar_fill(g, &live);

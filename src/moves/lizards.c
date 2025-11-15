@@ -6,15 +6,17 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 22:34:04 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/04 21:05:45 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 20:17:45 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/cub3d.h"
 
+#define MOVE_SPEED_LIZARD 1
+
 static int	move_lizard_to(t_game *g, t_sprite *l, t_coords move)
 {
-	int 	x;
+	int	x;
 
 	if (move.x < 0 || move.y < 0)
 		return (0);
@@ -25,8 +27,7 @@ static int	move_lizard_to(t_game *g, t_sprite *l, t_coords move)
 	{
 		if (g->bombs[x]->state == DEFUSED)
 			continue ;
-		if (g->bombs[x]->pos.x == move.x
-			&& g->bombs[x]->pos.y == move.y)
+		if (g->bombs[x]->pos.x == move.x && g->bombs[x]->pos.y == move.y)
 			g->bombs[x]->state = NO_RENDER;
 		else
 			g->bombs[x]->state = ACTIVE;
@@ -106,14 +107,10 @@ void	move_lizards(t_game *g)
 		else if (l->state == MOVING || (l->state == ATTACKED
 				&& g->timer >= l->delay))
 			l->state = ACTIVE;
+		l->dist = (fabs(l->pos.x - g->spider.pos.x) + fabs(l->pos.y
+					- g->spider.pos.y));
 		if (l->dist <= 1.1)
-		{
-			if (g->timer >= l->delay)
-			{
-				l->state = ATTACKING;// 1 segundo entre ataques
-				player_take_damage(g, 5);
-			}
-		}
+			player_take_damage(g, l);
 		if (l->dist <= DETECT_RADIUS)
 			chase_lizard(g, l, g->spider.pos);
 		else

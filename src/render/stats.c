@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 20:59:06 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/13 20:33:46 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 20:20:59 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,32 +29,25 @@ static void	draw_text(t_game *g, t_tex tex, t_sprite sp)
 			if (src_pos.x < 0 || src_pos.x >= tex.width || src_pos.y < 0
 				|| src_pos.y >= tex.height)
 				continue ;
-			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x * (tex.bpp / 8));
+			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x
+					* (tex.bpp / 8));
 			tex.color = *(unsigned int *)src;
 			if ((tex.color & 0x00FFFFFF) != 0)
-				put_pixel(g, (int)sp.pos.x + p.x, (int)sp.pos.y + p.y, tex.color);
+				put_pixel(g, (int)sp.pos.x + p.x,
+					(int)sp.pos.y + p.y, tex.color);
 		}
 	}
 }
 
-static void	put_score_text(t_game *g, t_pos pos)
+static void	put_score_text(t_game *g, t_coords pos)
 {
-	int		advance;
-	int		i;
 	char	*str;
-	char	ch;
 
 	str = ft_itoa(g->score);
 	if (!str)
 		return ;
-	pos.x -= (int)(g->font.char_w * ft_strlen(str) / 2);
-	advance = (int)(g->font.char_w);
-	i = -1;
-	while (str[++i])
-	{
-		ch = str[i];
-		render_text(g, &ch, (t_pos){pos.x + i * advance, pos.y});
-	}
+	pos.x -= (g->font.char_w * ft_strlen(str) / 2);
+	render_text(g, str, pos);
 	free(str);
 }
 
@@ -62,8 +55,8 @@ void	draw_panel_separator(t_game *g)
 {
 	t_pos	p;
 
-	p.x = GAME_WIDTH - 1;
-	while (++p.x < GAME_WIDTH + 8)
+	p.x = GAME_W - 1;
+	while (++p.x < GAME_W + 8)
 	{
 		p.y = -1;
 		while (++p.y < HEIGHT)
@@ -75,20 +68,20 @@ static void	draw_lives(t_game *g)
 {
 	t_sprite	sp;
 
-	sp.pos.x = GAME_WIDTH + 80;
+	sp.pos.x = GAME_W + 80;
 	sp.pos.y = 100;
 	sp.scale = 0.25;
 	draw_text(g, g->lives.spidermask_tex[g->spider.spider_sense], sp);
 	if (g->lives.lives_left > 1)
 	{
-		sp.pos.x = GAME_WIDTH + 370;
+		sp.pos.x = GAME_W + 370;
 		sp.pos.y = 55;
 		sp.scale = 0.15;
 		draw_text(g, g->lives.spidermask_tex[0], sp);
 	}
 	if (g->lives.lives_left > 2)
 	{
-		sp.pos.x = GAME_WIDTH + 290;
+		sp.pos.x = GAME_W + 290;
 		sp.pos.y = 55;
 		sp.scale = 0.15;
 		draw_text(g, g->lives.spidermask_tex[0], sp);
@@ -102,7 +95,7 @@ void	render_stats(t_game *g)
 
 	draw_health_bar(g);
 	draw_panel_separator(g);
-	sp.pos.x = GAME_WIDTH + 150;
+	sp.pos.x = GAME_W + 150;
 	sp.pos.y = HEIGHT - 300;
 	sp.scale = 0.5;
 	draw_text(g, g->bomb_tex[ACTIVE], sp);
@@ -110,13 +103,13 @@ void	render_stats(t_game *g)
 	g->font.scale = 1.8;
 	sp.pos.y -= g->font.char_h * g->font.scale / 3;
 	str = ft_itoa(g->bomb_count);
-	render_text(g, str, (t_pos){sp.pos.x, sp.pos.y});
+	render_text(g, str, sp.pos);
 	free(str);
-	sp.pos.x = GAME_WIDTH + 150;
+	sp.pos.x = GAME_W + 150;
 	sp.pos.y += g->bomb_tex[ACTIVE].height * sp.scale + 50;
-	put_timer(g, (t_pos){sp.pos.x, sp.pos.y});
+	put_timer(g, sp.pos);
 	sp.pos.y += g->font.char_h * g->font.scale + 10;
-	sp.pos.x = GAME_WIDTH + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
-	put_score_text(g, (t_pos){sp.pos.x, sp.pos.y});
+	sp.pos.x = GAME_W + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
+	put_score_text(g, sp.pos);
 	draw_lives(g);
 }

@@ -19,7 +19,7 @@ static int	close_high_scores(int keycode, t_game *g)
 	(void)keycode;
 	if (g->render_state == HIGH_SCORE)
 	{
-		g->render_state = GAME_OVER;
+		g->render_state = END;
 		ft_bzero(&g->keys, sizeof(t_keys));
 		clean_screen(g);
 		mlx_hook(g->win, 2, 1L << 0, key_press, g);
@@ -28,7 +28,7 @@ static int	close_high_scores(int keycode, t_game *g)
 	return (0);
 }
 
-static void	print_separator_line(t_game *g, t_pos pos, char **line)
+static void	print_separator_line(t_game *g, t_coords coords, char **line)
 {
 	int		i;
 	char	*separator;
@@ -45,12 +45,12 @@ static void	print_separator_line(t_game *g, t_pos pos, char **line)
 	while (i < separator_length - 1)
 		separator[i++] = '-';
 	separator[i] = '\0';
-	pos.x += ft_strlen((*line)) * g->font.char_w * g->font.scale;
-	render_text(g, separator, pos);
+	coords.x += ft_strlen((*line)) * g->font.char_w * g->font.scale;
+	render_text(g, separator, coords);
 	free(separator);
 }
 
-static void	put_line_scores(t_game *g, char *score, t_pos pos)
+static void	put_line_scores(t_game *g, char *score, t_coords coords)
 {
 	char	**line;
 	int		name_x;
@@ -67,25 +67,27 @@ static void	put_line_scores(t_game *g, char *score, t_pos pos)
 	g->font.scale = 2.5;
 	score_col_x = WIDTH - SCORE_SPACING;
 	name_x = SCORE_SPACING;
-	pos.x = name_x;
-	render_text(g, line[0], pos);
-	print_separator_line(g, pos, line);
-	pos.x = score_col_x - ft_strlen(line[1]) * g->font.char_w * g->font.scale;
-	render_text(g, line[1], pos);
+	coords.x = name_x;
+	render_text(g, line[0], coords);
+	print_separator_line(g, coords, line);
+	coords.x = score_col_x - ft_strlen(line[1]) * g->font.char_w
+		* g->font.scale;
+	render_text(g, line[1], coords);
 	ft_free_array((void ***)&line);
 }
 
-void	display_score_panel(t_game *g, t_tex *score_panel, char **scores)
+void	display_score_panel(t_game *g, t_tex score_panel, char **scores)
 {
-	int		index;
-	t_pos	pos;
+	int			index;
+	t_coords	pos;
 
+	clean_screen(g);
 	g->font.scale = 3.0;
 	draw_fullscreen_image(g, score_panel);
 	pos.x = WIDTH / 2 - (ft_strlen("HIGH SCORES") * g->font.char_w
 			* g->font.scale) / 2;
-	pos.y = (HEIGHT - score_panel->height) / 3;
-	render_text(g, "HIGH SCORES", pos);
+	pos.y = 50;
+	render_text(g, "HIGH SCORES", (t_coords){(double)pos.x, (double)pos.y});
 	if (!scores)
 		return ;
 	index = -1;
@@ -97,6 +99,7 @@ void	display_score_panel(t_game *g, t_tex *score_panel, char **scores)
 		g->font.scale = 3.0;
 	}
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	mlx_destroy_image(g->mlx, score_panel->img);
+	if (score_panel.img)
+		mlx_destroy_image(g->mlx, score_panel.img);
 	mlx_key_hook(g->win, close_high_scores, g);
 }

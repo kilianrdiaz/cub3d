@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 18:48:47 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 16:07:19 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 20:41:25 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static void	draw_triangle(t_game *g, t_pos *t)
 		process_triangle_line(g, t, y);
 }
 
-static void	set_arrow_points(t_pos *t, t_game *g, t_minimap *m, double ts)
+static void	set_arrow_points(t_pos *t, t_game *g, t_minimap m)
 {
 	double	ang;
 	double	ca;
@@ -76,25 +76,25 @@ static void	set_arrow_points(t_pos *t, t_game *g, t_minimap *m, double ts)
 	ang = atan2(g->spider.dir.y, g->spider.dir.x);
 	ca = cos(ang);
 	sa = sin(ang);
-	xc = m->offset.x + (int)(g->spider.pos.x * ts) - m->cam_x - (int)round(ca
-			* (ts / 2.0));
-	t[0].x = xc + (int)round(ca * ts);
-	t[0].y = m->offset.y + (int)(g->spider.pos.y * ts) - m->cam_y
-		- (int)round(sa * (ts / 2.0)) + (int)round(sa * ts);
-	t[1].x = xc - (int)round(sa * (ts / 2.0));
-	t[1].y = m->offset.y + (int)(g->spider.pos.y * ts) - m->cam_y
-		- (int)round(sa * (ts / 2.0)) + (int)round(ca * (ts / 2.0));
-	t[2].x = xc + (int)round(sa * (ts / 2.0));
-	t[2].y = m->offset.y + (int)(g->spider.pos.y * ts) - m->cam_y
-		- (int)round(sa * (ts / 2.0)) - (int)round(ca * (ts / 2.0));
+	xc = m.offset.x + (int)(g->spider.pos.x * MINIMAP_TILE) - m.cam_x
+		- (int)round(ca * (MINIMAP_TILE / 2.0));
+	t[0].x = xc + (int)round(ca * MINIMAP_TILE);
+	t[0].y = m.offset.y + (int)(g->spider.pos.y * MINIMAP_TILE) - m.cam_y
+		- (int)round(sa * (MINIMAP_TILE / 2.0)) + (int)round(sa * MINIMAP_TILE);
+	t[1].x = xc - (int)round(sa * (MINIMAP_TILE / 2.0));
+	t[1].y = m.offset.y + (int)(g->spider.pos.y * MINIMAP_TILE) - m.cam_y
+		- (int)round(sa * (MINIMAP_TILE / 2.0)) + (int)round(ca * (MINIMAP_TILE
+				/ 2.0));
+	t[2].x = xc + (int)round(sa * (MINIMAP_TILE / 2.0));
+	t[2].y = m.offset.y + (int)(g->spider.pos.y * MINIMAP_TILE) - m.cam_y
+		- (int)round(sa * (MINIMAP_TILE / 2.0)) - (int)round(ca * (MINIMAP_TILE
+				/ 2.0));
 }
 
 void	draw_player_arrow(t_game *g, t_minimap m)
 {
 	t_pos	p[3];
-	double	ts;
 
-	ts = m.tile_size;
-	set_arrow_points(p, g, &m, ts);
+	set_arrow_points(p, g, m);
 	draw_triangle(g, p);
 }

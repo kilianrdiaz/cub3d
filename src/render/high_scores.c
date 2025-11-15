@@ -34,11 +34,12 @@ static t_ray	ray_web_target(t_game *g, t_tex web_target, float scale)
 
 static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 {
-	t_ray	ray;
-	float	scale;
-	t_pos	pos;
+	t_ray			ray;
+	double			scale;
+	t_pos			pos;
+	unsigned int	color;
 
-	scale = (g->font.char_h * g->font.scale) / (float)web_target->height;
+	scale = (g->font.char_h * g->font.scale) / (double)web_target->height;
 	ray = ray_web_target(g, *web_target, scale);
 	// 5. Dibujado con reescalado por muestreo sencillo
 	pos.y = -1;
@@ -49,36 +50,37 @@ static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 		{
 			ray.src.x = pos.x / scale;
 			ray.src.y = pos.y / scale;
-			ray.color = *((unsigned int *)(web_target->addr + (ray.src.y
-							* web_target->line_len + ray.src.x
-							* (web_target->bpp / 8))));
-			if ((ray.color & 0x00FFFFFF) != 0)
+			color = get_pixel_color(*web_target, ray.src.x, ray.src.y);
+			if ((color & 0x00FFFFFF) != 0)
 				put_pixel(g, ray.d_start.x + pos.x, ray.d_start.y + pos.y,
-					ray.color);
+					color);
 		}
 	}
 	return (ray);
 }
 
-static char	*register_score(t_game *g, t_tex *score_panel)
+static char	*register_score(t_game *g, t_tex score_panel)
 {
 	t_tex		target;
 	t_sprite	*alphabet;
 	char		*result;
 	t_ray		ray;
 
+	clean_screen(g);
+	ft_bzero(&target, sizeof(t_tex));
 	load_texture(g, &target, "./textures/web_target.xpm");
 	draw_fullscreen_image(g, score_panel);
 	g->font.scale = 1.5;
-	render_text(g, "ENTER NAME", (t_pos){(WIDTH - score_panel->width) / 2,
-		(HEIGHT - score_panel->height) / 2});
-	alphabet = print_alphabet(g, *score_panel);
+	render_text(g, "ENTER NAME", (t_coords){WIDTH / 10, 50});
+	alphabet = print_alphabet(g);
 	draw_hand(g, g->spider.pos.x);
 	ray = draw_web_target(g, &target);
 	result = set_name(g, alphabet, ray);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	mlx_destroy_image(g->mlx, target.img);
-	mlx_destroy_image(g->mlx, score_panel->img);
+	if (target.img)
+		mlx_destroy_image(g->mlx, target.img);
+	if (score_panel.img)
+		mlx_destroy_image(g->mlx, score_panel.img);
 	free(alphabet);
 	return (result);
 }
@@ -105,7 +107,7 @@ static void	save_scores(char **scores)
 	close(fd);
 }
 
-int	show_high_scores(t_game *g)
+void	show_high_scores(t_game *g)
 {
 	char	**scores;
 	int		position;
@@ -117,9 +119,11 @@ int	show_high_scores(t_game *g)
 	position = get_position(g, scores);
 	if (position != -1 && g->render_state != SCORE_SAVED)
 		g->render_state = WAITING_FOR_NAME;
-	if (g->render_state == WAITING_FOR_NAME)
+	if (g->render_state == HIGH_SCORE || g->render_state == SCORE_SAVED)
+		display_score_panel(g, score_panel, scores);
+	else
 	{
-		new_score = register_score(g, &score_panel);
+		new_score = register_score(g, score_panel);
 		if (new_score)
 		{
 			update_scores(scores, position);
@@ -127,9 +131,6 @@ int	show_high_scores(t_game *g)
 			save_scores(scores);
 			g->render_state = SCORE_SAVED;
 		}
-		ft_free_array((void ***)&scores);
-		return (0);
 	}
-	display_score_panel(g, &score_panel, scores);
-	return (ft_free_array((void ***)&scores), 0);
+	ft_free_array((void ***)&scores);
 }

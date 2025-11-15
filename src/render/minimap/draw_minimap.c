@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:00:05 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 18:05:25 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 20:20:09 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ void	draw_tile(t_game *g, t_pos t)
 	t_minimap	*m;
 
 	m = &g->minimap;
-	r.width = m->tile_size;
-	r.height = m->tile_size;
-	sx = m->offset.x + t.x * m->tile_size - m->cam_x;
-	sy = m->offset.y + t.y * m->tile_size - m->cam_y;
-	if (is_outside(sx, sy, m, m->tile_size))
+	r.width = MINIMAP_TILE;
+	r.height = MINIMAP_TILE;
+	sx = m->offset.x + t.x * MINIMAP_TILE - m->cam_x;
+	sy = m->offset.y + t.y * MINIMAP_TILE - m->cam_y;
+	if (is_outside(sx, sy, m, MINIMAP_TILE))
 		return ;
 	r.pos.x = sx;
 	r.pos.y = sy;

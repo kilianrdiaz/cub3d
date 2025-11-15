@@ -9,10 +9,22 @@
 #    Updated: 2025/11/15 17:05:48 by kroyo-di         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+# **************************************************************************** #
+#                                   CUB3D                                      #
+# **************************************************************************** #
 
-# **************************************************************************** #
-#                                 VARIABLES                                    #
-# **************************************************************************** #
+# ================================
+# ⚙️ COMPILACIÓN
+# ================================
+CC      = cc
+CFLAGS  = -Wall -Wextra -Werror -g -Iinc
+NAME    = cub3d
+VICTUS  = -DFRAMES_PER_SECOND=30
+
+# ================================
+# 📂 DIRECTORIOS Y FUENTES
+# ================================
+OBJ_DIR = obj
 
 SRCS    = src/utils/parsing.c  \
 		  src/utils/render.c    \
@@ -26,8 +38,9 @@ SRCS    = src/utils/parsing.c  \
 		  src/render/map.c \
 		  src/render/sprite.c \
 		  src/render/font.c \
-		  src/render/render.c \
 		  src/render/intro.c \
+		  src/render/load_level.c \
+		  src/render/game.c \
 		  src/render/timer.c \
 		  src/render/stats.c \
 		  src/render/display_scores.c \
@@ -47,38 +60,84 @@ SRCS    = src/utils/parsing.c  \
 		  src/close_program.c \
 		  src/main.c
 
-OBJ_DIR = obj
-OBJ     = $(SRCS:src/%.c=$(OBJ_DIR)/%.o)
-
-LIBFT_DIR = libft/
-LIBFT = $(LIBFT_DIR)libft.a
+# ================================
+# 🧱 LIBFT
+# ================================
+LIBFT_DIR = libs/libft/
+LIBFT_LIB = $(LIBFT_DIR)libft.a
 LIBFT_REPO = https://github.com/alejhern/libft.git
+LIBFT   = -L$(LIBFT_DIR) -lft
 
+# ================================
+# 🖼️ MINILIBX
+# ================================
 MLX_REPO = https://github.com/42Paris/minilibx-linux.git
-MLX_DIR = minilibx-linux
+MLX_DIR = libs/minilibx-linux
 MLX_LIB = $(MLX_DIR)/libmlx.a
 MLX     = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm
 
-NAME    = cub3d
-CC      = cc
-CFLAGS  = -Wall -Wextra -Werror -Iinc -I$(LIBFT_DIR) -g
+# ================================
+# 🎵 MINIAUDIO (header-only)
+# ================================
+MINIAUDIO_DIR  = libs/miniaudio
+MINIAUDIO_REPO = https://github.com/mackron/miniaudio.git
+MINIAUDIO_LIB  = $(MINIAUDIO_DIR)/miniaudio.h
+MINIAUDIO_INC  = -I$(MINIAUDIO_DIR)
+
+# ================================
+#   OBJETOS DINÁMICOS
+# ================================
+OBJ_RENDER     = $(OBJ_DIR)/render/render.o
+OBJ_RENDER_SRC ?= src/render/render.c
+OBJ             = $(patsubst src/%.c,$(OBJ_DIR)/%.o,$(SRCS)) $(OBJ_RENDER)
 
 # **************************************************************************** #
-#                                 RULES                                        #
+#                                 REGLAS                                       #
 # **************************************************************************** #
 
-all: $(LIBFT) $(MLX_LIB) $(NAME)
+# -----------------------------
+# Compilación normal
+# -----------------------------
+all: $(LIBFT_LIB) $(MLX_LIB) $(NAME)
 
+# -----------------------------
+# Compilación con audio
+# -----------------------------
+miniaudio: $(MINIAUDIO_LIB)
+	@echo "🔊 Compilando con audio..."
+	$(MAKE) OBJ_RENDER_SRC=src/render/render_with_audio.c CFLAGS+="$(CFLAGS) $(MINIAUDIO_INC)" $(NAME)
+
+# -----------------------------
+# Victus (modo optimizado)
+# -----------------------------
+victus: CFLAGS += $(VICTUS)
+victus: miniaudio
+
+# -----------------------------
+# Compilación final
+# -----------------------------
 $(NAME): $(OBJ)
 	$(CC) $(OBJ) -o $(NAME) $(MLX) $(LIBFT)
 
-# Compilación de .c a .o dentro de obj/
-$(OBJ_DIR)/%.o: src/%.c ./inc/cub3d.h Makefile
+# -----------------------------
+# Compilación de cada objeto
+# -----------------------------
+$(OBJ_DIR)/%.o: src/%.c ./inc/cub3d.h ./inc/audio.h Makefile
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(LIBFT):
+# render.o (usa el SRC dinámico correcto)
+$(OBJ_DIR)/render/render.o: $(OBJ_RENDER_SRC) ./inc/cub3d.h ./inc/audio.h Makefile
+	@mkdir -p $(dir $@)
+	@echo "🎨 Compilando render desde: $(OBJ_RENDER_SRC)"
+	$(CC) $(CFLAGS) -c $(OBJ_RENDER_SRC) -o $@
+
+# ===========================
+#   🧰 LIBRERÍAS EXTERNAS
+# ===========================
+$(LIBFT_LIB):
 	@if [ ! -d "$(LIBFT_DIR)" ]; then \
+		echo "📥 Clonando Libft..."; \
 		git clone $(LIBFT_REPO) $(LIBFT_DIR); \
 	fi
 	@make -C $(LIBFT_DIR)
@@ -88,20 +147,28 @@ $(MLX_LIB):
 		echo "📥 Clonando MiniLibX..."; \
 		git clone $(MLX_REPO) $(MLX_DIR); \
 	fi
-	$(MAKE) -C $(MLX_DIR)
-	@echo "✅ MiniLibX compilada."
+	@echo "⚙️  Compilando MiniLibX (sin -Werror)..."
+	@$(MAKE) -C $(MLX_DIR)
 
+$(MINIAUDIO_LIB):
+	@if [ ! -f "$(MINIAUDIO_LIB)" ]; then \
+		echo "📥 Clonando Miniaudio..."; \
+		git clone $(MINIAUDIO_REPO) $(MINIAUDIO_DIR); \
+	fi
+
+# ===========================
+#   🧹 LIMPIEZA
+# ===========================
 clean:
 	@make -C $(LIBFT_DIR) clean
 	rm -rf $(OBJ_DIR)
 	@echo "🧹 Archivos objeto eliminados."
 
 fclean: clean
-	@make -C $(LIBFT_DIR) fclean
-	rm -rf $(MLX_DIR)
+	rm -rf libs
 	rm -f $(NAME)
 	@echo "🧼 Limpieza completa."
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re victus miniaudio

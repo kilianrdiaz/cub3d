@@ -28,6 +28,15 @@ t_tex	get_texture_wall(t_game g, t_ray ray, int side)
 	}
 }
 
+int	clamp_int(int v, int a, int b)
+{
+	if (v < a)
+		return (a);
+	if (v > b)
+		return (b);
+	return (v);
+}
+
 void	calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex, int side)
 {
 	ray->line_height = (int)(HEIGHT / ray->row_distance);
@@ -80,7 +89,7 @@ t_ray	ray_map(t_game g, int x)
 	t_ray	ray;
 
 	ft_bzero(&ray, sizeof(t_ray));
-	ray.view = 2 * x / (double)GAME_WIDTH - 1;
+	ray.view = 2 * x / (double)GAME_W - 1;
 	ray.left.x = g.spider.dir.x + g.spider.plane.x * ray.view;
 	ray.left.y = g.spider.dir.y + g.spider.plane.y * ray.view;
 	// Posición inicial en el mapa (celda del jugador)

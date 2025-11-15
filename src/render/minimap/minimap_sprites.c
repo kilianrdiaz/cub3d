@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:03:03 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 18:00:47 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 20:20:13 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static void	draw_single_sprite(t_game *g, t_sprite *sp, unsigned int color)
 	if (!show_sprite(g, sp))
 		return ;
 	m = &g->minimap;
-	ts = m->tile_size;
+	ts = MINIMAP_TILE;
 	sx = m->offset.x + (int)(sp->pos.x * ts + ts / 2) - m->cam_x;
 	sy = m->offset.y + (int)(sp->pos.y * ts + ts / 2) - m->cam_y;
 	if (!in_bounds(sx, sy, m))
