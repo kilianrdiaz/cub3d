@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:38:36 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 17:04:20 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 18:06:10 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ static void	clamp_camera(t_minimap *m)
 		m->cam_x = 0;
 	if (m->cam_y < 0)
 		m->cam_y = 0;
-	if (m->cam_x > m->real_w - m->visible_size)
-		m->cam_x = m->real_w - m->visible_size;
-	if (m->cam_y > m->real_h - m->visible_size)
-		m->cam_y = m->real_h - m->visible_size;
+	if (m->cam_x > m->real_w - VISIBLE_SIZE)
+		m->cam_x = m->real_w - VISIBLE_SIZE;
+	if (m->cam_y > m->real_h - VISIBLE_SIZE)
+		m->cam_y = m->real_h - VISIBLE_SIZE;
 }
 
 void	draw_minimap(t_game *g)
@@ -79,11 +79,10 @@ void	draw_minimap(t_game *g)
 	m->real_w = w * m->tile_size;
 	m->real_h = h * m->tile_size;
 	bar_w = WIDTH - GAME_WIDTH;
-	m->visible_size = 300;
-	m->offset.x = GAME_WIDTH + (bar_w / 2) - (m->visible_size / 2);
-	m->offset.y = (HEIGHT / 2) - (m->visible_size - 100);
-	m->cam_x = (int)(g->spider.pos.x * m->tile_size) - m->visible_size / 2;
-	m->cam_y = (int)(g->spider.pos.y * m->tile_size) - m->visible_size / 2;
+	m->offset.x = GAME_WIDTH + (bar_w / 2) - (VISIBLE_SIZE / 2);
+	m->offset.y = (HEIGHT / 2) - (VISIBLE_SIZE - 100);
+	m->cam_x = (int)(g->spider.pos.x * m->tile_size) - VISIBLE_SIZE / 2;
+	m->cam_y = (int)(g->spider.pos.y * m->tile_size) - VISIBLE_SIZE / 2;
 	clamp_camera(m);
 	draw_map_tiles(g);
 	draw_sprites_minimap(g);

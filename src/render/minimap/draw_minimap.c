@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:00:05 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/09 16:02:19 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 18:05:25 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 static int	is_outside(int sx, int sy, t_minimap *m, int ts)
 {
-	if (sx + ts < m->offset.x || sx > m->offset.x + m->visible_size)
+	if (sx + ts < m->offset.x || sx > m->offset.x + VISIBLE_SIZE)
 		return (1);
-	if (sy + ts < m->offset.y || sy > m->offset.y + m->visible_size)
+	if (sy + ts < m->offset.y || sy > m->offset.y + VISIBLE_SIZE)
 		return (1);
 	return (0);
 }

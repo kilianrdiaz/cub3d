@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 17:54:26 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 18:08:14 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # define GAME_HEIGHT 960
 
 # define MINIMAP_PLAYER_SIZE 10
+# define VISIBLE_SIZE 300
 
 # define SCALE_SPRITE 2.0
 
@@ -216,7 +217,6 @@ typedef struct s_minimap
 	int				cam_y;
 	int				real_w;
 	int				real_h;
-	int				visible_size;
 	int				tex_index;
 }					t_minimap;
 
