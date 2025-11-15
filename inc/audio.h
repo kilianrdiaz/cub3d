@@ -20,6 +20,7 @@ typedef struct s_audio
 	ma_engine	engine;
 	ma_sound	main;
 	ma_sound	game;
+	ma_sound	bomb;
 	ma_sound	lizard;
 	ma_sound	spiderweb;
 	ma_sound	game_over;
