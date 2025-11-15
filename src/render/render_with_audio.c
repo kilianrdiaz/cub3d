@@ -19,6 +19,7 @@ static void	clean_audio(t_audio *audio)
 		return ;
 	ma_sound_stop(&audio->game);
 	ma_sound_uninit(&audio->game);
+	ma_sound_uninit(&audio->bomb);
 	ma_sound_uninit(&audio->lizard);
 	ma_sound_uninit(&audio->spiderweb);
 	ma_sound_uninit(&audio->game_over);
@@ -52,6 +53,7 @@ static void	audio_init(void **audio_ptr)
 	}
 	load_audio(&audio->engine, &audio->game,
 		"audios/escape-from-the-sewers.wav", MA_SOUND_FLAG_LOOPING);
+	load_audio(&audio->engine, &audio->bomb, "audios/bomb.wav", 0);
 	load_audio(&audio->engine, &audio->lizard, "audios/lizard.wav", 0);
 	load_audio(&audio->engine, &audio->spiderweb, "audios/web.wav", 0);
 	load_audio(&audio->engine, &audio->game_over, "audios/gameover.wav", 0);
@@ -78,6 +80,9 @@ static void	game_effects(t_game *g, t_audio *audio)
 		if (sprite_list[i]->type == LIZARD
 			&& sprite_list[i]->state == ATTACKING)
 			ma_sound_start(&audio->lizard);
+		if (sprite_list[i]->type == BOMB
+			&& sprite_list[i]->state == ATTACKED)
+			ma_sound_start(&audio->bomb);	
 	}
 	free(sprite_list);
 }
