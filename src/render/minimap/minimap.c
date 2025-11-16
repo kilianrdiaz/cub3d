@@ -14,38 +14,35 @@
 
 static void	reveal_radius(t_minimap *m, int cx, int cy, int r)
 {
-	int	x;
-	int	y;
-	int	dx;
-	int	dy;
+	t_pos	pos;
+	t_pos	delta;
 
 	if (!m->revealed)
 		return ;
-	y = fmax(0, cy - r) - 1;
-	while (++y <= fmin(m->height - 1, cy + r))
+	pos.y = fmax(0, cy - r) - 1;
+	while (++pos.y <= fmin(m->height - 1, cy + r))
 	{
-		x = fmax(0, cx - r) - 1;
-		while (++x <= fmin(m->width - 1, cx + r))
+		pos.x = fmax(0, cx - r) - 1;
+		while (++pos.x <= fmin(m->width - 1, cx + r))
 		{
-			dx = x - cx;
-			dy = y - cy;
-			if (sqrt(dx * dx + dy * dy) <= r + 0.4)
-				m->revealed[y][x] = 1;
+			delta.x = pos.x - cx;
+			delta.y = pos.y - cy;
+			if (sqrt(delta.x * delta.x + delta.y * delta.y) <= r + 0.4)
+				m->revealed[pos.y][pos.x] = 1;
 		}
 	}
 }
 
 static void	draw_map_tiles(t_game *g)
 {
-	int	y;
-	int	x;
+	t_pos	pos;
 
-	y = -1;
-	while (g->map[++y])
+	pos.y = -1;
+	while (g->map[++pos.y])
 	{
-		x = -1;
-		while (g->map[y][++x])
-			draw_tile(g, (t_pos){x, y});
+		pos.x = -1;
+		while (g->map[pos.y][++pos.x])
+			draw_tile(g, pos);
 	}
 }
 
