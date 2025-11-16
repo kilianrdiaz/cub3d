@@ -54,38 +54,34 @@ static void	draw_single_sprite(t_game *g, t_sprite *sp, unsigned int color)
 {
 	t_minimap	*m;
 	t_sprite	r;
-	int			sx;
-	int			sy;
+	t_pos		src;
 	int			ts;
 
 	if (!show_sprite(g, sp))
 		return ;
 	m = &g->minimap;
 	ts = MINIMAP_TILE;
-	sx = m->offset.x + (int)(sp->pos.x * ts + ts / 2) - m->cam_x;
-	sy = m->offset.y + (int)(sp->pos.y * ts + ts / 2) - m->cam_y;
-	if (!in_bounds(sx, sy, m))
+	src.x = m->offset.x + (int)(sp->pos.x * ts + ts / 2) - m->cam_x;
+	src.y = m->offset.y + (int)(sp->pos.y * ts + ts / 2) - m->cam_y;
+	if (!in_bounds(src.x, src.y, m))
 		return ;
 	r.width = ts * 0.5;
 	if (r.width < 2)
 		r.width = 2;
 	r.height = r.width;
-	r.pos.x = sx - r.width / 2;
-	r.pos.y = sy - r.height / 2;
+	r.pos.x = src.x - r.width / 2;
+	r.pos.y = src.y - r.height / 2;
 	put_rect(g, r, color);
 }
 
 void	draw_sprites_minimap(t_game *g)
 {
-	int				i;
-	unsigned int	color;
+	int	i;
 
 	i = -1;
-	color = COL_BOMB;
 	while (g->bombs && g->bombs[++i])
-		draw_single_sprite(g, g->bombs[i], color);
+		draw_single_sprite(g, g->bombs[i], COL_BOMB);
 	i = -1;
-	color = COL_LIZARD;
 	while (g->lizards && g->lizards[++i])
-		draw_single_sprite(g, g->lizards[i], color);
+		draw_single_sprite(g, g->lizards[i], COL_LIZARD);
 }
