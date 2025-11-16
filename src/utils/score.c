@@ -97,7 +97,7 @@ t_sprite	*print_alphabet(t_game *game)
 	while (++x <= 'Z' && ++index < 26)
 	{
 		alphabet[index].pos = pos;
-		put_char(game, x, alphabet[index].pos);
+		render_char(game, x, alphabet[index].pos);
 		pos.x += game->font.char_w * game->font.scale + 10;
 		if ((x - 'A' + 1) % 9 == 0)
 		{

@@ -81,7 +81,7 @@ void	load_font(t_game *g, t_font *f, char *path)
 	create_char_bitmap(f);
 }
 
-void	put_char(t_game *g, char c, t_coords coords)
+void	render_char(t_game *g, char c, t_coords coords)
 {
 	t_char_bitmap	*cb;
 	t_pos			d;
@@ -121,6 +121,6 @@ void	render_text(t_game *g, char *str, t_coords coords)
 	{
 		if (str[i] == ' ' || str[i] == '\n')
 			continue ;
-		put_char(g, str[i], (t_coords){coords.x + i * advance, coords.y});
+		render_char(g, str[i], (t_coords){coords.x + i * advance, coords.y});
 	}
 }
