@@ -66,8 +66,7 @@ static int	check_if_is_bomb(t_game *g, int x, int y)
 	i = -1;
 	while (g->bombs && g->bombs[++i])
 	{
-		if (g->bombs[i]->state == DEFUSED || g->bombs[i]->state == NO_RENDER
-			|| g->bombs[i]->state == ATTACKED)
+		if (g->bombs[i]->state != ACTIVE)
 			continue ;
 		t = (t_pos){(int)g->bombs[i]->pos.x, (int)g->bombs[i]->pos.y};
 		if (t.x == x && t.y == y)

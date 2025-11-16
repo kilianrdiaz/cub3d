@@ -17,7 +17,7 @@
 static void	reset_player_after_death(t_game *g)
 {
 	g->live.lives_left--;
-	if (g->live.lives_left > 1)
+	if (g->live.lives_left > 0)
 		g->live.player_hp = 100;
 	else
 	{
