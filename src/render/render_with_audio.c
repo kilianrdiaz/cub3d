@@ -64,27 +64,29 @@ static void	audio_init(void **audio_ptr)
 
 static void	game_effects(t_game *g, t_audio *audio)
 {
-	t_sprite	**sprite_list;
+	t_sprite	**sprites;
 	int			i;
 
-	if (!audio)
-		return ;
-	if (g->render_state != PLAYING)
+	if (!audio || g->render_state != PLAYING)
 		return ;
 	if (g->spider.state == ATTACKING)
 		ma_sound_start(&audio->spiderweb);
-	sprite_list = get_sprites(*g);
+	sprites = get_sprites(*g);
 	i = -1;
-	while (sprite_list && sprite_list[++i])
+	while (sprites && sprites[++i])
 	{
-		if (sprite_list[i]->type == LIZARD
-			&& sprite_list[i]->state == ATTACKING)
+		if ((sprites[i]->type == LIZARD && sprites[i]->state == ATTACKING)
+			|| (sprites[i]->type == BOMB && sprites[i]->state == ATTACKED))
+		{
+			ma_sound_stop(&audio->bomb);
+			ma_sound_stop(&audio->lizard);
+		}
+		if (sprites[i]->type == LIZARD && sprites[i]->state == ATTACKING)
 			ma_sound_start(&audio->lizard);
-		if (sprite_list[i]->type == BOMB
-			&& sprite_list[i]->state == ATTACKED)
-			ma_sound_start(&audio->bomb);	
+		if (sprites[i]->type == BOMB && sprites[i]->state == ATTACKED)
+			ma_sound_start(&audio->bomb);
 	}
-	free(sprite_list);
+	free(sprites);
 }
 
 int	render(t_game *g)
