@@ -63,11 +63,11 @@ static void	load_sprite_textures(t_game *g)
 	load_texture(g, &g->lizard_tex[ATTACKED], "./textures/lizard_attacked.xpm");
 	load_texture(g, &g->lizard_tex[ATTACKING], "./textures/lizard_attack.xpm");
 	load_texture(g, &g->lizard_tex[MOVING], "./textures/lizard_step.xpm");
-	g->lives.spidermask_tex = ft_calloc(sizeof(t_tex), 2);
-	if (!g->lives.spidermask_tex)
+	g->live.spidermask_tex = ft_calloc(sizeof(t_tex), 2);
+	if (!g->live.spidermask_tex)
 		ft_error_exit("Error: Memory allocation failed for mask textures\n");
-	load_texture(g, &g->lives.spidermask_tex[0], "./textures/spidermask.xpm");
-	load_texture(g, &g->lives.spidermask_tex[1],
+	load_texture(g, &g->live.spidermask_tex[0], "./textures/spidermask.xpm");
+	load_texture(g, &g->live.spidermask_tex[1],
 		"./textures/spidermask_danger.xpm");
 }
 
@@ -99,8 +99,8 @@ int	main(int argc, char **argv)
 		ft_error_exit("Error: Memory allocation failed for map textures\n");
 	load_sprite_textures(&g);
 	load_font(&g, &g.font, "./textures/font.xpm");
-	g.lives.player_hp = 100;
-	g.lives.lives_left = 3;
+	g.live.player_hp = 100;
+	g.live.lives_left = 3;
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g);

@@ -205,9 +205,6 @@ typedef struct s_minimap
 	t_pos			offset;
 	int				cam_x;
 	int				cam_y;
-	int				real_w;
-	int				real_h;
-	int				tex_index;
 }					t_minimap;
 
 typedef struct s_game
@@ -238,7 +235,7 @@ typedef struct s_game
 	unsigned int	score;
 	void			*audio;
 	void			(*game_loop)(void *);
-	t_lives			lives;
+	t_lives			live;
 }					t_game;
 
 typedef struct s_ray
@@ -294,7 +291,7 @@ int					render(t_game *g);
 void				update_bombs(t_game *g);
 void				draw_hand(t_game *g, int x);
 void				render_sprites(t_game *g);
-void				put_char(t_game *g, char c, t_coords coords);
+void				render_char(t_game *g, char c, t_coords coords);
 void				render_text(t_game *g, char *str, t_coords coords);
 void				load_font(t_game *g, t_font *f, char *path);
 void				load_level(t_game *g);

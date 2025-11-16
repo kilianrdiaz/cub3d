@@ -49,23 +49,10 @@ static void	draw_map_tiles(t_game *g)
 	}
 }
 
-static void	clamp_camera(t_minimap *m)
-{
-	if (m->cam_x < 0)
-		m->cam_x = 0;
-	if (m->cam_y < 0)
-		m->cam_y = 0;
-	if (m->cam_x > m->real_w - VISIBLE_SIZE)
-		m->cam_x = m->real_w - VISIBLE_SIZE;
-	if (m->cam_y > m->real_h - VISIBLE_SIZE)
-		m->cam_y = m->real_h - VISIBLE_SIZE;
-}
-
 void	draw_minimap(t_game *g)
 {
 	int			w;
 	int			h;
-	int			bar_w;
 	t_minimap	*m;
 
 	m = &g->minimap;
@@ -77,14 +64,14 @@ void	draw_minimap(t_game *g)
 		init_revealed_if_needed(m, w, h);
 	reveal_radius(m, (int)g->spider.pos.x, (int)g->spider.pos.y,
 		REVEAL_STEP_RADIUS);
-	m->real_w = w * MINIMAP_TILE;
-	m->real_h = h * MINIMAP_TILE;
-	bar_w = WIDTH - GAME_W;
-	m->offset.x = GAME_W + (bar_w / 2) - (VISIBLE_SIZE / 2);
+	w *= MINIMAP_TILE;
+	h *= MINIMAP_TILE;
+	m->offset.x = GAME_W + ((WIDTH - GAME_W) / 2) - (VISIBLE_SIZE / 2);
 	m->offset.y = (HEIGHT / 2) - (VISIBLE_SIZE - 100);
 	m->cam_x = (int)(g->spider.pos.x * MINIMAP_TILE) - VISIBLE_SIZE / 2;
 	m->cam_y = (int)(g->spider.pos.y * MINIMAP_TILE) - VISIBLE_SIZE / 2;
-	clamp_camera(m);
+	m->cam_x = clamp_int(m->cam_x, 0, w - VISIBLE_SIZE);
+	m->cam_y = clamp_int(m->cam_y, 0, h - VISIBLE_SIZE);
 	draw_map_tiles(g);
 	draw_sprites_minimap(g);
 	draw_player_arrow(g, *m);

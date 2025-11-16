@@ -24,15 +24,15 @@ static int	show_sprite(t_game *g, t_sprite *sp)
 	{
 		if (sp->dist <= 5)
 		{
-			if (g->lives.mask_sprite.delay < g->timer)
+			if (g->live.mask_sprite.delay < g->timer)
 			{
-				g->lives.mask_sprite.delay = g->timer + 7;
+				g->live.mask_sprite.delay = g->timer + 7;
 				g->spider.spider_sense = 1;
 			}
-			if (g->lives.mask_sprite.delay == g->timer)
+			if (g->live.mask_sprite.delay == g->timer)
 			{
 				g->spider.spider_sense = !g->spider.spider_sense;
-				g->lives.mask_sprite.delay = g->timer + 7;
+				g->live.mask_sprite.delay = g->timer + 7;
 			}
 			return (1);
 		}

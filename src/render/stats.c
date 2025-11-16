@@ -71,20 +71,20 @@ static void	draw_lives(t_game *g)
 	sp.pos.x = GAME_W + 80;
 	sp.pos.y = 100;
 	sp.scale = 0.25;
-	draw_text(g, g->lives.spidermask_tex[g->spider.spider_sense], sp);
-	if (g->lives.lives_left > 1)
+	draw_text(g, g->live.spidermask_tex[g->spider.spider_sense], sp);
+	if (g->live.lives_left > 1)
 	{
 		sp.pos.x = GAME_W + 370;
 		sp.pos.y = 55;
 		sp.scale = 0.15;
-		draw_text(g, g->lives.spidermask_tex[0], sp);
+		draw_text(g, g->live.spidermask_tex[0], sp);
 	}
-	if (g->lives.lives_left > 2)
+	if (g->live.lives_left > 2)
 	{
 		sp.pos.x = GAME_W + 290;
 		sp.pos.y = 55;
 		sp.scale = 0.15;
-		draw_text(g, g->lives.spidermask_tex[0], sp);
+		draw_text(g, g->live.spidermask_tex[0], sp);
 	}
 }
 
@@ -112,4 +112,5 @@ void	render_stats(t_game *g)
 	sp.pos.x = GAME_W + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
 	put_score_text(g, sp.pos);
 	draw_lives(g);
+	draw_minimap(g);
 }

@@ -14,11 +14,11 @@
 
 static void	reset_player_after_death(t_game *g)
 {
-	if (g->lives.lives_left > 0)
+	if (g->live.lives_left > 0)
 	{
-		g->lives.lives_left--;
-		if (g->lives.lives_left >= 0)
-			g->lives.player_hp = 100;
+		g->live.lives_left--;
+		if (g->live.lives_left >= 0)
+			g->live.player_hp = 100;
 		else
 			ft_printf("GAME OVER 💀\n");
 	}
@@ -27,9 +27,9 @@ static void	reset_player_after_death(t_game *g)
 void	player_take_damage(t_game *g, t_sprite *lizard)
 {
 	lizard->state = ATTACKING;
-	g->lives.player_hp -= 5;
-	if (g->lives.player_hp < 0)
-		g->lives.player_hp = 0;
-	if (g->lives.player_hp <= 0)
+	g->live.player_hp -= 5;
+	if (g->live.player_hp < 0)
+		g->live.player_hp = 0;
+	if (g->live.player_hp <= 0)
 		reset_player_after_death(g);
 }

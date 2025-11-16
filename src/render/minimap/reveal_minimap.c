@@ -12,24 +12,6 @@
 
 #include "../../../inc/cub3d.h"
 
-void	free_revealed(t_minimap *m)
-{
-	int	i;
-
-	if (!m->revealed)
-		return ;
-	i = 0;
-	while (i < m->height)
-	{
-		free(m->revealed[i]);
-		i++;
-	}
-	free(m->revealed);
-	m->revealed = NULL;
-	m->width = 0;
-	m->height = 0;
-}
-
 static int	alloc_revealed_rows(t_minimap *m, int w, int h)
 {
 	int	i;
@@ -49,28 +31,17 @@ static int	alloc_revealed_rows(t_minimap *m, int w, int h)
 void	init_revealed_if_needed(t_minimap *m, int w, int h)
 {
 	int	fail_i;
-	int	j;
 
 	if (m->revealed && m->width == w && m->height == h)
 		return ;
 	if (m->revealed)
-		free_revealed(m);
+		ft_free_array((void ***)&m->revealed);
 	m->revealed = ft_calloc(h + 1, sizeof(char *));
 	if (!m->revealed)
 		return ;
 	fail_i = alloc_revealed_rows(m, w, h);
 	if (fail_i != -1)
-	{
-		j = 0;
-		while (j < fail_i)
-		{
-			free(m->revealed[j]);
-			j++;
-		}
-		free(m->revealed);
-		m->revealed = NULL;
-		return ;
-	}
+		return (ft_free_array((void ***)&m->revealed));
 	m->width = w;
 	m->height = h;
 }

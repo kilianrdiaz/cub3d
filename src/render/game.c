@@ -43,7 +43,6 @@ void	game(t_game *g)
 	render_map(g);
 	render_sprites(g);
 	draw_hand(g, GAME_W / 2);
-	draw_minimap(g);
 	render_stats(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	if (g->render_state != PLAYING)
