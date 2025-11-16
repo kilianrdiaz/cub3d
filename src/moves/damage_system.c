@@ -14,13 +14,13 @@
 
 static void	reset_player_after_death(t_game *g)
 {
-	if (g->live.lives_left > 0)
+	g->live.lives_left--;
+	if (g->live.lives_left > 1)
+		g->live.player_hp = 100;
+	else
 	{
-		g->live.lives_left--;
-		if (g->live.lives_left >= 0)
-			g->live.player_hp = 100;
-		else
-			ft_printf("GAME OVER 💀\n");
+		g->render_state = GAME_OVER;
+		g->timer = 0;
 	}
 }
 

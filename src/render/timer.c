@@ -62,6 +62,8 @@ void	update_timer(t_game *g)
 {
 	t_timeleft	t;
 
+	if (g->render_state != PLAYING)
+		return ;
 	t = get_time_left(g->timer, TIMER);
 	if (t.minutes == 0 && t.seconds == 0)
 	{
