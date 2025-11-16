@@ -55,9 +55,9 @@ void	draw_minimap(t_game *g)
 	int			h;
 	t_minimap	*m;
 
-	m = &g->minimap;
 	if (!g->map)
 		return ;
+	m = &g->minimap;
 	h = ft_memlen(g->map);
 	w = get_map_max_width(g->map);
 	if (!m->revealed || m->width != w || m->height != h)

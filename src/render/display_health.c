@@ -72,7 +72,7 @@ static void	bar_fill(t_game *g, t_sprite *live)
 /* ---- FONDO ---- */
 static void	bar_bg(t_game *g, t_sprite *live)
 {
-	t_pos pos;
+	t_pos	pos;
 
 	pos.y = -1;
 	while (++pos.y < live->height)

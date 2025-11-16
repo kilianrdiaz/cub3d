@@ -305,7 +305,7 @@ void				update_timer(t_game *g);
 void				render_stats(t_game *g);
 void				display_score_panel(t_game *g, t_tex score_panel,
 						char **scores);
-void					show_high_scores(t_game *g);
+void				show_high_scores(t_game *g);
 void				draw_health_bar(t_game *g);
 
 // minimap rendering
