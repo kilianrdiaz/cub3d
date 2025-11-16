@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stats.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 20:59:06 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/02 20:59:09 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/15 20:20:59 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,17 @@ static void	draw_text(t_game *g, t_tex tex, t_sprite sp)
 		p.x = -1;
 		while (++p.x < tex.width * sp.scale)
 		{
-			// Convertir coordenadas escaladas -> coordenadas reales de textura
 			src_pos.x = (int)(p.x / sp.scale);
 			src_pos.y = (int)(p.y / sp.scale);
-			// Proteger límites
 			if (src_pos.x < 0 || src_pos.x >= tex.width || src_pos.y < 0
 				|| src_pos.y >= tex.height)
 				continue ;
-			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x * (tex.bpp
-						/ 8));
+			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x
+					* (tex.bpp / 8));
 			tex.color = *(unsigned int *)src;
-			if ((tex.color & 0x00FFFFFF) != 0) // transparencia
-				put_pixel(g, (int)sp.pos.x + p.x, (int)sp.pos.y + p.y,
-					tex.color);
+			if ((tex.color & 0x00FFFFFF) != 0)
+				put_pixel(g, (int)sp.pos.x + p.x,
+					(int)sp.pos.y + p.y, tex.color);
 		}
 	}
 }
@@ -66,11 +64,36 @@ void	draw_panel_separator(t_game *g)
 	}
 }
 
+static void	draw_lives(t_game *g)
+{
+	t_sprite	sp;
+
+	sp.pos.x = GAME_W + 80;
+	sp.pos.y = 100;
+	sp.scale = 0.25;
+	draw_text(g, g->live.spidermask_tex[g->spider.spider_sense], sp);
+	if (g->live.lives_left > 1)
+	{
+		sp.pos.x = GAME_W + 370;
+		sp.pos.y = 55;
+		sp.scale = 0.15;
+		draw_text(g, g->live.spidermask_tex[0], sp);
+	}
+	if (g->live.lives_left > 2)
+	{
+		sp.pos.x = GAME_W + 290;
+		sp.pos.y = 55;
+		sp.scale = 0.15;
+		draw_text(g, g->live.spidermask_tex[0], sp);
+	}
+}
+
 void	render_stats(t_game *g)
 {
 	t_sprite	sp;
 	char		*str;
 
+	draw_health_bar(g);
 	draw_panel_separator(g);
 	sp.pos.x = GAME_W + 150;
 	sp.pos.y = HEIGHT - 300;
@@ -88,4 +111,6 @@ void	render_stats(t_game *g)
 	sp.pos.y += g->font.char_h * g->font.scale + 10;
 	sp.pos.x = GAME_W + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
 	put_score_text(g, sp.pos);
+	draw_lives(g);
+	draw_minimap(g);
 }

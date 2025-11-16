@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/29 21:38:25 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/10/29 21:46:11 by kroyo-di         ###   ########.fr       */
+/*   Created: 2025/11/09 16:03:03 by kroyo-di          #+#    #+#             */
+/*   Updated: 2025/11/15 20:20:13 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,56 +14,74 @@
 
 static int	show_sprite(t_game *g, t_sprite *sp)
 {
-	double	dist;
-
-	if (!sp || sp->state == DEFUSED)
+	if (!sp)
 		return (0);
-	if (sp->type != LIZARD)
+	if (sp->dist <= 5)
+		sp->found = 1;
+	if (sp->type == BOMB && sp->state != DEFUSED && sp->found)
 		return (1);
-	dist = sqrt(pow(g->spider.pos.x - sp->pos.x, 2) + pow(g->spider.pos.y
-				- sp->pos.y, 2));
-	if (dist <= 5)
-		return (1);
+	if (sp->type == LIZARD)
+	{
+		if (sp->dist <= 5)
+		{
+			if (g->live.mask_sprite.delay < g->timer)
+			{
+				g->live.mask_sprite.delay = g->timer + 7;
+				g->spider.spider_sense = 1;
+			}
+			if (g->live.mask_sprite.delay == g->timer)
+			{
+				g->spider.spider_sense = !g->spider.spider_sense;
+				g->live.mask_sprite.delay = g->timer + 7;
+			}
+			return (1);
+		}
+		g->spider.spider_sense = 0;
+	}
 	return (0);
+}
+
+static int	in_bounds(int sx, int sy, t_minimap *m)
+{
+	if (sx < m->offset.x || sx > m->offset.x + MINIMAP_SIZE_LIMIT)
+		return (0);
+	if (sy < m->offset.y || sy > m->offset.y + MINIMAP_SIZE_LIMIT)
+		return (0);
+	return (1);
 }
 
 static void	draw_single_sprite(t_game *g, t_sprite *sp, unsigned int color)
 {
+	t_minimap	*m;
 	t_sprite	r;
-	t_pos		offset;
-	int			size_title;
+	t_pos		src;
+	int			ts;
 
 	if (!show_sprite(g, sp))
 		return ;
-	if (!g->minimap.revealed || sp->pos.x < 0 || sp->pos.y < 0
-		|| sp->pos.x >= g->minimap.width || sp->pos.y >= g->minimap.height
-		|| !g->minimap.revealed[(int)sp->pos.y][(int)sp->pos.x])
+	m = &g->minimap;
+	ts = MINIMAP_TILE;
+	src.x = m->offset.x + (int)(sp->pos.x * ts + ts / 2) - m->cam_x;
+	src.y = m->offset.y + (int)(sp->pos.y * ts + ts / 2) - m->cam_y;
+	if (!in_bounds(src.x, src.y, m))
 		return ;
-	offset.x = g->minimap.offset.x;
-	offset.y = g->minimap.offset.y;
-	size_title = g->minimap.tile_size;
-	r.pos.x = offset.x + (int)(sp->pos.x * size_title + size_title / 2);
-	r.pos.y = offset.y + (int)(sp->pos.y * size_title + size_title / 2);
-	r.width = (int)(size_title * 0.5);
+	r.width = ts * 0.5;
 	if (r.width < 2)
 		r.width = 2;
 	r.height = r.width;
-	r.pos.x -= r.width / 2;
-	r.pos.y -= r.height / 2;
+	r.pos.x = src.x - r.width / 2;
+	r.pos.y = src.y - r.height / 2;
 	put_rect(g, r, color);
 }
 
 void	draw_sprites_minimap(t_game *g)
 {
-	int				i;
-	unsigned int	color;
+	int	i;
 
 	i = -1;
-	color = COL_BOMB;
 	while (g->bombs && g->bombs[++i])
-		draw_single_sprite(g, g->bombs[i], color);
+		draw_single_sprite(g, g->bombs[i], COL_BOMB);
 	i = -1;
-	color = COL_LIZARD;
 	while (g->lizards && g->lizards[++i])
-		draw_single_sprite(g, g->lizards[i], color);
+		draw_single_sprite(g, g->lizards[i], COL_LIZARD);
 }

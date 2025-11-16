@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lizards.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 22:34:04 by alejhern          #+#    #+#             */
-/*   Updated: 2025/10/16 15:29:20 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/15 20:17:45 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	move_lizard_to(t_game *g, t_sprite *l, t_coords move)
 			g->bombs[x]->state = ACTIVE;
 	}
 	l->pos = move;
-	l->delay = g->timer + 5;
+	l->delay = g->timer + 10;
 	return (1);
 }
 
@@ -65,13 +65,13 @@ static double	get_move_speed(double diff)
 		return (-MOVE_SPEED_LIZARD);
 }
 
-static void	chase_lizard(t_game *g, t_sprite *l, t_spidy *p)
+static void	chase_lizard(t_game *g, t_sprite *l, t_coords spider)
 {
 	t_coords	diff;
 	t_coords	direction;
 
-	diff.x = p->pos.x - l->pos.x;
-	diff.y = p->pos.y - l->pos.y;
+	diff.x = spider.x - l->pos.x;
+	diff.y = spider.y - l->pos.y;
 	direction.x = 0;
 	direction.y = 0;
 	if (fabs(diff.x) > fabs(diff.y))
@@ -94,7 +94,6 @@ static void	chase_lizard(t_game *g, t_sprite *l, t_spidy *p)
 void	move_lizards(t_game *g)
 {
 	t_sprite	*l;
-	double		dist;
 	int			i;
 
 	i = -1;
@@ -108,12 +107,12 @@ void	move_lizards(t_game *g)
 		else if (l->state == MOVING || (l->state == ATTACKED
 				&& g->timer >= l->delay))
 			l->state = ACTIVE;
-		dist = (fabs(l->pos.x - g->spider.pos.x) + fabs(l->pos.y
+		l->dist = (fabs(l->pos.x - g->spider.pos.x) + fabs(l->pos.y
 					- g->spider.pos.y));
-		if (dist <= 1.1)
-			l->state = ATTACKING;
-		if (dist <= DETECT_RADIUS)
-			chase_lizard(g, l, &g->spider);
+		if (l->dist <= 1.1)
+			player_take_damage(g, l);
+		if (l->dist <= DETECT_RADIUS)
+			chase_lizard(g, l, g->spider.pos);
 		else
 			patrol_lizard(g, l);
 	}

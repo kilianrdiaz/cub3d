@@ -5,12 +5,21 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/29 21:38:07 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/10/29 21:47:53 by kroyo-di         ###   ########.fr       */
+/*   Created: 2025/11/09 16:00:05 by kroyo-di          #+#    #+#             */
+/*   Updated: 2025/11/15 20:20:09 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/cub3d.h"
+
+static int	is_outside(int sx, int sy, t_minimap *m, int ts)
+{
+	if (sx + ts < m->offset.x || sx > m->offset.x + VISIBLE_SIZE)
+		return (1);
+	if (sy + ts < m->offset.y || sy > m->offset.y + VISIBLE_SIZE)
+		return (1);
+	return (0);
+}
 
 void	put_rect(t_game *g, t_sprite r, unsigned int color)
 {
@@ -48,17 +57,25 @@ void	draw_border(t_game *g, t_sprite r, unsigned int color)
 	}
 }
 
-void	draw_tile(t_game *g, t_pos tile)
+void	draw_tile(t_game *g, t_pos t)
 {
+	int			sx;
+	int			sy;
 	t_sprite	r;
+	t_minimap	*m;
 
-	r.pos.x = g->minimap.offset.x + tile.x * g->minimap.tile_size;
-	r.pos.y = g->minimap.offset.y + tile.y * g->minimap.tile_size;
-	r.width = g->minimap.tile_size;
-	r.height = g->minimap.tile_size;
-	if (!g->minimap.revealed || !g->minimap.revealed[tile.y][tile.x])
+	m = &g->minimap;
+	r.width = MINIMAP_TILE;
+	r.height = MINIMAP_TILE;
+	sx = m->offset.x + t.x * MINIMAP_TILE - m->cam_x;
+	sy = m->offset.y + t.y * MINIMAP_TILE - m->cam_y;
+	if (is_outside(sx, sy, m, MINIMAP_TILE))
+		return ;
+	r.pos.x = sx;
+	r.pos.y = sy;
+	if (!m->revealed || !m->revealed[t.y][t.x])
 		put_rect(g, r, COL_UNK_FOG);
-	else if (g->map[tile.y][tile.x] == '1')
+	else if (g->map[t.y][t.x] == '1')
 	{
 		put_rect(g, r, COL_WALL);
 		draw_border(g, r, COL_WALL_BORDER);

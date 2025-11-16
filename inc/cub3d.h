@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/10/29 21:48:16 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/15 21:04:09 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@
 # define GAME_W 1400
 # define GAME_HEIGHT 960
 
-# define MINIMAP_PLAYER_SIZE 10 // 🔹 radio del punto del jugador
+# define MINIMAP_PLAYER_SIZE 10
+# define VISIBLE_SIZE 300
 
 # define SCALE_SPRITE 2.0
 
@@ -42,10 +43,19 @@
 # define COL_BOMB 0xFFB84D
 # define COL_LIZARD 0x5AFF7A
 
+# define COL_BORDER 0xFFB0B0B0
+# define COL_HIGHLIGHT 0xFFFFFFFF
+# define COL_FILL 0xFFA00000
+# define COL_FILL_MID 0xFF800000
+# define COL_FILL_DARK 0xFF500000
+# define COL_SHADE 0xFF707070
+# define COL_BAR_BG 0xFF202020
+
 # define REVEAL_STEP_RADIUS 3
 # define MINIMAP_SIZE_LIMIT 500
-# define MINIMAP_OFFSET_X (WIDTH - MINIMAP_SIZE_LIMIT - 20)
-# define MINIMAP_OFFSET_Y 250
+# define MINIMAP_OFFSET_X (WIDTH - MINIMAP_SIZE_LIMIT + 80)
+# define MINIMAP_OFFSET_Y 200
+# define MINIMAP_TILE 20
 
 # define TIMER 125
 # define TEXT_DURATION 60.0
@@ -156,10 +166,12 @@ typedef struct s_sprite
 {
 	t_coords		pos;
 	t_coords		trans;
+	double			dist;
 	double			inv_det;
 	int				width;
 	int				height;
 	int				screen_x;
+	int				found;
 	unsigned int	delay;
 	double			scale;
 	t_state			state;
@@ -174,15 +186,25 @@ typedef struct s_spidy
 	double			move_accum;
 	t_tex			*hand;
 	t_state			state;
+	int				spider_sense;
 }					t_spidy;
+
+typedef struct s_lives
+{
+	int				lives_left;
+	t_tex			*spidermask_tex;
+	t_sprite		mask_sprite;
+	int				player_hp;
+}					t_lives;
 
 typedef struct s_minimap
 {
 	char			**revealed;
 	int				width;
 	int				height;
-	int				tile_size;
 	t_pos			offset;
+	int				cam_x;
+	int				cam_y;
 }					t_minimap;
 
 typedef struct s_game
@@ -213,6 +235,7 @@ typedef struct s_game
 	unsigned int	score;
 	void			*audio;
 	void			(*game_loop)(void *);
+	t_lives			live;
 }					t_game;
 
 typedef struct s_ray
@@ -240,7 +263,7 @@ int					clamp_int(int v, int a, int b);
 unsigned int		get_pixel_color(t_tex tex, int x, int y);
 void				put_pixel(t_game *g, int x, int y, int color);
 void				clean_screen(t_game *g);
-void				recalc_sprite_scale(t_game *g, t_sprite *sp, double dist);
+void				recalc_sprite_scale(t_game *g, t_sprite *sp);
 t_tex				get_texture_wall(t_game g, t_ray ray, int dist);
 t_sprite			**get_sprites(t_game g);
 void				calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex,
@@ -251,6 +274,7 @@ char				**get_scores(void);
 int					get_position(t_game *g, char **scores);
 t_sprite			*print_alphabet(t_game *game);
 void				update_scores(char **scores, int position);
+int					lizard_on_player(t_game *g);
 
 // parsing
 int					check_files_extension(int argc, char **argv);
@@ -259,6 +283,7 @@ void				load_map_textures(t_game *g, char **content);
 char				**get_map(char **content);
 void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
+int					get_map_max_width(char **map);
 
 // rendering
 void				game(t_game *g);
@@ -266,6 +291,7 @@ int					render(t_game *g);
 void				update_bombs(t_game *g);
 void				draw_hand(t_game *g, int x);
 void				render_sprites(t_game *g);
+void				render_char(t_game *g, char c, t_coords coords);
 void				render_text(t_game *g, char *str, t_coords coords);
 void				load_font(t_game *g, t_font *f, char *path);
 void				load_level(t_game *g);
@@ -280,6 +306,7 @@ void				render_stats(t_game *g);
 void				display_score_panel(t_game *g, t_tex score_panel,
 						char **scores);
 void				show_high_scores(t_game *g);
+void				draw_health_bar(t_game *g);
 
 // minimap rendering
 void				draw_minimap(t_game *g);
@@ -287,6 +314,7 @@ void				draw_sprites_minimap(t_game *g);
 void				draw_player_arrow(t_game *g, t_minimap m);
 void				put_rect(t_game *g, t_sprite r, unsigned int color);
 void				draw_tile(t_game *g, t_pos tile);
+void				init_revealed_if_needed(t_minimap *m, int w, int h);
 
 // input
 int					key_press(int key, t_game *g);
@@ -300,5 +328,6 @@ char				*set_name(t_game *g, t_sprite *alphabet, t_ray ray);
 
 void				free_level(t_game *g);
 void				close_program(t_game *g);
+void				player_take_damage(t_game *g, t_sprite *lizard);
 
 #endif

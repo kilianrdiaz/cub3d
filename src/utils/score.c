@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   score.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 18:19:03 by alejhern          #+#    #+#             */
-/*   Updated: 2025/10/19 20:49:23 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/15 21:06:23 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,8 @@ t_sprite	*print_alphabet(t_game *game)
 	x = 'A' - 1;
 	while (++x <= 'Z' && ++index < 26)
 	{
-		alphabet[index].pos = (t_coords){pos.x, pos.y};
-		render_text(game, &x, alphabet[index].pos);
+		alphabet[index].pos = pos;
+		render_char(game, x, alphabet[index].pos);
 		pos.x += game->font.char_w * game->font.scale + 10;
 		if ((x - 'A' + 1) % 9 == 0)
 		{

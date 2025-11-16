@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 13:56:50 by alejhern          #+#    #+#             */
-/*   Updated: 2025/10/19 20:47:55 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/15 19:57:32 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ t_sprite	**get_sprites(t_game g)
 	return (sprites);
 }
 
-void	recalc_sprite_scale(t_game *g, t_sprite *sp, double dist)
+void	recalc_sprite_scale(t_game *g, t_sprite *sp)
 {
 	int		base_scale;
 	double	target_scale;
@@ -91,9 +91,9 @@ void	recalc_sprite_scale(t_game *g, t_sprite *sp, double dist)
 	max_dist = VIEW_BOMB;
 	if (sp->type == LIZARD)
 		max_dist = DETECT_RADIUS;
-	dist = sqrt(pow(g->spider.pos.x - sp->pos.x, 2) + pow(g->spider.pos.y
+	sp->dist = sqrt(pow(g->spider.pos.x - sp->pos.x, 2) + pow(g->spider.pos.y
 				- sp->pos.y, 2));
-	if (dist > max_dist)
+	if (sp->dist > max_dist)
 	{
 		sp->scale += (0.0 - sp->scale) * LERP_SPEED;
 		if (sp->scale < 0.01)
@@ -103,7 +103,7 @@ void	recalc_sprite_scale(t_game *g, t_sprite *sp, double dist)
 	base_scale = 1;
 	if (sp->type == LIZARD)
 		base_scale = 2;
-	int_dist = (int)(dist + 0.5);
+	int_dist = (int)(sp->dist + 0.5);
 	target_scale = base_scale + (max_dist - int_dist) * 0.2;
 	if (target_scale < base_scale)
 		target_scale = base_scale;
