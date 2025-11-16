@@ -12,6 +12,8 @@
 
 #include "../../inc/cub3d.h"
 
+#define DAMAGE_AMOUNT 5
+
 static void	reset_player_after_death(t_game *g)
 {
 	g->live.lives_left--;
@@ -27,7 +29,7 @@ static void	reset_player_after_death(t_game *g)
 void	player_take_damage(t_game *g, t_sprite *lizard)
 {
 	lizard->state = ATTACKING;
-	g->live.player_hp -= 5;
+	g->live.player_hp -= DAMAGE_AMOUNT;
 	if (g->live.player_hp < 0)
 		g->live.player_hp = 0;
 	if (g->live.player_hp <= 0)
