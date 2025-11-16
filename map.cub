@@ -11,5 +11,6 @@
 WE ./textures/wall.xpm
 SO ./textures/wall.xpm
 EA ./textures/wall.xpm
+NO ./textures/wall.xpm
 F ./textures/floor.xpm
 C ./textures/ceiling.xpm
