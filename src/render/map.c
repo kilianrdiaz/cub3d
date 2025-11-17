@@ -12,6 +12,31 @@
 
 #include "../../inc/cub3d.h"
 
+#define FADE 3
+#define CUTOFF 8
+
+static unsigned int	apply_darkness(unsigned int color, double dist)
+{
+	unsigned char	rgb[3];
+	double			t;
+	double			factor;
+
+	if (dist >= CUTOFF)
+		return (0x000000);
+	if (dist <= FADE)
+		return (color);
+	t = (dist - FADE) / (CUTOFF - FADE);
+	if (t < 0)
+		t = 0;
+	if (t > 1)
+		t = 1;
+	factor = 1.0 - t;
+	rgb[0] = ((color >> 16) & 0xFF) * factor;
+	rgb[1] = ((color >> 8) & 0xFF) * factor;
+	rgb[2] = (color & 0xFF) * factor;
+	return ((rgb[0] << 16) | (rgb[1] << 8) | rgb[2]);
+}
+
 static void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 {
 	int				x;
@@ -25,16 +50,16 @@ static void	draw_floor_and_ceiling(t_game *g, t_ray *ray, int y)
 		map.y = (int)ray->side_dist.y;
 		ray->src.x = (int)((ray->side_dist.x - map.x) * g->map_text[F].width);
 		ray->src.y = (int)((ray->side_dist.y - map.y) * g->map_text[F].height);
-		/* clamp por si hay rounding negativo/extraño */
 		ray->src.x = clamp_int(ray->src.x, 0, g->map_text[F].width - 1);
 		ray->src.y = clamp_int(ray->src.y, 0, g->map_text[F].height - 1);
 		color = get_pixel_color(g->map_text[F], ray->src.x, ray->src.y);
+		color = apply_darkness(color, ray->row_distance);
 		put_pixel(g, x, y, color);
-		/* techo espejo */
 		ray->delta_dist.x = clamp_int(ray->src.x, 0, g->map_text[C].width - 1);
 		ray->delta_dist.y = clamp_int(ray->src.y, 0, g->map_text[C].height - 1);
 		color = get_pixel_color(g->map_text[C], ray->delta_dist.x,
 				ray->delta_dist.y);
+		color = apply_darkness(color, ray->row_distance);
 		put_pixel(g, x, HEIGHT - y - 1, color);
 		ray->side_dist.x += ray->coords.x;
 		ray->side_dist.y += ray->coords.y;
@@ -55,6 +80,7 @@ static void	draw_wall_stripe(t_game *g, t_ray *ray, t_tex tex, int x)
 		ray->src.y = ((d * tex.height) / ray->line_height) / 256;
 		ray->src.y = clamp_int(ray->src.y, 0, tex.height - 1);
 		color = get_pixel_color(tex, ray->src.x, ray->src.y);
+		color = apply_darkness(color, ray->row_distance);
 		put_pixel(g, x, y, color);
 	}
 }
@@ -84,7 +110,7 @@ static void	render_walls(t_game *g)
 		tex = get_texture_wall(*g, ray, side);
 		calculate_wall_stripe(*g, &ray, tex, side);
 		draw_wall_stripe(g, &ray, tex, x);
-		g->zbuffer[x] = ray.row_distance; // Guardamos la distancia del rayo
+		g->zbuffer[x] = ray.row_distance;
 	}
 }
 
