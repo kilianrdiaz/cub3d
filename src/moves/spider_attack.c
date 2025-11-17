@@ -21,7 +21,7 @@ void	update_bombs(t_game *g)
 		return ;
 	while (g->bombs[++i])
 	{
-		if (g->bombs[i]->state == ATTACKED)
+		if (g->bombs[i]->state == ATTACKED && g->bombs[i]->delay <= g->timer)
 		{
 			g->bombs[i]->state = DEFUSED;
 			printf("Bomb at (%.1f, %.1f) has been defused.\n",
@@ -72,6 +72,7 @@ static int	check_if_is_bomb(t_game *g, int x, int y)
 		if (t.x == x && t.y == y)
 		{
 			g->bombs[i]->state = ATTACKED;
+			g->bombs[i]->delay = g->timer + 2;
 			g->keys.space = 0;
 			ft_printf("Bomb attacked at (%d,%d)\n", t.x, t.y);
 			return (1);

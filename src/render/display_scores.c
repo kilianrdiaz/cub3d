@@ -17,7 +17,7 @@
 static int	close_high_scores(int keycode, t_game *g)
 {
 	(void)keycode;
-	if (g->render_state == HIGH_SCORE)
+	if (g->timer > 30)
 	{
 		g->render_state = END;
 		ft_bzero(&g->keys, sizeof(t_keys));
@@ -101,5 +101,6 @@ void	display_score_panel(t_game *g, t_tex score_panel, char **scores)
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	if (score_panel.img)
 		mlx_destroy_image(g->mlx, score_panel.img);
+	g->timer++;
 	mlx_key_hook(g->win, close_high_scores, g);
 }

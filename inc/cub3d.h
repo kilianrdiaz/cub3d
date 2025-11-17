@@ -28,6 +28,8 @@
 # define VISIBLE_SIZE 300
 
 # define SCALE_SPRITE 2.0
+# define SCALE_BOMB 1.2
+# define SCALE_LIZARD 1.5
 
 # define MOVE_SPEED 0.1
 # define ROT_SPEED 0.1

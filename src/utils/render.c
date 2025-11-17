@@ -83,7 +83,7 @@ t_sprite	**get_sprites(t_game g)
 
 void	recalc_sprite_scale(t_game *g, t_sprite *sp)
 {
-	int		base_scale;
+	double	base_scale;
 	double	target_scale;
 	int		max_dist;
 	int		int_dist;
@@ -100,9 +100,9 @@ void	recalc_sprite_scale(t_game *g, t_sprite *sp)
 			sp->scale = 0.0;
 		return ;
 	}
-	base_scale = 1;
+	base_scale = SCALE_BOMB;
 	if (sp->type == LIZARD)
-		base_scale = 2;
+		base_scale = SCALE_LIZARD;
 	int_dist = (int)(sp->dist + 0.5);
 	target_scale = base_scale + (max_dist - int_dist) * 0.2;
 	if (target_scale < base_scale)

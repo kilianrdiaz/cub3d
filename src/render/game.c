@@ -48,9 +48,9 @@ void	game(t_game *g)
 	if (g->render_state != PLAYING)
 		return ;
 	move_lizards(g);
+	if (g->spider.state == ATTACKING)
+		spider_attack(g);
 	update_player_position(g);
 	update_timer(g);
 	update_bombs(g);
-	if (g->spider.state == ATTACKING)
-		spider_attack(g);
 }
