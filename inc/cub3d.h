@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 21:04:09 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/24 19:18:21 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -330,6 +330,7 @@ char				*set_name(t_game *g, t_sprite *alphabet, t_ray ray);
 
 void				free_level(t_game *g);
 void				close_program(t_game *g);
+int					close_window(t_game *g);
 void				player_take_damage(t_game *g, t_sprite *lizard);
 
 #endif

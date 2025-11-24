@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:03:30 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 20:52:53 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/24 19:17:55 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ int	main(int argc, char **argv)
 	ft_bzero(&g.keys, sizeof(t_keys));
 	mlx_hook(g.win, 2, 1L << 0, key_press, &g);
 	mlx_hook(g.win, 3, 1L << 1, key_release, &g);
+	mlx_hook(g.win, 17, 0, close_window, &g);
 	g.game_loop = game_loop;
 	unset_colors_textures(g.map_text);
 	mlx_loop_hook(g.mlx, render, &g);

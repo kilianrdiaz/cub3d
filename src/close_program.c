@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   close_program.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/16 19:29:32 by alejhern          #+#    #+#             */
-/*   Updated: 2025/10/16 19:29:37 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/24 19:17:41 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,12 @@ void	free_level(t_game *g)
 	ft_free_array((void ***)&g->lizards);
 	ft_free_array((void ***)&g->map);
 	ft_free_array((void ***)&g->minimap.revealed);
+}
+
+int	close_window(t_game *g)
+{
+	close_program(g);
+	return (0);
 }
 
 void	close_program(t_game *g)
