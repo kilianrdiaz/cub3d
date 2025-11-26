@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/24 19:18:21 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/26 21:45:40 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@
 
 # define REVEAL_STEP_RADIUS 3
 # define MINIMAP_SIZE_LIMIT 500
-# define MINIMAP_OFFSET_X (WIDTH - MINIMAP_SIZE_LIMIT + 80)
+# define MINIMAP_OFFSET_X 1500
 # define MINIMAP_OFFSET_Y 200
 # define MINIMAP_TILE 20
 
@@ -283,6 +283,7 @@ int					check_files_extension(int argc, char **argv);
 void				get_info_file(t_game *g);
 void				load_map_textures(t_game *g, char **content);
 char				**get_map(char **content);
+int					check_player_count(char **map);
 void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
 int					get_map_max_width(char **map);

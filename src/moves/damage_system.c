@@ -6,13 +6,13 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 20:25:37 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 20:18:24 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/24 19:36:45 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/cub3d.h"
 
-#define DAMAGE_AMOUNT 5
+#define DAMAGE_AMOUNT 20
 
 static void	reset_player_after_death(t_game *g)
 {

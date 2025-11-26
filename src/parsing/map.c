@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 19:20:58 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/15 16:32:14 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/26 21:49:35 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #define NO_CLOSE "Error: Map is not closed/surrounded by walls"
 #define NO_MAP "Error: Could not load map"
+#define MULTI_PLAYER "Error: Found more than 1 player"
 
 static int	is_map_str(char *s)
 {
@@ -121,9 +122,12 @@ char	**get_map(char **content)
 		ft_append_array((void ***)&map, line);
 		i++;
 	}
-	if (map && !is_map_closed(map))
+	if (map && (!is_map_closed(map) || !check_player_count(map)))
 	{
-		ft_putendl_fd(NO_CLOSE, 2);
+		if (!check_player_count(map))
+			ft_putendl_fd(MULTI_PLAYER, 2);
+		else
+			ft_putendl_fd(NO_CLOSE, 2);
 		ft_free_array((void ***)&map);
 	}
 	return (map);
