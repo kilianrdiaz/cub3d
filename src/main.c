@@ -32,16 +32,6 @@ static void	game_loop(void *param)
 		close_program(g);
 }
 
-static void	unset_colors_textures(t_tex *map_text)
-{
-	map_text[NO].color = COLOR_NONE;
-	map_text[SO].color = COLOR_NONE;
-	map_text[WE].color = COLOR_NONE;
-	map_text[EA].color = COLOR_NONE;
-	map_text[F].color = COLOR_NONE;
-	map_text[C].color = COLOR_NONE;
-}
-
 static void	load_sprite_textures(t_game *g)
 {
 	g->spider.hand = ft_calloc(sizeof(t_tex), sizeof(t_state));
@@ -71,6 +61,31 @@ static void	load_sprite_textures(t_game *g)
 		"./textures/spidermask_danger.xpm");
 }
 
+static void	prepare_game(t_game *g)
+{
+	load_sprite_textures(g);
+	load_font(g, &g->font, "./textures/font.xpm");
+	g->map_text = ft_calloc(sizeof(t_tex), 6);
+	if (!g->map_text)
+		ft_error_exit("Error: Memory allocation failed for map textures\n");
+	g->map_text[NO].color = COLOR_NONE;
+	g->map_text[SO].color = COLOR_NONE;
+	g->map_text[WE].color = COLOR_NONE;
+	g->map_text[EA].color = COLOR_NONE;
+	g->map_text[F].color = COLOR_NONE;
+	g->map_text[C].color = COLOR_NONE;
+	g->live.player_hp = 100;
+	g->live.lives_left = 3;
+	ft_bzero(&g->keys, sizeof(t_keys));
+	mlx_hook(g->win, 2, 1L << 0, key_press, g);
+	mlx_hook(g->win, 3, 1L << 1, key_release, g);
+	mlx_hook(g->win, 17, 0, close_window, g);
+	mlx_hook(g->win, 6, 1L << 6, mouse_rotation, g);
+	mlx_mouse_hide(g->mlx, g->win);
+	mlx_mouse_move(g->mlx, g->win, WIDTH / 2, HEIGHT / 2);
+	g->game_loop = game_loop;
+}
+
 static void	create_mlx_window(t_game *g)
 {
 	g->mlx = mlx_init();
@@ -94,22 +109,7 @@ int	main(int argc, char **argv)
 		return (1);
 	g.levels = argv;
 	create_mlx_window(&g);
-	g.map_text = ft_calloc(sizeof(t_tex), 6);
-	if (!g.map_text)
-		ft_error_exit("Error: Memory allocation failed for map textures\n");
-	load_sprite_textures(&g);
-	load_font(&g, &g.font, "./textures/font.xpm");
-	g.live.player_hp = 100;
-	g.live.lives_left = 3;
-	ft_bzero(&g.keys, sizeof(t_keys));
-	mlx_hook(g.win, 2, 1L << 0, key_press, &g);
-	mlx_hook(g.win, 3, 1L << 1, key_release, &g);
-	mlx_hook(g.win, 17, 0, close_window, &g);
-	mlx_hook(g.win, 6, 1L << 6, mouse_rotation, &g);
-	mlx_mouse_hide(g.mlx, g.win);
-	mlx_mouse_move(g.mlx, g.win, WIDTH / 2, HEIGHT / 2);
-	g.game_loop = game_loop;
-	unset_colors_textures(g.map_text);
+	prepare_game(&g);
 	mlx_loop_hook(g.mlx, render, &g);
 	mlx_loop(g.mlx);
 	close_program(&g);
