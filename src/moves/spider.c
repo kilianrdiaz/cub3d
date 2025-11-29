@@ -12,6 +12,8 @@
 
 #include "../inc/cub3d.h"
 
+#define SAFETY_OFFSET 0.2
+
 static int	is_walkable(int x, int y, char **map)
 {
 	if (y < 0 || x < 0 || !map[y] || x >= (int)ft_strlen(map[y]))
@@ -21,32 +23,33 @@ static int	is_walkable(int x, int y, char **map)
 	return (1);
 }
 
-static void	move_player(t_game *g, double dir)
+static double	move_player(t_game *g, double dir)
 {
 	t_coords	new_pos;
+	t_coords	check_pos;
 	double		distance;
 
 	new_pos.x = g->spider.pos.x + g->spider.dir.x * dir;
 	new_pos.y = g->spider.pos.y + g->spider.dir.y * dir;
 	distance = sqrt(pow(new_pos.x - g->spider.pos.x, 2) + pow(new_pos.y
 				- g->spider.pos.y, 2));
-	// Movimiento diagonal: revisar esquinas
-	if ((int)new_pos.x != (int)g->spider.pos.x
-		&& (int)new_pos.y != (int)g->spider.pos.y)
-		if (!is_walkable((int)new_pos.x, (int)g->spider.pos.y, g->map)
-			&& !is_walkable((int)g->spider.pos.x, (int)new_pos.y, g->map))
-			return ;
-	if (!is_walkable((int)new_pos.x, (int)new_pos.y, g->map))
-		return ;
+	if (dir > 0)
+		dir += SAFETY_OFFSET;
+	else if (dir < 0)
+		dir -= SAFETY_OFFSET;
+	check_pos.x = g->spider.pos.x + g->spider.dir.x * dir;
+	check_pos.y = g->spider.pos.y + g->spider.dir.y * dir;
+	if ((int)check_pos.x != (int)g->spider.pos.x
+		&& (int)check_pos.y != (int)g->spider.pos.y)
+	{
+		if (!is_walkable((int)check_pos.x, (int)g->spider.pos.y, g->map)
+			&& !is_walkable((int)g->spider.pos.x, (int)check_pos.y, g->map))
+			return (0);
+	}
+	if (!is_walkable((int)check_pos.x, (int)check_pos.y, g->map))
+		return (0);
 	g->spider.pos = new_pos;
-	g->spider.move_accum += distance;
-	if (g->spider.move_accum < 0.40)
-		return ;
-	if (g->spider.state == ACTIVE)
-		g->spider.state = MOVING;
-	else if (g->spider.state == MOVING)
-		g->spider.state = ACTIVE;
-	g->spider.move_accum = 0.0;
+	return (distance);
 }
 
 static void	rotate_spidy(t_spidy *spidy, double angle)
@@ -93,11 +96,18 @@ void	update_player_position(t_game *g)
 	if (g->keys.d)
 		rotate_spidy(&g->spider, ROT_SPEED);
 	if (g->keys.w)
-		move_player(g, MOVE_SPEED);
+		g->spider.move_accum += move_player(g, MOVE_SPEED);
 	if (g->keys.s)
-		move_player(g, -MOVE_SPEED);
+		g->spider.move_accum += move_player(g, -MOVE_SPEED);
 	if (g->keys.space)
 		g->spider.state = ATTACKING;
 	else if (g->spider.state == ATTACKING)
 		g->spider.state = ACTIVE;
+	if (g->spider.move_accum < 0.40)
+		return ;
+	if (g->spider.state == ACTIVE)
+		g->spider.state = MOVING;
+	else if (g->spider.state == MOVING)
+		g->spider.state = ACTIVE;
+	g->spider.move_accum = 0.0;
 }
