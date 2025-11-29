@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 16:47:00 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/29 20:17:01 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/29 20:32:01 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #define O_FAILED "Error: Could not open file %s\n"
 #define R_FAILED "Error: Could not read %s content\n"
 #define NO_BOMBS "Warning: No bombs found in the map %s\n"
+#define MAP_INVALID "Error: Invalid map in %s\n"
 
 static int	check_map_at_end(char **content)
 {
@@ -84,12 +85,12 @@ void	get_info_file(t_game *g)
 	if (fd == -1)
 		return (set_error_parsing(g, O_FAILED, *g->levels));
 	content = read_file(fd);
-	if (!content || !check_map_at_end(content))
+	if (!content)
 		return (set_error_parsing(g, R_FAILED, *g->levels));
 	load_map_textures(g, content);
 	g->map = get_map(content);
-	if (!g->map)
-		return (set_error_parsing(g, NULL, NULL));
+	if (!g->map  || !check_map_at_end(content))
+		return (set_error_parsing(g, MAP_INVALID, *g->levels));
 	ft_free_array((void ***)&content);
 	close(fd);
 	create_spiderman(g);
