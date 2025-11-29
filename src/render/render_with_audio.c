@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/16 13:56:22 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/10 15:41:27 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/29 16:00:08 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,6 @@ static void	game_effects(t_game *g, t_audio *audio)
 	i = -1;
 	while (sprites && sprites[++i])
 	{
-		if ((sprites[i]->type == LIZARD && sprites[i]->state == ATTACKING)
-			|| (sprites[i]->type == BOMB && sprites[i]->state == ATTACKED))
-		{
-			ma_sound_stop(&audio->bomb);
-			ma_sound_stop(&audio->lizard);
-		}
 		if (sprites[i]->type == LIZARD && sprites[i]->state == ATTACKING)
 			ma_sound_start(&audio->lizard);
 		if (sprites[i]->type == BOMB && sprites[i]->state == ATTACKED)

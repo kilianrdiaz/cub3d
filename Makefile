@@ -6,10 +6,10 @@
 #    By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/15 14:52:33 by alejhern          #+#    #+#              #
-#    Updated: 2025/11/15 17:05:48 by kroyo-di         ###   ########.fr        #
+#    Updated: 2025/11/29 15:42:12 by kroyo-di         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-# **************************************************************************** #
+
 #                                   CUB3D                                      #
 # **************************************************************************** #
 
@@ -105,7 +105,7 @@ all: $(LIBFT_LIB) $(MLX_LIB) $(NAME)
 # -----------------------------
 miniaudio: $(MINIAUDIO_LIB)
 	@echo "🔊 Compilando con audio..."
-	$(MAKE) OBJ_RENDER_SRC=src/render/render_with_audio.c CFLAGS+="$(CFLAGS) $(MINIAUDIO_INC)" $(NAME)
+	$(MAKE) OBJ_RENDER_SRC=src/render/render_with_audio.c CFLAGS+="$(CFLAGS) $(MINIAUDIO_INC)" all
 
 # -----------------------------
 # Victus (modo optimizado)

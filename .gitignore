@@ -16,3 +16,4 @@ cub3d
 *.d
 .venv
 obj
+audios

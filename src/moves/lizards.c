@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 22:34:04 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/15 20:17:45 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/29 16:04:56 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,8 @@ void	move_lizards(t_game *g)
 		if (l->state == ACTIVE)
 			l->state = MOVING;
 		else if (l->state == MOVING || (l->state == ATTACKED
-				&& g->timer >= l->delay))
+				&& g->timer >= l->delay) || l->state == ATTACKING)
 			l->state = ACTIVE;
-		l->dist = (fabs(l->pos.x - g->spider.pos.x) + fabs(l->pos.y
-					- g->spider.pos.y));
 		if (l->dist <= 1.1)
 			player_take_damage(g, l);
 		if (l->dist <= DETECT_RADIUS)
