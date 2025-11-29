@@ -6,7 +6,7 @@
 #    By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/15 14:52:33 by alejhern          #+#    #+#              #
-#    Updated: 2025/11/29 15:42:12 by kroyo-di         ###   ########.fr        #
+#    Updated: 2025/11/29 20:26:03 by kroyo-di         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -160,11 +160,16 @@ $(MINIAUDIO_LIB):
 #   🧹 LIMPIEZA
 # ===========================
 clean:
-	@make -C $(LIBFT_DIR) clean
+	@if [ -d "$(LIBFT_DIR)" ]; then \
+		$(MAKE) -C $(LIBFT_DIR) clean; \
+	fi
 	rm -rf $(OBJ_DIR)
 	@echo "🧹 Archivos objeto eliminados."
 
 fclean: clean
+	@if [ -d "$(LIBFT_DIR)" ]; then \
+		$(MAKE) -C $(LIBFT_DIR) fclean; \
+	fi
 	rm -rf libs
 	rm -f $(NAME)
 	@echo "🧼 Limpieza completa."
