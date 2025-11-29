@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/29 15:20:38 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/29 20:18:05 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -289,6 +289,7 @@ int					check_player_count(char **map);
 void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
 int					get_map_max_width(char **map);
+int					is_map_str(char *s);
 
 // rendering
 void				game(t_game *g);

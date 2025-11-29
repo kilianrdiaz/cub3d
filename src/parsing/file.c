@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 16:47:00 by alejhern          #+#    #+#             */
-/*   Updated: 2025/10/10 16:47:12 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/29 20:17:01 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,23 @@
 #define O_FAILED "Error: Could not open file %s\n"
 #define R_FAILED "Error: Could not read %s content\n"
 #define NO_BOMBS "Warning: No bombs found in the map %s\n"
+
+static int	check_map_at_end(char **content)
+{
+	int	i;
+	int	map_started;
+
+	map_started = 0;
+	i = -1;
+	while (content[++i])
+	{
+		if (is_map_str(content[i]))
+			map_started = 1;
+		else if (map_started && validate_line(content[i]) == 0)
+			return (0);
+	}
+	return (1);
+}
 
 static char	**read_file(int fd)
 {
@@ -67,7 +84,7 @@ void	get_info_file(t_game *g)
 	if (fd == -1)
 		return (set_error_parsing(g, O_FAILED, *g->levels));
 	content = read_file(fd);
-	if (!content)
+	if (!content || !check_map_at_end(content))
 		return (set_error_parsing(g, R_FAILED, *g->levels));
 	load_map_textures(g, content);
 	g->map = get_map(content);
