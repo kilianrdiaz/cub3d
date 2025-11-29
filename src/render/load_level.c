@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   load_level.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 15:33:30 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/06 15:34:22 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/29 15:19:52 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	load_level(t_game *g)
 	char	*level;
 	char	*msg;
 
+	mlx_hook(g->win, 6, 1L << 6, NULL, NULL);
 	if (!g->timer && g->render_state == LOAD_LEVEL)
 	{
 		++g->levels;

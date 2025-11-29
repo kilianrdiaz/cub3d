@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 13:15:22 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/13 13:15:36 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/29 15:21:55 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,5 @@ void	game(t_game *g)
 	update_player_position(g);
 	update_timer(g);
 	update_bombs(g);
+	mlx_hook(g->win, 6, 1L << 6, mouse_rotation, g);
 }

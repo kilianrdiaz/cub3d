@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 17:14:03 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/24 19:54:58 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/29 15:12:25 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static void	move_player(t_game *g, double dir)
 	g->spider.move_accum = 0.0;
 }
 
-static void	rotate_spidy(t_spidy *spidy, double angle)
+void	rotate_spidy(t_spidy *spidy, double angle)
 {
 	double	olddir_x;
 	double	oldplane_x;

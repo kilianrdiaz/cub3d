@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/26 21:45:40 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/29 15:20:38 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,6 +215,7 @@ typedef struct s_game
 	void			*win;
 	void			*img;
 	char			*addr;
+	int				mouse_enabled;
 	int				bpp;
 	int				line_len;
 	int				endian;
@@ -333,5 +334,9 @@ void				free_level(t_game *g);
 void				close_program(t_game *g);
 int					close_window(t_game *g);
 void				player_take_damage(t_game *g, t_sprite *lizard);
+
+void				rotate_spidy(t_spidy *spidy, double angle);
+int					mouse_rotation(int x, int y, t_game *g);
+void				mouse_setup(t_game *g);
 
 #endif
