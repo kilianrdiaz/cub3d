@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 16:47:00 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/29 20:32:01 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/29 20:39:26 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	get_info_file(t_game *g)
 		return (set_error_parsing(g, R_FAILED, *g->levels));
 	load_map_textures(g, content);
 	g->map = get_map(content);
-	if (!g->map  || !check_map_at_end(content))
+	if (!g->map || !check_map_at_end(content))
 		return (set_error_parsing(g, MAP_INVALID, *g->levels));
 	ft_free_array((void ***)&content);
 	close(fd);
