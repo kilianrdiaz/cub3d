@@ -49,7 +49,7 @@ static void	move_player(t_game *g, double dir)
 	g->spider.move_accum = 0.0;
 }
 
-void	rotate_spidy(t_spidy *spidy, double angle)
+static void	rotate_spidy(t_spidy *spidy, double angle)
 {
 	double	olddir_x;
 	double	oldplane_x;
@@ -60,6 +60,30 @@ void	rotate_spidy(t_spidy *spidy, double angle)
 	spidy->dir.y = olddir_x * sin(angle) + spidy->dir.y * cos(angle);
 	spidy->plane.x = spidy->plane.x * cos(angle) - spidy->plane.y * sin(angle);
 	spidy->plane.y = oldplane_x * sin(angle) + spidy->plane.y * cos(angle);
+}
+
+int	mouse_rotation(int x, int y, t_game *g)
+{
+	static int	first = 1;
+	int			dx;
+	double		angle;
+
+	(void)y;
+	if (!g || !g->mlx || !g->win)
+		return (0);
+	if (first)
+	{
+		first = 0;
+		mlx_mouse_move(g->mlx, g->win, WIDTH / 2, HEIGHT / 2);
+		return (0);
+	}
+	dx = x - WIDTH / 2;
+	if (dx == 0)
+		return (0);
+	angle = dx * MOUSE_SENSITIVITY;
+	rotate_spidy(&g->spider, angle);
+	mlx_mouse_move(g->mlx, g->win, WIDTH / 2, HEIGHT / 2);
+	return (0);
 }
 
 void	update_player_position(t_game *g)
