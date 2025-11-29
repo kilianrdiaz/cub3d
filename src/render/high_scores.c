@@ -117,7 +117,7 @@ void	show_high_scores(t_game *g)
 	load_texture(g, &score_panel, "./textures/score_panel.xpm");
 	scores = get_scores();
 	position = get_position(g, scores);
-	if (position != -1 && g->render_state != SCORE_SAVED)
+	if (position != -1 && g->render_state != SCORE_SAVED && g->score)
 		g->render_state = WAITING_FOR_NAME;
 	if (g->render_state == HIGH_SCORE || g->render_state == SCORE_SAVED)
 		display_score_panel(g, score_panel, scores);
