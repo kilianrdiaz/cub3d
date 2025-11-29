@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/13 20:25:37 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/24 19:36:45 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/29 15:33:05 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ static void	reset_player_after_death(t_game *g)
 {
 	g->live.lives_left--;
 	if (g->live.lives_left > 0)
+	{
 		g->live.player_hp = 100;
+		create_spiderman(g);
+	}
 	else
 	{
 		g->render_state = GAME_OVER;
