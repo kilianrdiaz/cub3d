@@ -6,13 +6,12 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:46:16 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 20:22:36 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/30 14:53:48 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/cub3d.h"
 
-/* ---- BORDE ---- */
 static void	bar_border(t_game *g, t_sprite *live)
 {
 	int	i;
@@ -35,7 +34,6 @@ static void	bar_border(t_game *g, t_sprite *live)
 	}
 }
 
-/* ---- RELLENO DE UNA LÍNEA ---- */
 static void	bar_fill_line(t_game *g, t_sprite *live, int y, int color)
 {
 	int	i;
@@ -45,7 +43,6 @@ static void	bar_fill_line(t_game *g, t_sprite *live, int y, int color)
 		put_pixel(g, live->pos.x + i, y, color);
 }
 
-/* ---- RELLENO COMPLETO (CON PROFUNDIDAD) ---- */
 static void	bar_fill(t_game *g, t_sprite *live)
 {
 	int	y;
@@ -69,7 +66,6 @@ static void	bar_fill(t_game *g, t_sprite *live)
 	}
 }
 
-/* ---- FONDO ---- */
 static void	bar_bg(t_game *g, t_sprite *live)
 {
 	t_pos	pos;
@@ -83,16 +79,13 @@ static void	bar_bg(t_game *g, t_sprite *live)
 	}
 }
 
-/* ---- BARRA DE VIDA ---- */
 void	draw_health_bar(t_game *g)
 {
 	t_sprite	live;
 	double		ratio;
 
-	/* Tamaño */
 	live.width = 300;
 	live.height = 30;
-	/* Posición */
 	live.pos.x = GAME_W + 150;
 	live.pos.y = 140;
 	ratio = (double)g->live.player_hp / 100;
@@ -100,13 +93,11 @@ void	draw_health_bar(t_game *g)
 		ratio = 0.0;
 	if (ratio > 1.0)
 		ratio = 1.0;
-	/* Usamos screen_x para almacenar fill */
 	live.screen_x = (int)(ratio * (double)live.width);
 	if (live.screen_x < 0)
 		live.screen_x = 0;
 	if (live.screen_x > live.width)
 		live.screen_x = live.width;
-	/* Dibujar */
 	bar_bg(g, &live);
 	bar_fill(g, &live);
 	bar_border(g, &live);

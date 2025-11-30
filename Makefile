@@ -6,7 +6,7 @@
 #    By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/15 14:52:33 by alejhern          #+#    #+#              #
-#    Updated: 2025/11/29 20:26:03 by kroyo-di         ###   ########.fr        #
+#    Updated: 2025/11/30 13:21:58 by kroyo-di         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -141,14 +141,15 @@ $(LIBFT_LIB):
 		git clone $(LIBFT_REPO) $(LIBFT_DIR); \
 	fi
 	@make -C $(LIBFT_DIR)
-
+	
 $(MLX_LIB):
 	@if [ ! -d "$(MLX_DIR)" ]; then \
 		echo "📥 Clonando MiniLibX..."; \
 		git clone $(MLX_REPO) $(MLX_DIR); \
 	fi
-	@echo "⚙️  Compilando MiniLibX (sin -Werror)..."
-	@$(MAKE) -C $(MLX_DIR)
+	@echo "⚙️  Compilando MiniLibX..."
+	@$(MAKE) -C $(MLX_DIR) > /dev/null
+
 
 $(MINIAUDIO_LIB):
 	@if [ ! -f "$(MINIAUDIO_LIB)" ]; then \

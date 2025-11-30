@@ -6,13 +6,13 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 16:03:03 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 20:20:13 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/11/30 15:37:46 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../inc/cub3d.h"
 
-static int	show_sprite(t_game *g, t_sprite *sp)
+static int	show_sprite(t_sprite *sp, int *enemy_nearby)
 {
 	if (!sp)
 		return (0);
@@ -24,19 +24,9 @@ static int	show_sprite(t_game *g, t_sprite *sp)
 	{
 		if (sp->dist <= 5)
 		{
-			if (g->live.mask_sprite.delay < g->timer)
-			{
-				g->live.mask_sprite.delay = g->timer + 7;
-				g->spider.spider_sense = 1;
-			}
-			if (g->live.mask_sprite.delay == g->timer)
-			{
-				g->spider.spider_sense = !g->spider.spider_sense;
-				g->live.mask_sprite.delay = g->timer + 7;
-			}
+			*enemy_nearby = 1;
 			return (1);
 		}
-		g->spider.spider_sense = 0;
 	}
 	return (0);
 }
@@ -50,14 +40,15 @@ static int	in_bounds(int sx, int sy, t_minimap *m)
 	return (1);
 }
 
-static void	draw_single_sprite(t_game *g, t_sprite *sp, unsigned int color)
+static void	draw_single_sprite(t_game *g, t_sprite *sp, unsigned int color,
+		int *enemy_nearby)
 {
 	t_minimap	*m;
 	t_sprite	r;
 	t_pos		src;
 	int			ts;
 
-	if (!show_sprite(g, sp))
+	if (!show_sprite(sp, enemy_nearby))
 		return ;
 	m = &g->minimap;
 	ts = MINIMAP_TILE;
@@ -74,14 +65,38 @@ static void	draw_single_sprite(t_game *g, t_sprite *sp, unsigned int color)
 	put_rect(g, r, color);
 }
 
+static void	update_spider_sense(t_game *g, int enemy_nearby)
+{
+	if (enemy_nearby)
+	{
+		if (g->live.mask_sprite.delay < g->timer)
+		{
+			g->live.mask_sprite.delay = g->timer + 7;
+			g->spider.spider_sense = 1;
+		}
+		if (g->live.mask_sprite.delay == g->timer)
+		{
+			g->spider.spider_sense = !g->spider.spider_sense;
+			g->live.mask_sprite.delay = g->timer + 7;
+		}
+	}
+	else
+	{
+		g->spider.spider_sense = 0;
+	}
+}
+
 void	draw_sprites_minimap(t_game *g)
 {
 	int	i;
+	int	enemy_nearby;
 
+	enemy_nearby = 0;
 	i = -1;
 	while (g->bombs && g->bombs[++i])
-		draw_single_sprite(g, g->bombs[i], COL_BOMB);
+		draw_single_sprite(g, g->bombs[i], COL_BOMB, &enemy_nearby);
 	i = -1;
 	while (g->lizards && g->lizards[++i])
-		draw_single_sprite(g, g->lizards[i], COL_LIZARD);
+		draw_single_sprite(g, g->lizards[i], COL_LIZARD, &enemy_nearby);
+	update_spider_sense(g, enemy_nearby);
 }
