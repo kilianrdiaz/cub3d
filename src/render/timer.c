@@ -37,7 +37,7 @@ void	put_timer(t_game *g, t_coords coords)
 	char		*str;
 	char		**buffer;
 
-	t = get_time_left(g->timer, TIMER);
+	t = get_time_left(g->timer, g->timeout);
 	buffer = NULL;
 	str = ft_itoa(t.minutes);
 	ft_append_array((void ***)&buffer, str);
@@ -64,7 +64,7 @@ void	update_timer(t_game *g)
 
 	if (g->render_state != PLAYING)
 		return ;
-	t = get_time_left(g->timer, TIMER);
+	t = get_time_left(g->timer, g->timeout);
 	if (t.minutes == 0 && t.seconds == 0)
 	{
 		g->render_state = GAME_OVER;
@@ -80,7 +80,7 @@ t_timeleft	set_message(t_game *g, char *msg, t_coords coords)
 	double		timer;
 
 	timer = g->timer;
-	g->timer = TIMER * 30;
+	g->timer = g->timeout * FRAMES_PER_SECOND;
 	game(g);
 	g->timer = timer;
 	t = get_time_left(g->timer, TEXT_DURATION - g->timer);
