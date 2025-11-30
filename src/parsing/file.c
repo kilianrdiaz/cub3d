@@ -17,23 +17,6 @@
 #define NO_BOMBS "Warning: No bombs found in the map %s\n"
 #define MAP_INVALID "Error: Invalid map in %s\n"
 
-static int	check_map_at_end(char **content)
-{
-	int	i;
-	int	map_started;
-
-	map_started = 0;
-	i = -1;
-	while (content[++i])
-	{
-		if (is_map_str(content[i]))
-			map_started = 1;
-		else if (map_started && validate_line(content[i]) == 0)
-			return (0);
-	}
-	return (1);
-}
-
 static char	**read_file(int fd)
 {
 	char	**content;
@@ -89,7 +72,7 @@ void	get_info_file(t_game *g)
 		return (set_error_parsing(g, R_FAILED, *g->levels));
 	load_map_textures(g, content);
 	g->map = get_map(content);
-	if (!g->map || !check_map_at_end(content))
+	if (!g->map)
 		return (set_error_parsing(g, MAP_INVALID, *g->levels));
 	ft_free_array((void ***)&content);
 	close(fd);

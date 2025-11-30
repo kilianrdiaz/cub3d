@@ -14,9 +14,8 @@
 
 #define NO_CLOSE "Error: Map is not closed/surrounded by walls"
 #define NO_MAP "Error: Could not load map"
-#define MULTI_PLAYER "Error: Found more than 1 player"
 
-int	is_map_str(char *s)
+static int	is_map_str(char *s)
 {
 	int	i;
 
@@ -30,7 +29,8 @@ int	is_map_str(char *s)
 	while (s[i])
 	{
 		if (!(s[i] == '0' || s[i] == '1' || s[i] == 'N' || s[i] == 'S'
-				|| s[i] == 'E' || s[i] == 'W' || s[i] == ' '))
+				|| s[i] == 'E' || s[i] == 'W' || s[i] == ' ' || s[i] == 'P'
+				|| s[i] == 'B' || s[i] == 'L'))
 			return (0);
 		i++;
 	}
@@ -114,7 +114,7 @@ char	**get_map(char **content)
 	i = 0;
 	while (content[i] && !is_map_str(content[i]))
 		i++;
-	while (content[i])
+	while (content[i] && is_map_str(content[i]))
 	{
 		if (!validate_line(content[i]))
 			break ;
@@ -122,12 +122,11 @@ char	**get_map(char **content)
 		ft_append_array((void ***)&map, line);
 		i++;
 	}
+	if (content[i] && !is_map_str(content[i]))
+		return (ft_free_array((void ***)&map), NULL);
 	if (map && (!is_map_closed(map) || !check_player_count(map)))
 	{
-		if (!check_player_count(map))
-			ft_putendl_fd(MULTI_PLAYER, 2);
-		else
-			ft_putendl_fd(NO_CLOSE, 2);
+		ft_putendl_fd(NO_CLOSE, 2);
 		ft_free_array((void ***)&map);
 	}
 	return (map);

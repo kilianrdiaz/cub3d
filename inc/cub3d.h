@@ -289,7 +289,6 @@ int					check_player_count(char **map);
 void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
 int					get_map_max_width(char **map);
-int					is_map_str(char *s);
 
 // rendering
 void				game(t_game *g);
