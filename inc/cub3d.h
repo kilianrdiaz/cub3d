@@ -60,7 +60,6 @@
 # define MINIMAP_OFFSET_Y 200
 # define MINIMAP_TILE 20
 
-# define TIMER 125
 # define TEXT_DURATION 60.0
 # define TEXT_HOLD_TIME 20
 
@@ -222,6 +221,7 @@ typedef struct s_game
 	int				endian;
 	t_render		render_state;
 	unsigned int	timer;
+	unsigned int	timeout;
 	int				bomb_count;
 	char			**levels;
 	unsigned int	level;

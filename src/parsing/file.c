@@ -17,6 +17,22 @@
 #define NO_BOMBS "Warning: No bombs found in the map %s\n"
 #define MAP_INVALID "Error: Invalid map in %s\n"
 
+static unsigned int	get_timeout_value(t_game g)
+{
+	double	dist;
+	int		i;
+
+	if (!g.bomb_count)
+		return (0);
+	dist = sqrt(pow(g.spider.pos.x - g.bombs[0]->pos.x, 2) + pow(g.spider.pos.y
+				- g.bombs[0]->pos.y, 2));
+	i = 0;
+	while (g.bombs[++i])
+		dist += sqrt(pow(g.spider.pos.x - g.bombs[i]->pos.x, 2)
+				+ pow(g.spider.pos.y - g.bombs[i]->pos.y, 2));
+	return ((unsigned int)(dist / MOVE_SPEED));
+}
+
 static char	**read_file(int fd)
 {
 	char	**content;
@@ -82,4 +98,5 @@ void	get_info_file(t_game *g)
 		set_error_parsing(g, NO_BOMBS, *g->levels);
 	if (g->level > 1 && g->render_state == LOAD_LEVEL)
 		g->render_state = NEW_LEVEL;
+	g->timeout = get_timeout_value(*g);
 }
