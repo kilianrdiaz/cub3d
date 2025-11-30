@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   display_scores.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/19 17:18:02 by alejhern          #+#    #+#             */
-/*   Updated: 2025/10/19 17:18:09 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/11/30 17:17:36 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ static void	print_separator_line(t_game *g, t_coords coords, char **line)
 	separator_length = (WIDTH - SCORE_SPACING) - (ft_strlen(line[0])
 			* g->font.char_w * g->font.scale) - (ft_strlen(line[1])
 			* g->font.char_w * g->font.scale);
+	if (separator_length < 1)
+		return ;
 	separator_length /= (g->font.char_w * g->font.scale);
 	separator = ft_safe_calloc(sizeof(char), separator_length + 1);
 	if (!separator)
