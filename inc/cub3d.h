@@ -261,7 +261,6 @@ typedef struct s_ray
 void				set_error_parsing(t_game *g, char *msg, char *path);
 void				load_texture(t_game *g, t_tex *tex, char *path);
 int					validate_line(char *line);
-int					ft_isspace(int c);
 int					check_loaded_textures(t_game *game);
 int					clamp_int(int v, int a, int b);
 unsigned int		get_pixel_color(t_tex tex, int x, int y);
@@ -278,7 +277,9 @@ char				**get_scores(void);
 int					get_position(t_game *g, char **scores);
 t_sprite			*print_alphabet(t_game *game);
 void				update_scores(char **scores, int position);
-int					lizard_on_player(t_game *g);
+int 				**get_visited_map(char **map);
+int					is_map_closed(char **map);
+int					check_bombs_accessibility(char **map);
 
 // parsing
 int					check_files_extension(int argc, char **argv);

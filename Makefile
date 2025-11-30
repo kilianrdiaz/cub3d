@@ -31,6 +31,7 @@ SRCS    = src/utils/parsing.c  \
 		  src/utils/ray_map.c \
 		  src/utils/score.c   \
 		  src/parsing/map_textures.c   \
+		  src/parsing/map_checks.c   \
 		  src/parsing/map.c   \
 		  src/parsing/sprites.c   \
 		  src/parsing/file.c   \

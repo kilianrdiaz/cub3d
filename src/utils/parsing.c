@@ -15,11 +15,20 @@
 #define NO_TEXTURE "Error: could not load texture %s\n"
 #define INVALID_SIZE "Error: texture %s has invalid size\n"
 
-int	ft_isspace(int c)
+int	**get_visited_map(char **map)
 {
-	if (c == 9 || c == 10 || c == 11 || c == 12 || c == 13 || c == 32)
-		return (1);
-	return (0);
+	int	row;
+	int	*visited_row;
+	int	**visited;
+
+	visited = NULL;
+	row = -1;
+	while (map[++row])
+	{
+		visited_row = ft_safe_calloc((ft_strlen(map[row])), sizeof(int));
+		ft_append_array((void ***)&visited, visited_row);
+	}
+	return (visited);
 }
 
 int	check_loaded_textures(t_game *game)

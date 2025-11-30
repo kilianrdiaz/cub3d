@@ -14,6 +14,7 @@
 
 #define NO_CLOSE "Error: Map is not closed/surrounded by walls"
 #define NO_MAP "Error: Could not load map"
+#define NO_WAY_TO_BOMB "Error: No way to reach all bombs in the map"
 
 static int	is_map_str(char *s)
 {
@@ -37,71 +38,20 @@ static int	is_map_str(char *s)
 	return (1);
 }
 
-static int	flood_fill(char **map, t_pos pos, int rows, int **visited)
+static void	checker_map(char ***map)
 {
-	int	row_length;
-
-	if (pos.y < 0 || pos.y >= rows)
-		return (0);
-	row_length = ft_strlen(map[pos.y]);
-	if (pos.x < 0 || pos.x >= row_length)
-		return (0);
-	if (map[pos.y][pos.x] == '1' || visited[pos.y][pos.x])
-		return (1);
-	visited[pos.y][pos.x] = 1;
-	if ((pos.y == 0 || pos.y == rows - 1) || (pos.x == 0 || pos.x == row_length
-			- 1))
-		return (0);
-	if (!flood_fill(map, (t_pos){pos.x, pos.y + 1}, rows, visited))
-		return (0);
-	if (!flood_fill(map, (t_pos){pos.x, pos.y - 1}, rows, visited))
-		return (0);
-	if (!flood_fill(map, (t_pos){pos.x + 1, pos.y}, rows, visited))
-		return (0);
-	if (!flood_fill(map, (t_pos){pos.x - 1, pos.y}, rows, visited))
-		return (0);
-	return (1);
-}
-
-static int	**get_visited_map(char **map)
-{
-	int	row;
-	int	*visited_row;
-	int	**visited;
-
-	visited = NULL;
-	row = -1;
-	while (map[++row])
+	if (!map || !*map)
+		return ;
+	if (!check_bombs_accessibility(*map))
 	{
-		visited_row = ft_safe_calloc((ft_strlen(map[row])), sizeof(int));
-		ft_append_array((void ***)&visited, visited_row);
+		ft_putendl_fd(NO_WAY_TO_BOMB, 2);
+		ft_free_array((void ***)map);
 	}
-	return (visited);
-}
-
-static int	is_map_closed(char **map)
-{
-	int		rows;
-	int		**visited;
-	t_pos	p;
-
-	rows = ft_memlen((const void **)map);
-	p.y = -1;
-	visited = get_visited_map(map);
-	while (map[++p.y])
+	else if (!is_map_closed(*map))
 	{
-		p.x = -1;
-		while (map[p.y][++p.x])
-		{
-			if (map[p.y][p.x] != '1' && map[p.y][p.x] != ' ')
-			{
-				if (!flood_fill(map, p, rows, visited))
-					return (0);
-			}
-		}
+		ft_putendl_fd(NO_CLOSE, 2);
+		ft_free_array((void ***)map);
 	}
-	ft_free_array((void ***)&visited);
-	return (1);
 }
 
 char	**get_map(char **content)
@@ -124,10 +74,6 @@ char	**get_map(char **content)
 	}
 	if (content[i] && !is_map_str(content[i]))
 		return (ft_free_array((void ***)&map), NULL);
-	if (map && (!is_map_closed(map) || !check_player_count(map)))
-	{
-		ft_putendl_fd(NO_CLOSE, 2);
-		ft_free_array((void ***)&map);
-	}
+	checker_map(&map);
 	return (map);
 }
