@@ -51,3 +51,26 @@ int	key_release(int key, t_game *g)
 		g->keys.space = 0;
 	return (0);
 }
+
+int	mouse_rotation(int x, int y, t_game *g)
+{
+	int			dx;
+	double		angle;
+
+	(void)y;
+	if (!g || !g->mlx || !g->win)
+		return (0);
+	if (g->mouse_enabled == 0)
+	{
+		mlx_mouse_move(g->mlx, g->win, WIDTH / 2, HEIGHT / 2);
+		g->mouse_enabled = 1;
+		return (0);
+	}
+	dx = x - WIDTH / 2;
+	if (dx == 0)
+		return (0);
+	angle = dx * MOUSE_SENSITIVITY;
+	update_player_position(g, angle);
+	mlx_mouse_move(g->mlx, g->win, WIDTH / 2, HEIGHT / 2);
+	return (0);
+}

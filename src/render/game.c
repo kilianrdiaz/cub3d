@@ -50,7 +50,7 @@ void	game(t_game *g)
 	move_lizards(g);
 	if (g->spider.state == ATTACKING)
 		spider_attack(g);
-	update_player_position(g);
+	update_player_position(g, 0);
 	update_timer(g);
 	update_bombs(g);
 	mlx_hook(g->win, 6, 1L << 6, mouse_rotation, g);

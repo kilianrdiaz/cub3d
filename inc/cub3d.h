@@ -327,7 +327,7 @@ int					key_press(int key, t_game *g);
 int					key_release(int key, t_game *g);
 
 // animation
-void				update_player_position(t_game *g);
+void				update_player_position(t_game *g, double mouse);
 void				spider_attack(t_game *g);
 void				move_lizards(t_game *g);
 char				*set_name(t_game *g, t_sprite *alphabet, t_ray ray);

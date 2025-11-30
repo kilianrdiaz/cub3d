@@ -23,6 +23,18 @@ static int	is_walkable(int x, int y, char **map)
 	return (1);
 }
 
+static void	slide_player(t_game *g, t_coords *new_pos)
+{
+	t_pos	slide_pos;
+
+	slide_pos.x = is_walkable((int)new_pos->x, (int)g->spider.pos.y, g->map);
+	slide_pos.y = is_walkable((int)g->spider.pos.x, (int)new_pos->y, g->map);
+	if (slide_pos.x && !slide_pos.y)
+		new_pos->y = g->spider.pos.y;
+	else if (slide_pos.y && !slide_pos.x)
+		new_pos->x = g->spider.pos.x;
+}
+
 static double	move_player(t_game *g, double dir)
 {
 	t_coords	new_pos;
@@ -33,21 +45,20 @@ static double	move_player(t_game *g, double dir)
 	new_pos.y = g->spider.pos.y + g->spider.dir.y * dir;
 	distance = sqrt(pow(new_pos.x - g->spider.pos.x, 2) + pow(new_pos.y
 				- g->spider.pos.y, 2));
-	if (dir > 0)
+	if (distance > 0)
 		dir += SAFETY_OFFSET;
-	else if (dir < 0)
+	else if (distance < 0)
 		dir -= SAFETY_OFFSET;
 	check_pos.x = g->spider.pos.x + g->spider.dir.x * dir;
 	check_pos.y = g->spider.pos.y + g->spider.dir.y * dir;
-	if ((int)check_pos.x != (int)g->spider.pos.x
-		&& (int)check_pos.y != (int)g->spider.pos.y)
-	{
-		if (!is_walkable((int)check_pos.x, (int)g->spider.pos.y, g->map)
-			&& !is_walkable((int)g->spider.pos.x, (int)check_pos.y, g->map))
-			return (0);
-	}
 	if (!is_walkable((int)check_pos.x, (int)check_pos.y, g->map))
-		return (0);
+	{
+		slide_player(g, &new_pos);
+		if (!is_walkable((int)new_pos.x, (int)new_pos.y, g->map))
+			return (0.0);
+	}
+	if (new_pos.x == g->spider.pos.x && new_pos.y == g->spider.pos.y)
+		return (0.0);
 	g->spider.pos = new_pos;
 	return (distance);
 }
@@ -65,32 +76,13 @@ static void	rotate_spidy(t_spidy *spidy, double angle)
 	spidy->plane.y = oldplane_x * sin(angle) + spidy->plane.y * cos(angle);
 }
 
-int	mouse_rotation(int x, int y, t_game *g)
+void	update_player_position(t_game *g, double mouse)
 {
-	static int	first = 1;
-	int			dx;
-	double		angle;
-
-	(void)y;
-	if (!g || !g->mlx || !g->win)
-		return (0);
-	if (first)
+	if (mouse)
 	{
-		first = 0;
-		mlx_mouse_move(g->mlx, g->win, WIDTH / 2, HEIGHT / 2);
-		return (0);
+		rotate_spidy(&g->spider, mouse);
+		return ;
 	}
-	dx = x - WIDTH / 2;
-	if (dx == 0)
-		return (0);
-	angle = dx * MOUSE_SENSITIVITY;
-	rotate_spidy(&g->spider, angle);
-	mlx_mouse_move(g->mlx, g->win, WIDTH / 2, HEIGHT / 2);
-	return (0);
-}
-
-void	update_player_position(t_game *g)
-{
 	if (g->keys.a)
 		rotate_spidy(&g->spider, -ROT_SPEED);
 	if (g->keys.d)
