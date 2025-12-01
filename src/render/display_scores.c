@@ -17,7 +17,7 @@
 static int	close_high_scores(int keycode, t_game *g)
 {
 	(void)keycode;
-	if (g->timer > 30)
+	if (g->timer > MIN_TIME_TO_READ)
 	{
 		g->render_state = END;
 		ft_bzero(&g->keys, sizeof(t_keys));

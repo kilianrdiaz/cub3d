@@ -15,7 +15,7 @@
 static int	close_intro(int keycode, t_game *g)
 {
 	(void)keycode;
-	if (g->render_state == INTRO && g->timer > 60)
+	if (g->render_state == INTRO && g->timer > MIN_TIME_TO_READ)
 	{
 		g->render_state = LOAD_LEVEL;
 		ft_bzero(&g->keys, sizeof(t_keys));
@@ -50,7 +50,7 @@ static int	read_intro(t_game *g)
 	coords.y += g->font.char_h * 0.8 + 10;
 	coords.x = WIDTH / 2 - ((int)ft_strlen("PRESS ANY BUTTON TO PLAY")
 			* g->font.char_w * g->font.scale) / 2;
-	if (g->timer > 60 && g->timer % 60 < 30)
+	if (g->timer > MIN_TIME_TO_READ && g->timer % 60 < 30)
 		render_text(g, "PRESS ANY BUTTON TO PLAY", coords);
 	close(fd);
 	return (1);

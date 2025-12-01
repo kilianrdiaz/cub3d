@@ -62,6 +62,7 @@
 
 # define TEXT_DURATION 60.0
 # define TEXT_HOLD_TIME 20
+# define MIN_TIME_TO_READ 45
 
 typedef struct s_coords
 {
