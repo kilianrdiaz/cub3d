@@ -152,6 +152,7 @@ typedef struct s_keys
 	int				left;
 	int				right;
 	int				space;
+	int				shift;
 }					t_keys;
 
 typedef struct s_tex
@@ -278,7 +279,7 @@ char				**get_scores(void);
 int					get_position(t_game *g, char **scores);
 t_sprite			*print_alphabet(t_game *game);
 void				update_scores(char **scores, int position);
-int 				**get_visited_map(char **map);
+int					**get_visited_map(char **map);
 int					is_map_closed(char **map);
 int					check_bombs_accessibility(char **map);
 

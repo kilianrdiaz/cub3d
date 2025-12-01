@@ -30,6 +30,8 @@ int	key_press(int key, t_game *g)
 		g->keys.space = 1;
 	if (key == 112)
 		g->keys.p = 1;
+	if (key == 65505)
+		g->keys.shift = 1;
 	if (key == 65307)
 		close_program(g);
 	return (0);
@@ -53,6 +55,8 @@ int	key_release(int key, t_game *g)
 		g->keys.space = 0;
 	if (key == 112)
 		g->keys.p = 0;
+	if (key == 65505)
+		g->keys.shift = 0;
 	return (0);
 }
 
@@ -67,6 +71,8 @@ static int	enable_mouse(t_game *g)
 		return (mlx_mouse_show(g->mlx, g->win), reset_mouse = 1, 0);
 	else if (g->render_state <= GAME_OVER || g->render_state >= PAUSE)
 		return (0);
+	if (g->keys.shift)
+		return (mlx_mouse_show(g->mlx, g->win), reset_mouse = 1, 0);
 	if (reset_mouse)
 	{
 		mlx_mouse_move(g->mlx, g->win, WIDTH / 2, HEIGHT / 2);
