@@ -99,10 +99,10 @@ int	is_map_closed(char **map)
 			if (map[p.y][p.x] != '1' && map[p.y][p.x] != ' ')
 			{
 				if (!flood_fill(map, p, rows, visited))
-                {
-                    ft_free_array((void ***)&visited);
+				{
+					ft_free_array((void ***)&visited);
 					return (0);
-                }
+				}
 			}
 		}
 	}
