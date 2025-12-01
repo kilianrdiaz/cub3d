@@ -22,7 +22,7 @@ static void	game_loop(void *param)
 	else if (g->render_state == LOAD_LEVEL || g->render_state == NEW_LEVEL
 		|| g->render_state == GAME_OVER || g->render_state == WIN)
 		load_level(g);
-	else if (g->render_state == PLAYING)
+	else if (g->render_state == PLAYING || g->render_state == PAUSE)
 		game(g);
 	else if (g->render_state == HIGH_SCORE
 		|| g->render_state == WAITING_FOR_NAME

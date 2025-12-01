@@ -79,10 +79,9 @@ static void	rotate_spidy(t_spidy *spidy, double angle)
 void	update_player_position(t_game *g, double mouse)
 {
 	if (mouse)
-	{
-		rotate_spidy(&g->spider, mouse);
-		return ;
-	}
+		return (rotate_spidy(&g->spider, mouse));
+	if (g->keys.p)
+		return (g->render_state = PAUSE, g->keys.p = 0, (void)0);
 	if (g->keys.a)
 		rotate_spidy(&g->spider, -ROT_SPEED);
 	if (g->keys.d)

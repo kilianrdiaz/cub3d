@@ -37,21 +37,36 @@ void	draw_fullscreen_image(t_game *g, t_tex tex)
 	}
 }
 
+static void	game_pause(t_game *g)
+{
+	render_text(g, "PAUSE!", (t_coords){GAME_W / 2 - 100, HEIGHT / 2 - 20});
+	if (g->keys.p)
+	{
+		g->render_state = PLAYING;
+		g->keys.p = 0;
+	}
+}
+
 void	game(t_game *g)
 {
+	if (g->render_state == PLAYING)
+	{
+		mlx_hook(g->win, 6, 1L << 6, mouse_rotation, g);
+		update_player_position(g, 0);
+		if (g->spider.state == ATTACKING)
+			spider_attack(g);
+		update_bombs(g);
+		move_lizards(g);
+	}
 	clean_screen(g);
 	render_map(g);
 	render_sprites(g);
 	draw_hand(g, GAME_W / 2);
 	render_stats(g);
+	if (g->render_state == PAUSE)
+		game_pause(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	if (g->render_state != PLAYING)
 		return ;
-	move_lizards(g);
-	if (g->spider.state == ATTACKING)
-		spider_attack(g);
-	update_player_position(g, 0);
 	update_timer(g);
-	update_bombs(g);
-	mlx_hook(g->win, 6, 1L << 6, mouse_rotation, g);
 }

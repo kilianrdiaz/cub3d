@@ -91,6 +91,7 @@ typedef enum e_render
 	LOAD_LEVEL,
 	NEW_LEVEL,
 	PLAYING,
+	PAUSE,
 	WIN,
 	GAME_OVER,
 	WAITING_FOR_NAME,
@@ -147,6 +148,7 @@ typedef struct s_keys
 	int				a;
 	int				s;
 	int				d;
+	int				p;
 	int				left;
 	int				right;
 	int				space;

@@ -28,6 +28,8 @@ int	key_press(int key, t_game *g)
 		g->keys.right = 1;
 	if (key == 32)
 		g->keys.space = 1;
+	if (key == 112)
+		g->keys.p = 1;
 	if (key == 65307)
 		close_program(g);
 	return (0);
@@ -49,6 +51,8 @@ int	key_release(int key, t_game *g)
 		g->keys.right = 0;
 	if (key == 32)
 		g->keys.space = 0;
+	if (key == 112)
+		g->keys.p = 0;
 	return (0);
 }
 
