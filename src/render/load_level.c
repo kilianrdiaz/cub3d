@@ -75,8 +75,6 @@ void	load_level(t_game *g)
 	char	*level;
 	char	*msg;
 
-	mlx_hook(g->win, 6, 1L << 6, NULL, NULL);
-	g->mouse_enabled = 0;
 	if (!g->timer && g->render_state == LOAD_LEVEL)
 	{
 		++g->levels;

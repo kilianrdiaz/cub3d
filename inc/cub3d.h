@@ -90,13 +90,13 @@ typedef enum e_render
 	INTRO,
 	LOAD_LEVEL,
 	NEW_LEVEL,
-	PLAYING,
-	PAUSE,
 	WIN,
 	GAME_OVER,
+	PLAYING,
+	PAUSE,
+	HIGH_SCORE,
 	WAITING_FOR_NAME,
 	SCORE_SAVED,
-	HIGH_SCORE,
 	END
 }					t_render;
 
@@ -217,7 +217,6 @@ typedef struct s_game
 	void			*win;
 	void			*img;
 	char			*addr;
-	int				mouse_enabled;
 	int				bpp;
 	int				line_len;
 	int				endian;

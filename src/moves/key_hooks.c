@@ -56,20 +56,36 @@ int	key_release(int key, t_game *g)
 	return (0);
 }
 
+static int	enable_mouse(t_game *g)
+{
+	static int	reset_mouse = 1;
+
+	if (!g || !g->mlx || !g->win)
+		return (0);
+	if ((g->render_state <= GAME_OVER || g->render_state >= PAUSE)
+		&& !reset_mouse)
+		return (mlx_mouse_show(g->mlx, g->win), reset_mouse = 1, 0);
+	else if (g->render_state <= GAME_OVER || g->render_state >= PAUSE)
+		return (0);
+	if (reset_mouse)
+	{
+		mlx_mouse_move(g->mlx, g->win, WIDTH / 2, HEIGHT / 2);
+		mlx_mouse_hide(g->mlx, g->win);
+		reset_mouse = 0;
+	}
+	return (1);
+}
+
 int	mouse_rotation(int x, int y, t_game *g)
 {
-	int			dx;
-	double		angle;
+	int		dx;
+	double	angle;
 
 	(void)y;
 	if (!g || !g->mlx || !g->win)
 		return (0);
-	if (g->mouse_enabled == 0)
-	{
-		mlx_mouse_move(g->mlx, g->win, WIDTH / 2, HEIGHT / 2);
-		g->mouse_enabled = 1;
+	if (!enable_mouse(g))
 		return (0);
-	}
 	dx = x - WIDTH / 2;
 	if (dx == 0)
 		return (0);
