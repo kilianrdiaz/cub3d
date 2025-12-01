@@ -14,7 +14,6 @@
 
 #define NO_CLOSE "Error: Map is not closed/surrounded by walls"
 #define NO_MAP "Error: Could not load map"
-#define NO_WAY_TO_BOMB "Error: No way to reach all bombs in the map"
 
 static int	is_map_str(char *s)
 {
@@ -40,16 +39,19 @@ static int	is_map_str(char *s)
 
 static void	checker_map(char ***map)
 {
+	char	*msg;
+
 	if (!map || !*map)
 		return ;
-	if (!check_bombs_accessibility(*map))
+	msg = check_map_accessibility(*map);
+	if (msg)
 	{
-		ft_putendl_fd(NO_WAY_TO_BOMB, 2);
+		ft_putendl_fd(msg, STDERR_FILENO);
 		ft_free_array((void ***)map);
 	}
 	else if (!is_map_closed(*map))
 	{
-		ft_putendl_fd(NO_CLOSE, 2);
+		ft_putendl_fd(NO_CLOSE, STDERR_FILENO);
 		ft_free_array((void ***)map);
 	}
 }

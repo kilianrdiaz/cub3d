@@ -282,7 +282,7 @@ t_sprite			*print_alphabet(t_game *game);
 void				update_scores(char **scores, int position);
 int					**get_visited_map(char **map);
 int					is_map_closed(char **map);
-int					check_bombs_accessibility(char **map);
+char				*check_map_accessibility(char **map);
 
 // parsing
 int					check_files_extension(int argc, char **argv);

@@ -12,6 +12,9 @@
 
 #include "../../inc/cub3d.h"
 
+#define NO_WAY_TO_BOMB "Error: No way to reach all bombs in the map"
+#define SPACE_IN_MAP "Error: There are accessible spaces in the map"
+
 static t_pos	get_player_pos(char **map)
 {
 	t_pos	p;
@@ -96,7 +99,7 @@ int	is_map_closed(char **map)
 		p.x = -1;
 		while (map[p.y][++p.x])
 		{
-			if (map[p.y][p.x] != '1' && map[p.y][p.x] != ' ')
+			if (map[p.y][p.x] != '1')
 			{
 				if (!flood_fill(map, p, rows, visited))
 				{
@@ -110,17 +113,15 @@ int	is_map_closed(char **map)
 	return (1);
 }
 
-int	check_bombs_accessibility(char **map)
+char	*check_map_accessibility(char **map)
 {
-	int		rows;
 	int		**visited;
 	t_pos	player;
 	t_pos	p;
 
-	rows = ft_memlen((const void **)map);
 	visited = get_visited_map(map);
 	player = get_player_pos(map);
-	accessible_flood(map, player, rows, visited);
+	accessible_flood(map, player, ft_memlen((const void **)map), visited);
 	p.y = -1;
 	while (map[++p.y])
 	{
@@ -128,12 +129,11 @@ int	check_bombs_accessibility(char **map)
 		while (map[p.y][++p.x])
 		{
 			if (map[p.y][p.x] == 'B' && !visited[p.y][p.x])
-			{
-				ft_free_array((void ***)&visited);
-				return (0);
-			}
+				return (ft_free_array((void ***)&visited), NO_WAY_TO_BOMB);
+			if (map[p.y][p.x] == ' ' && visited[p.y][p.x])
+				return (ft_free_array((void ***)&visited), SPACE_IN_MAP);
 		}
 	}
 	ft_free_array((void ***)&visited);
-	return (1);
+	return (NULL);
 }
