@@ -23,16 +23,21 @@ static int	is_walkable(int x, int y, char **map)
 	return (1);
 }
 
-static void	slide_player(t_game *g, t_coords *new_pos)
+static int	slide_player(t_game *g, t_coords *new_pos, t_coords check_pos)
 {
 	t_pos	slide_pos;
 
-	slide_pos.x = is_walkable((int)new_pos->x, (int)g->spider.pos.y, g->map);
-	slide_pos.y = is_walkable((int)g->spider.pos.x, (int)new_pos->y, g->map);
+	if (is_walkable((int)check_pos.x, (int)check_pos.y, g->map))
+		return (1);
+	slide_pos.x = is_walkable((int)check_pos.x, (int)g->spider.pos.y, g->map);
+	slide_pos.y = is_walkable((int)g->spider.pos.x, (int)check_pos.y, g->map);
 	if (slide_pos.x && !slide_pos.y)
 		new_pos->y = g->spider.pos.y;
 	else if (slide_pos.y && !slide_pos.x)
 		new_pos->x = g->spider.pos.x;
+	if (!is_walkable((int)new_pos->x, (int)new_pos->y, g->map))
+		return (0);
+	return (1);	
 }
 
 static double	move_player(t_game *g, double dir)
@@ -43,22 +48,23 @@ static double	move_player(t_game *g, double dir)
 
 	new_pos.x = g->spider.pos.x + g->spider.dir.x * dir;
 	new_pos.y = g->spider.pos.y + g->spider.dir.y * dir;
-	distance = sqrt(pow(new_pos.x - g->spider.pos.x, 2) + pow(new_pos.y
-				- g->spider.pos.y, 2));
-	if (distance > 0)
+	if (dir > 0)
 		dir += SAFETY_OFFSET;
-	else if (distance < 0)
+	else if (dir < 0)
 		dir -= SAFETY_OFFSET;
 	check_pos.x = g->spider.pos.x + g->spider.dir.x * dir;
 	check_pos.y = g->spider.pos.y + g->spider.dir.y * dir;
-	if (!is_walkable((int)check_pos.x, (int)check_pos.y, g->map))
+	if ((int)check_pos.x != (int)g->spider.pos.x
+		&& (int)check_pos.y != (int)g->spider.pos.y)
 	{
-		slide_player(g, &new_pos);
-		if (!is_walkable((int)new_pos.x, (int)new_pos.y, g->map))
-			return (0.0);
+		if (!is_walkable((int)check_pos.x, (int)g->spider.pos.y, g->map)
+			&& !is_walkable((int)g->spider.pos.x, (int)check_pos.y, g->map))
+			return (0);
 	}
-	if (new_pos.x == g->spider.pos.x && new_pos.y == g->spider.pos.y)
-		return (0.0);
+	if (!slide_player(g, &new_pos, check_pos))
+		return (0);
+	distance = sqrt(pow(new_pos.x - g->spider.pos.x, 2)
+			+ pow(new_pos.y - g->spider.pos.y, 2));
 	g->spider.pos = new_pos;
 	return (distance);
 }
