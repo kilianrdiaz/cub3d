@@ -13,6 +13,8 @@
 #include "../inc/cub3d.h"
 
 #define MOVE_SPEED_LIZARD 1
+#define DELAY_LIZARD_MOVE 10
+#define DIST_TO_ATTACK 1.1
 
 static int	move_lizard_to(t_game *g, t_sprite *l, t_coords move)
 {
@@ -33,7 +35,7 @@ static int	move_lizard_to(t_game *g, t_sprite *l, t_coords move)
 			g->bombs[x]->state = ACTIVE;
 	}
 	l->pos = move;
-	l->delay = g->timer + 10;
+	l->delay = g->timer + DELAY_LIZARD_MOVE;
 	return (1);
 }
 
@@ -107,7 +109,7 @@ void	move_lizards(t_game *g)
 		else if (l->state == MOVING || (l->state == ATTACKED
 				&& g->timer >= l->delay) || l->state == ATTACKING)
 			l->state = ACTIVE;
-		if (l->dist <= 1.1)
+		if (l->dist <= DIST_TO_ATTACK)
 			player_take_damage(g, l);
 		if (l->dist <= DETECT_RADIUS)
 			chase_lizard(g, l, g->spider.pos);

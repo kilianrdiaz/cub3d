@@ -12,6 +12,10 @@
 
 #include "../inc/cub3d.h"
 
+#define DELAY_BOMB_DEFUSE 2
+#define DELAY_LIZARD_ATTACKED 200
+#define SCORE_BOMB_DEFUSED 1000
+
 void	update_bombs(t_game *g)
 {
 	int	i;
@@ -27,7 +31,7 @@ void	update_bombs(t_game *g)
 			printf("Bomb at (%.1f, %.1f) has been defused.\n",
 				g->bombs[i]->pos.x, g->bombs[i]->pos.y);
 			g->bomb_count--;
-			g->score += 1000;
+			g->score += SCORE_BOMB_DEFUSED;
 		}
 	}
 	if (g->bomb_count == 0)
@@ -49,7 +53,7 @@ static int	check_if_is_lizard(t_game *g, int x, int y)
 		if (t.x == x && t.y == y)
 		{
 			g->lizards[i]->state = ATTACKED;
-			g->lizards[i]->delay = g->timer + 200;
+			g->lizards[i]->delay = g->timer + DELAY_LIZARD_ATTACKED;
 			g->keys.space = 0;
 			ft_printf("Lizard attacked at (%d,%d)\n", t.x, t.y);
 			return (1);
@@ -72,7 +76,7 @@ static int	check_if_is_bomb(t_game *g, int x, int y)
 		if (t.x == x && t.y == y)
 		{
 			g->bombs[i]->state = ATTACKED;
-			g->bombs[i]->delay = g->timer + 2;
+			g->bombs[i]->delay = g->timer + DELAY_BOMB_DEFUSE;
 			g->keys.space = 0;
 			ft_printf("Bomb attacked at (%d,%d)\n", t.x, t.y);
 			return (1);
