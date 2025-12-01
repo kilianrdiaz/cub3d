@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/10 19:20:58 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/29 20:17:24 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/12/01 21:36:15 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #define NO_CLOSE "Error: Map is not closed/surrounded by walls"
 #define NO_MAP "Error: Could not load map"
+#define NO_WAY_TO_BOMB "Error: No way to reach all bombs in the map"
 
 static int	is_map_str(char *s)
 {
@@ -39,14 +40,11 @@ static int	is_map_str(char *s)
 
 static void	checker_map(char ***map)
 {
-	char	*msg;
-
 	if (!map || !*map)
 		return ;
-	msg = check_map_accessibility(*map);
-	if (msg)
+	if (!check_map_accessibility(*map))
 	{
-		ft_putendl_fd(msg, STDERR_FILENO);
+		ft_putendl_fd(NO_WAY_TO_BOMB, STDERR_FILENO);
 		ft_free_array((void ***)map);
 	}
 	else if (!is_map_closed(*map))

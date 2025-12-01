@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   map_checks.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 21:09:41 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/30 21:09:51 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/12/01 21:32:20 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/cub3d.h"
-
-#define NO_WAY_TO_BOMB "Error: No way to reach all bombs in the map"
-#define SPACE_IN_MAP "Error: There are accessible spaces in the map"
 
 static t_pos	get_player_pos(char **map)
 {
@@ -96,24 +93,22 @@ int	is_map_closed(char **map)
 	visited = get_visited_map(map);
 	while (map[++p.y])
 	{
-		p.x = -1;
+		p.x = 0;
+		while (ft_isspace(map[p.y][p.x]))
+			p.x++;
 		while (map[p.y][++p.x])
 		{
 			if (map[p.y][p.x] != '1')
 			{
 				if (!flood_fill(map, p, rows, visited))
-				{
-					ft_free_array((void ***)&visited);
-					return (0);
-				}
+					return (ft_free_array((void ***)&visited), 0);
 			}
 		}
 	}
-	ft_free_array((void ***)&visited);
-	return (1);
+	return (ft_free_array((void ***)&visited), 1);
 }
 
-char	*check_map_accessibility(char **map)
+int	check_map_accessibility(char **map)
 {
 	int		**visited;
 	t_pos	player;
@@ -129,11 +124,9 @@ char	*check_map_accessibility(char **map)
 		while (map[p.y][++p.x])
 		{
 			if (map[p.y][p.x] == 'B' && !visited[p.y][p.x])
-				return (ft_free_array((void ***)&visited), NO_WAY_TO_BOMB);
-			if (map[p.y][p.x] == ' ' && visited[p.y][p.x])
-				return (ft_free_array((void ***)&visited), SPACE_IN_MAP);
+				return (ft_free_array((void ***)&visited), 0);
 		}
 	}
 	ft_free_array((void ***)&visited);
-	return (NULL);
+	return (1);
 }

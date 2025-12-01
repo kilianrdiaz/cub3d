@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:27:17 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/29 20:18:05 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/12/01 21:34:13 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,18 +281,17 @@ int					get_position(t_game *g, char **scores);
 t_sprite			*print_alphabet(t_game *game);
 void				update_scores(char **scores, int position);
 int					**get_visited_map(char **map);
-int					is_map_closed(char **map);
-char				*check_map_accessibility(char **map);
 
 // parsing
 int					check_files_extension(int argc, char **argv);
 void				get_info_file(t_game *g);
 void				load_map_textures(t_game *g, char **content);
+int					is_map_closed(char **map);
+int					check_map_accessibility(char **map);
 char				**get_map(char **content);
 int					check_player_count(char **map);
 void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
-int					get_map_max_width(char **map);
 
 // rendering
 void				game(t_game *g);
@@ -324,6 +323,7 @@ void				draw_player_arrow(t_game *g, t_minimap m);
 void				put_rect(t_game *g, t_sprite r, unsigned int color);
 void				draw_tile(t_game *g, t_pos tile);
 void				init_revealed_if_needed(t_minimap *m, int w, int h);
+int					get_map_max_width(char **map);
 
 // input
 int					key_press(int key, t_game *g);
