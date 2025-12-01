@@ -37,7 +37,7 @@ static int	slide_player(t_game *g, t_coords *new_pos, t_coords check_pos)
 		new_pos->x = g->spider.pos.x;
 	if (!is_walkable((int)new_pos->x, (int)new_pos->y, g->map))
 		return (0);
-	return (1);	
+	return (1);
 }
 
 static double	move_player(t_game *g, double dir)
@@ -63,8 +63,8 @@ static double	move_player(t_game *g, double dir)
 	}
 	if (!slide_player(g, &new_pos, check_pos))
 		return (0);
-	distance = sqrt(pow(new_pos.x - g->spider.pos.x, 2)
-			+ pow(new_pos.y - g->spider.pos.y, 2));
+	distance = sqrt(pow(new_pos.x - g->spider.pos.x, 2) + pow(new_pos.y
+				- g->spider.pos.y, 2));
 	g->spider.pos = new_pos;
 	return (distance);
 }
