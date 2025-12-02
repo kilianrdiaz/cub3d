@@ -16,21 +16,26 @@
 #define R_FAILED "Error: Could not read %s content\n"
 #define NO_BOMBS "Warning: No bombs found in the map %s\n"
 #define MAP_INVALID "Error: Invalid map in %s\n"
+#define MAX_TIMEOUT 3500
+#define MIN_TIMEOUT 500
 
 static unsigned int	get_timeout_value(t_game g)
 {
-	double	dist;
-	int		i;
+	double			dist;
+	int				i;
+	unsigned int	timeout;
 
+	dist = 0.0;
 	if (!g.bomb_count)
 		return (0);
-	dist = sqrt(pow(g.spider.pos.x - g.bombs[0]->pos.x, 2) + pow(g.spider.pos.y
-				- g.bombs[0]->pos.y, 2));
-	i = 0;
+	i = -1;
 	while (g.bombs[++i])
 		dist += sqrt(pow(g.spider.pos.x - g.bombs[i]->pos.x, 2)
 				+ pow(g.spider.pos.y - g.bombs[i]->pos.y, 2));
-	return ((unsigned int)(dist / MOVE_SPEED));
+	dist = dist / g.bomb_count;
+	dist /= sqrt(pow(get_map_max_width(g.map), 2) + pow(ft_memlen(g.map), 2));
+	timeout = MIN_TIMEOUT + (unsigned int)(dist * (MAX_TIMEOUT - MIN_TIMEOUT));
+	return (timeout);
 }
 
 static char	**read_file(int fd)
