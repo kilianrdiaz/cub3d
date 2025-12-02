@@ -6,7 +6,7 @@
 #    By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/15 14:59:14 by alejhern          #+#    #+#              #
-#    Updated: 2025/09/15 15:00:24 by alejhern         ###   ########.fr        #
+#    Updated: 2025/12/02 10:57:20 by alejhern         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,3 +18,5 @@ cub3d
 obj
 audios
 maps
+*.cub
+textures
