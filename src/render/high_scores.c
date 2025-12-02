@@ -21,12 +21,9 @@ static t_ray	ray_web_target(t_game *g, t_tex web_target, float scale)
 	ray.d_end.y = g->spider.hand[ACTIVE].height * SCALE_SPRITE;
 	ray.d_start.x = g->spider.pos.x - ray.d_end.x / 2;
 	ray.d_start.y = HEIGHT - ray.d_end.y;
-	// 2. Calculamos la escala según el tamaño de las letras
 	ray.d_end.x = web_target.width * scale;
 	ray.d_end.y = web_target.height * scale;
-	// 3. Ajuste vertical (por encima de la mano)
 	ray.line_height = -ray.d_end.y * (1.0 + g->spider.pos.y * 0.5);
-	// 4. Posición: centrado respecto a la mano
 	ray.d_start.x = ray.d_start.x + (ray.d_end.x / 1.5) - (ray.d_end.x / 2);
 	ray.d_start.y = ray.d_start.y + ray.line_height;
 	return (ray);
@@ -41,7 +38,6 @@ static t_ray	draw_web_target(t_game *g, t_tex *web_target)
 
 	scale = (g->font.char_h * g->font.scale) / (double)web_target->height;
 	ray = ray_web_target(g, *web_target, scale);
-	// 5. Dibujado con reescalado por muestreo sencillo
 	pos.y = -1;
 	while (++pos.y < ray.d_end.y)
 	{

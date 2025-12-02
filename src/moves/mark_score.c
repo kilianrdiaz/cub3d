@@ -47,7 +47,6 @@ int	mark_letter(t_game *g, t_sprite *sprites, t_ray ray)
 	t_coords	x;
 	t_sprite	target;
 
-	// Coordenadas reales del centro del target (en pantalla)
 	x.x = ray.d_start.x + ray.d_end.x / 2.0f;
 	x.y = ray.d_start.y + ray.d_end.y / 2.0f;
 	i = -1;
@@ -125,9 +124,9 @@ char	*set_name(t_game *g, t_sprite *alphabet, t_ray ray)
 	ch = mark_letter(g, alphabet, ray);
 	if (ch == -1)
 		return (NULL);
-	if (ch < 26 && index < 6) // A-Z
+	if (ch < 26 && index < 6)
 		name[index++] = 'A' + ch;
-	else if (ch == 26) // DEL
+	else if (ch == 26)
 	{
 		if (index > 0)
 			name[--index] = '-';

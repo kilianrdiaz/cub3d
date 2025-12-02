@@ -74,14 +74,13 @@ void	calculate_distance_to_wall(t_game g, t_ray *ray, int *side)
 			*side = 1;
 		}
 	}
-	// 4. Cálculo de la distancia perpendicular a la pared
 	ray->row_distance = (ray->src.y - g.spider.pos.y + (1 - ray->coords.y)
 			/ 2.0) / ray->left.y;
 	if (!(*side))
 		ray->row_distance = (ray->src.x - g.spider.pos.x + (1 - ray->coords.x)
 				/ 2.0) / ray->left.x;
 	if (ray->row_distance <= 0.0)
-		ray->row_distance = 1e-6; // Evita divisiones por 0
+		ray->row_distance = 1e-6;
 }
 
 t_ray	ray_map(t_game g, int x)
@@ -92,10 +91,8 @@ t_ray	ray_map(t_game g, int x)
 	ray.view = 2 * x / (double)GAME_W - 1;
 	ray.left.x = g.spider.dir.x + g.spider.plane.x * ray.view;
 	ray.left.y = g.spider.dir.y + g.spider.plane.y * ray.view;
-	// Posición inicial en el mapa (celda del jugador)
 	ray.src.x = (int)g.spider.pos.x;
 	ray.src.y = (int)g.spider.pos.y;
-	// Distancias que recorrerá el rayo para cruzar una celda en X e Y
 	ray.delta_dist.x = fabs(1.0 / ray.left.x);
 	if (ray.left.x == 0.0)
 		ray.delta_dist.x = 1e30;

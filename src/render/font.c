@@ -77,7 +77,7 @@ void	load_font(t_game *g, t_font *f, char *path)
 	}
 	f->scale = 1.0;
 	f->char_h = f->char_h / NUM_ROWS;
-	f->char_w = f->char_w / 9; // fila más larga = 9 letras
+	f->char_w = f->char_w / 9;
 	create_char_bitmap(f);
 }
 

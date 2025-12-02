@@ -41,7 +41,7 @@ static void	audio_init(void **audio_ptr)
 {
 	t_audio	*audio;
 
-	if (*audio_ptr) // Ya inicializado
+	if (*audio_ptr)
 		return ;
 	audio = ft_calloc(1, sizeof(t_audio));
 	if (!audio)
@@ -59,7 +59,7 @@ static void	audio_init(void **audio_ptr)
 	load_audio(&audio->engine, &audio->game_over, "audios/gameover.wav", 0);
 	load_audio(&audio->engine, &audio->win, "audios/win.wav", 0);
 	ma_sound_start(&audio->game);
-	*audio_ptr = audio; // Guardamos el puntero en g->audio
+	*audio_ptr = audio;
 }
 
 static void	game_effects(t_game *g, t_audio *audio)

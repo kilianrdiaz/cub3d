@@ -52,26 +52,22 @@ static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex tex)
 			|| ray.src.y >= tex.height)
 			continue ;
 		color = get_pixel_color(tex, ray.src.x, ray.src.y);
-		if ((color & 0x00FFFFFF) != 0) // Transparencia
+		if ((color & 0x00FFFFFF) != 0)
 			put_pixel(g, ray.line_height, y, color);
 	}
 }
 
 static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex tex)
 {
-	// 1️⃣ Altura y ancho del sprite según la distancia (como las paredes)
 	sp->height = (tex.height * sp->scale / sp->trans.y);
 	sp->width = (tex.width * sp->scale / sp->trans.y);
-	// 2️⃣ Offset vertical para apoyarlo en el suelo
 	ray->view = (int)(HEIGHT / sp->trans.y * 0.5);
-	// 3️⃣ Límites verticales
 	ray->d_start.y = -sp->height / 2 + HEIGHT / 2 + ray->view;
 	ray->d_end.y = sp->height / 2 + HEIGHT / 2 + ray->view;
 	if (ray->d_start.y < 0)
 		ray->d_start.y = 0;
 	if (ray->d_end.y >= HEIGHT)
 		ray->d_end.y = HEIGHT - 1;
-	// 4️⃣ Límites horizontales
 	sp->screen_x = (int)((GAME_W / 2) * (1 + sp->trans.x / sp->trans.y));
 	ray->d_start.x = -sp->width / 2 + sp->screen_x;
 	ray->d_end.x = ray->d_start.x + sp->width;
