@@ -45,13 +45,15 @@ void	put_timer(t_game *g, t_coords coords)
 	ft_append_array((void ***)&buffer, str);
 	str = ft_itoa(t.seconds);
 	ft_append_array((void ***)&buffer, str);
-	render_text(g, buffer[0], coords);
-	coords.x += (g->font.char_w * g->font.scale);
 	render_text(g, buffer[1], coords);
+	if (buffer[0])
+		coords.x -= (g->font.char_w * g->font.scale) * ft_strlen(buffer[0]);
+	render_text(g, buffer[0], coords);
+	coords.x = GAME_W + ((WIDTH - GAME_W) / 2) - 60;
 	coords.x += (g->font.char_w * g->font.scale);
 	if (t.seconds < 10)
 	{
-		render_text(g, "0", coords);
+		render_char(g, '0', coords);
 		coords.x += (g->font.char_w * g->font.scale);
 	}
 	render_text(g, buffer[2], coords);

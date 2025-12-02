@@ -12,6 +12,9 @@
 
 #include "../../inc/cub3d.h"
 
+#define MIDELINE_WIDTH 8
+#define MIDELINE_COLOR 0xFF555555
+
 static void	draw_text(t_game *g, t_tex tex, t_sprite sp)
 {
 	t_pos	p;
@@ -29,12 +32,12 @@ static void	draw_text(t_game *g, t_tex tex, t_sprite sp)
 			if (src_pos.x < 0 || src_pos.x >= tex.width || src_pos.y < 0
 				|| src_pos.y >= tex.height)
 				continue ;
-			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x
-					* (tex.bpp / 8));
+			src = tex.addr + (src_pos.y * tex.line_len + src_pos.x * (tex.bpp
+						/ 8));
 			tex.color = *(unsigned int *)src;
 			if ((tex.color & 0x00FFFFFF) != 0)
-				put_pixel(g, (int)sp.pos.x + p.x,
-					(int)sp.pos.y + p.y, tex.color);
+				put_pixel(g, (int)sp.pos.x + p.x, (int)sp.pos.y + p.y,
+					tex.color);
 		}
 	}
 }
@@ -42,12 +45,21 @@ static void	draw_text(t_game *g, t_tex tex, t_sprite sp)
 static void	put_score_text(t_game *g, t_coords pos)
 {
 	char	*str;
+	int		i;
 
+	pos.x = GAME_W + ((WIDTH - GAME_W) / 2) - 60;
+	pos.x += (g->font.char_w * g->font.scale) * 2;
+	if (!g->score)
+		return (render_char(g, '0', pos));
 	str = ft_itoa(g->score);
 	if (!str)
 		return ;
-	pos.x -= (g->font.char_w * ft_strlen(str) / 2);
-	render_text(g, str, pos);
+	i = ft_strlen(str);
+	while (--i >= 0)
+	{
+		render_char(g, str[i], pos);
+		pos.x -= g->font.char_w;
+	}
 	free(str);
 }
 
@@ -64,7 +76,7 @@ void	draw_panel_separator(t_game *g)
 	}
 }
 
-static void	draw_lives(t_game *g)
+static void	render_live(t_game *g)
 {
 	t_sprite	sp;
 
@@ -95,22 +107,23 @@ void	render_stats(t_game *g)
 
 	draw_health_bar(g);
 	draw_panel_separator(g);
-	sp.pos.x = GAME_W + 150;
-	sp.pos.y = HEIGHT - 300;
+	sp.pos.x = GAME_W + ((WIDTH - GAME_W) / 2) - 120;
+	sp.pos.y = HEIGHT - 250;
 	sp.scale = 0.5;
 	draw_text(g, g->bomb_tex[ACTIVE], sp);
-	sp.pos.x += g->bomb_tex[ACTIVE].width * sp.scale + 50;
+	sp.pos.x = GAME_W + ((WIDTH - GAME_W) / 2) + 120;
 	g->font.scale = 1.8;
 	sp.pos.y -= g->font.char_h * g->font.scale / 3;
 	str = ft_itoa(g->bomb_count);
+	if (str)
+		sp.pos.x -= (g->font.char_w * g->font.scale * ft_strlen(str)) / 2;
 	render_text(g, str, sp.pos);
 	free(str);
-	sp.pos.x = GAME_W + 150;
+	sp.pos.x = GAME_W + ((WIDTH - GAME_W) / 2) - 60;
 	sp.pos.y += g->bomb_tex[ACTIVE].height * sp.scale + 50;
 	put_timer(g, sp.pos);
-	sp.pos.y += g->font.char_h * g->font.scale + 10;
-	sp.pos.x = GAME_W + 100 + g->bomb_tex[ACTIVE].width * sp.scale + 50;
+	sp.pos.y += g->bomb_tex[ACTIVE].height * sp.scale + 50;
 	put_score_text(g, sp.pos);
-	draw_lives(g);
+	render_live(g);
 	draw_minimap(g);
 }
