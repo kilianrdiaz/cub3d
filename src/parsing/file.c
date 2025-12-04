@@ -17,26 +17,31 @@
 #define NO_BOMBS "Error: No bombs found in the map %s\n"
 #define NO_TEXTURES "Error: Not all textures/colors were defined in %s\n"
 #define INVALID_LINE "Error: Invalid line in texture definitions in %s\n"
-#define MAX_TIMEOUT 3500
-#define MIN_TIMEOUT 500
+#define TIMEOUT_EXP 1.3     // curva suave
+#define TIMEOUT_SCALE 8.0   // factor multiplicador del tiempo
+#define TIMEOUT_OFFSET 10.0 // tiempo mínimo base opcional
 
 static unsigned int	get_timeout_value(t_game g)
 {
-	double			dist;
-	int				i;
-	unsigned int	timeout;
+	double		min_dist;
+	double		dist;
+	int			i;
+	t_coords	d;
 
-	dist = 0.0;
+	min_dist = 1e9;
 	if (!g.bomb_count)
 		return (0);
 	i = -1;
 	while (g.bombs[++i])
-		dist += sqrt(pow(g.spider.pos.x - g.bombs[i]->pos.x, 2)
-				+ pow(g.spider.pos.y - g.bombs[i]->pos.y, 2));
-	dist = dist / g.bomb_count;
-	dist /= sqrt(pow(get_map_max_width(g.map), 2) + pow(ft_memlen(g.map), 2));
-	timeout = MIN_TIMEOUT + (unsigned int)(dist * (MAX_TIMEOUT - MIN_TIMEOUT));
-	return (timeout);
+	{
+		d.x = g.spider.pos.x - g.bombs[i]->pos.x;
+		d.y = g.spider.pos.y - g.bombs[i]->pos.y;
+		dist = sqrt(d.x * d.x + d.y * d.y);
+		if (dist < min_dist)
+			min_dist = dist;
+	}
+	dist = pow(min_dist, TIMEOUT_EXP);
+	return ((unsigned int)(TIMEOUT_OFFSET + TIMEOUT_SCALE * dist));
 }
 
 static char	**read_file(int fd)
