@@ -64,6 +64,31 @@ static int	flood_fill(char **map, t_pos pos, int rows, int **visited)
 	return (1);
 }
 
+int	is_map_closed(char **map)
+{
+	int		rows;
+	int		**visited;
+	t_pos	p;
+
+	rows = ft_memlen((const void **)map);
+	p.y = -1;
+	visited = get_visited_map(map);
+	while (map[++p.y])
+	{
+		p.x = -1;
+		while (map[p.y][++p.x])
+		{
+			if (map[p.y][p.x] != '1' && map[p.y][p.x] != ' '
+				&& !visited[p.y][p.x])
+			{
+				if (!flood_fill(map, p, rows, visited))
+					return (ft_free_array((void ***)&visited), 0);
+			}
+		}
+	}
+	return (ft_free_array((void ***)&visited), 1);
+}
+
 static void	accessible_flood(char **map, t_pos p, int rows, int **visited)
 {
 	int	row_length;
@@ -80,32 +105,6 @@ static void	accessible_flood(char **map, t_pos p, int rows, int **visited)
 	accessible_flood(map, (t_pos){p.x - 1, p.y}, rows, visited);
 	accessible_flood(map, (t_pos){p.x, p.y + 1}, rows, visited);
 	accessible_flood(map, (t_pos){p.x, p.y - 1}, rows, visited);
-}
-
-int	is_map_closed(char **map)
-{
-	int		rows;
-	int		**visited;
-	t_pos	p;
-
-	rows = ft_memlen((const void **)map);
-	p.y = -1;
-	visited = get_visited_map(map);
-	while (map[++p.y])
-	{
-		p.x = 0;
-		while (ft_isspace(map[p.y][p.x]))
-			p.x++;
-		while (map[p.y][++p.x])
-		{
-			if (map[p.y][p.x] != '1')
-			{
-				if (!flood_fill(map, p, rows, visited))
-					return (ft_free_array((void ***)&visited), 0);
-			}
-		}
-	}
-	return (ft_free_array((void ***)&visited), 1);
 }
 
 int	check_map_accessibility(char **map)
