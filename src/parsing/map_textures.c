@@ -31,6 +31,8 @@ static t_tex	*get_tex_id(t_game *g, char *line)
 		tex = &g->map_text[F];
 	else if (ft_strncmp(line, "C ", 2) == 0)
 		tex = &g->map_text[C];
+	else if (!is_map_str(line) && line[0] != '\0')
+		return (set_error_parsing(g, ERR_LINE_TEXT, line), NULL);
 	if (g->level > 1 && tex && tex->img)
 	{
 		mlx_destroy_image(g->mlx, tex->img);

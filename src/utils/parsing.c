@@ -14,7 +14,6 @@
 
 #define NO_TEXTURE "Error: could not load texture %s\n"
 #define INVALID_SIZE "Error: texture %s has invalid size\n"
-#define INVALID_LINE "Error: Invalid line in texture definitions\n"
 
 int	**get_visited_map(char **map)
 {
