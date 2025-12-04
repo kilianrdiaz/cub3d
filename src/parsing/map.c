@@ -12,9 +12,8 @@
 
 #include "../../inc/cub3d.h"
 
-#define NO_CLOSE "Error: Map is not closed/surrounded by walls"
 #define NO_MAP "Error: Could not load map"
-#define NO_WAY_TO_BOMB "Error: No way to reach all bombs in the map"
+#define LINE_AFTER_MAP "Error: Found lines after map definition"
 
 static int	is_map_str(char *s)
 {
@@ -40,18 +39,15 @@ static int	is_map_str(char *s)
 
 static void	checker_map(char ***map)
 {
+	char	*msg;
+
 	if (!map || !*map)
 		return ;
-	if (!check_map_accessibility(*map))
-	{
-		ft_putendl_fd(NO_WAY_TO_BOMB, STDERR_FILENO);
-		ft_free_array((void ***)map);
-	}
-	else if (!is_map_closed(*map))
-	{
-		ft_putendl_fd(NO_CLOSE, STDERR_FILENO);
-		ft_free_array((void ***)map);
-	}
+	msg = check_map_accessibility(*map);
+	if (!msg)
+		return ;
+	ft_putendl_fd(msg, STDERR_FILENO);
+	ft_free_array((void ***)map);
 }
 
 char	**get_map(char **content)
@@ -72,8 +68,11 @@ char	**get_map(char **content)
 		ft_append_array((void ***)&map, line);
 		i++;
 	}
-	if (content[i] && !is_map_str(content[i]))
+	if (content[i])
+	{
+		ft_putendl_fd(LINE_AFTER_MAP, STDERR_FILENO);
 		return (ft_free_array((void ***)&map), NULL);
+	}
 	checker_map(&map);
 	return (map);
 }

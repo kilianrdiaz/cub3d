@@ -286,10 +286,8 @@ int					**get_visited_map(char **map);
 int					check_files_extension(int argc, char **argv);
 void				get_info_file(t_game *g);
 void				load_map_textures(t_game *g, char **content);
-int					is_map_closed(char **map);
-int					check_map_accessibility(char **map);
+char				*check_map_accessibility(char **map);
 char				**get_map(char **content);
-int					check_player_count(char **map);
 void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
 

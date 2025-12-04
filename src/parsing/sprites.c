@@ -12,9 +12,6 @@
 
 #include "../../inc/cub3d.h"
 
-#define NO_PLAYER "Error: No player start position found in map\n"
-#define MULTI_PLAYER "Error: Found more than 1 player in %s\n"
-
 static void	set_direction(t_game *g, char c)
 {
 	if (c == 'N' || c == 'P')
@@ -46,8 +43,6 @@ void	create_spiderman(t_game *g)
 
 	if (!g->map)
 		return ;
-	if (!check_player_count(g->map))
-		return (set_error_parsing(g, MULTI_PLAYER, *g->levels));
 	p.y = -1;
 	while (g->map[++p.y])
 	{
@@ -64,7 +59,6 @@ void	create_spiderman(t_game *g)
 			}
 		}
 	}
-	set_error_parsing(g, NO_PLAYER, NULL);
 }
 
 static void	create_sprite(t_game *g, t_pos p, char type)

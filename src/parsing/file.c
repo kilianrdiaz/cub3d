@@ -14,7 +14,7 @@
 
 #define O_FAILED "Error: Could not open file %s\n"
 #define R_FAILED "Error: Could not read %s content\n"
-#define NO_BOMBS "Warning: No bombs found in the map %s\n"
+#define NO_BOMBS "Error: No bombs found in the map %s\n"
 #define MAP_INVALID "Error: Invalid map in %s\n"
 #define MAX_TIMEOUT 3500
 #define MIN_TIMEOUT 500
@@ -94,7 +94,7 @@ void	get_info_file(t_game *g)
 	load_map_textures(g, content);
 	g->map = get_map(content);
 	if (!g->map)
-		return (set_error_parsing(g, MAP_INVALID, *g->levels));
+		return (set_error_parsing(g, NULL, NULL));
 	ft_free_array((void ***)&content);
 	close(fd);
 	create_spiderman(g);

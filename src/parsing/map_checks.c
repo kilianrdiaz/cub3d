@@ -12,30 +12,38 @@
 
 #include "../../inc/cub3d.h"
 
+#define NO_PLAYER "Error: No player starting position found in the map"
+#define MULTI_PLAYER                             \
+	"Error: Multiple player starting positions found in the map"
+#define NO_WAY_TO_BOMB "Error: No way to reach all bombs in the map"
+#define NO_CLOSE "Error: Map is not closed/surrounded by walls"
+
 static t_pos	get_player_pos(char **map)
 {
-	t_pos	p;
-	int		y;
-	int		x;
+	t_pos	player;
+	t_pos	pos;
+	int		found;
 
-	p.x = -1;
-	p.y = -1;
-	y = -1;
-	while (map[++y])
+	ft_memset(&player, -1, sizeof(t_pos));
+	pos.y = -1;
+	found = 0;
+	while (map[++pos.y])
 	{
-		x = -1;
-		while (map[y][++x])
+		pos.x = -1;
+		while (map[pos.y][++pos.x])
 		{
-			if (map[y][x] == 'N' || map[y][x] == 'S' || map[y][x] == 'E'
-				|| map[y][x] == 'W' || map[y][x] == 'P')
+			if (map[pos.y][pos.x] == 'N' || map[pos.y][pos.x] == 'S'
+				|| map[pos.y][pos.x] == 'E' || map[pos.y][pos.x] == 'W'
+				|| map[pos.y][pos.x] == 'P')
 			{
-				p.x = x;
-				p.y = y;
-				return (p);
+				player = pos;
+				found++;
+				if (found > 1)
+					return ((t_pos){.x = -2, .y = -2});
 			}
 		}
 	}
-	return (p);
+	return (player);
 }
 
 static int	flood_fill(char **map, t_pos pos, int rows, int **visited)
@@ -64,7 +72,7 @@ static int	flood_fill(char **map, t_pos pos, int rows, int **visited)
 	return (1);
 }
 
-int	is_map_closed(char **map)
+static int	is_map_closed(char **map)
 {
 	int		rows;
 	int		**visited;
@@ -107,14 +115,20 @@ static void	accessible_flood(char **map, t_pos p, int rows, int **visited)
 	accessible_flood(map, (t_pos){p.x, p.y - 1}, rows, visited);
 }
 
-int	check_map_accessibility(char **map)
+char	*check_map_accessibility(char **map)
 {
 	int		**visited;
 	t_pos	player;
 	t_pos	p;
 
-	visited = get_visited_map(map);
+	if (!is_map_closed(map))
+		return (NO_CLOSE);
 	player = get_player_pos(map);
+	if (player.x == -1 && player.y == -1)
+		return (NO_PLAYER);
+	else if (player.x == -2 && player.y == -2)
+		return (MULTI_PLAYER);
+	visited = get_visited_map(map);
 	accessible_flood(map, player, ft_memlen((const void **)map), visited);
 	p.y = -1;
 	while (map[++p.y])
@@ -123,9 +137,9 @@ int	check_map_accessibility(char **map)
 		while (map[p.y][++p.x])
 		{
 			if (map[p.y][p.x] == 'B' && !visited[p.y][p.x])
-				return (ft_free_array((void ***)&visited), 0);
+				return (ft_free_array((void ***)&visited), NO_WAY_TO_BOMB);
 		}
 	}
 	ft_free_array((void ***)&visited);
-	return (1);
+	return (NULL);
 }

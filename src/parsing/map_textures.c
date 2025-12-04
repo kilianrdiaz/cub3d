@@ -16,33 +16,6 @@
 #define ERR_LINE_TEXT "Error en la línea de textura %s\n"
 #define NO_TEXTURE "Error: Not all textures/colors were defined\n"
 
-int	check_player_count(char **map)
-{
-	int	y;
-	int	x;
-	int	found;
-
-	y = 0;
-	found = 0;
-	while (map[y])
-	{
-		x = 0;
-		while (map[y][x])
-		{
-			if (map[y][x] == 'N' || map[y][x] == 'S' || map[y][x] == 'E'
-				|| map[y][x] == 'W')
-			{
-				found++;
-				if (found > 1)
-					return (0);
-			}
-			x++;
-		}
-		y++;
-	}
-	return (1);
-}
-
 static t_tex	*get_tex_id(t_game *g, char *line)
 {
 	t_tex	*tex;
