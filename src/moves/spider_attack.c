@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   spider_attack.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+        */
+/*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 18:49:27 by alejhern          #+#    #+#             */
-/*   Updated: 2025/10/03 18:49:29 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/12/04 23:55:34 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ void	update_bombs(t_game *g)
 		if (g->bombs[i]->state == ATTACKED && g->bombs[i]->delay <= g->timer)
 		{
 			g->bombs[i]->state = DEFUSED;
-			printf("Bomb at (%.1f, %.1f) has been defused.\n",
-				g->bombs[i]->pos.x, g->bombs[i]->pos.y);
 			g->bomb_count--;
 			g->score += SCORE_BOMB_DEFUSED;
 		}
@@ -55,7 +53,6 @@ static int	check_if_is_lizard(t_game *g, int x, int y)
 			g->lizards[i]->state = ATTACKED;
 			g->lizards[i]->delay = g->timer + DELAY_LIZARD_ATTACKED;
 			g->keys.space = 0;
-			ft_printf("Lizard attacked at (%d,%d)\n", t.x, t.y);
 			return (1);
 		}
 	}
@@ -78,7 +75,6 @@ static int	check_if_is_bomb(t_game *g, int x, int y)
 			g->bombs[i]->state = ATTACKED;
 			g->bombs[i]->delay = g->timer + DELAY_BOMB_DEFUSE;
 			g->keys.space = 0;
-			ft_printf("Bomb attacked at (%d,%d)\n", t.x, t.y);
 			return (1);
 		}
 	}

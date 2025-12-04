@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/12 17:03:30 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/29 20:36:08 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/12/04 23:49:32 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ static void	load_sprite_textures(t_game *g)
 
 static void	prepare_game(t_game *g)
 {
-	load_sprite_textures(g);
 	load_font(g, &g->font, "./textures/font.xpm");
+	load_sprite_textures(g);
 	g->map_text = ft_calloc(sizeof(t_tex), 6);
 	if (!g->map_text)
 		ft_error_exit("Error: Memory allocation failed for map textures\n");

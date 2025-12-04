@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 17:14:32 by alejhern          #+#    #+#             */
-/*   Updated: 2025/11/15 21:04:02 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/12/04 23:46:01 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,13 @@ void	load_font(t_game *g, t_font *f, char *path)
 	if (!f->img)
 	{
 		ft_printf_fd(2, "Error: could not load font %s\n", path);
-		return ;
+		exit(EXIT_FAILURE);
 	}
 	f->addr = mlx_get_data_addr(f->img, &f->bpp, &f->line_len, &f->endian);
 	if (!f->addr)
 	{
 		ft_printf_fd(2, "Error: font %s has invalid size\n", path);
-		return ;
+		exit(EXIT_FAILURE);
 	}
 	f->scale = 1.0;
 	f->char_h = f->char_h / NUM_ROWS;

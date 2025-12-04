@@ -6,7 +6,7 @@
 /*   By: kroyo-di <kroyo-di@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:48:02 by kroyo-di          #+#    #+#             */
-/*   Updated: 2025/11/15 17:42:42 by kroyo-di         ###   ########.fr       */
+/*   Updated: 2025/12/04 23:41:53 by kroyo-di         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,11 @@ void	load_texture(t_game *g, t_tex *tex, char *path)
 	tex->color = COLOR_NONE;
 	tex->img = mlx_xpm_file_to_image(g->mlx, path, &tex->width, &tex->height);
 	if (!tex->img)
+	{
+		if (g->render_state == INTRO || g->render_state >= HIGH_SCORE)
+			return ;
 		return (set_error_parsing(g, NO_TEXTURE, path));
+	}
 	tex->addr = mlx_get_data_addr(tex->img, &tex->bpp, &tex->line_len,
 			&tex->endian);
 	if (tex->width <= 0 || tex->height <= 0)
