@@ -68,12 +68,6 @@ static void	prepare_game(t_game *g)
 	g->map_text = ft_calloc(sizeof(t_tex), 6);
 	if (!g->map_text)
 		ft_error_exit("Error: Memory allocation failed for map textures\n");
-	g->map_text[NO].color = COLOR_NONE;
-	g->map_text[SO].color = COLOR_NONE;
-	g->map_text[WE].color = COLOR_NONE;
-	g->map_text[EA].color = COLOR_NONE;
-	g->map_text[F].color = COLOR_NONE;
-	g->map_text[C].color = COLOR_NONE;
 	g->live.player_hp = 100;
 	g->live.lives_left = 3;
 	ft_bzero(&g->keys, sizeof(t_keys));

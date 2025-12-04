@@ -14,6 +14,7 @@
 
 #define NO_TEXTURE "Error: could not load texture %s\n"
 #define INVALID_SIZE "Error: texture %s has invalid size\n"
+#define INVALID_LINE "Error: Invalid line in texture definitions\n"
 
 int	**get_visited_map(char **map)
 {
@@ -31,35 +32,51 @@ int	**get_visited_map(char **map)
 	return (visited);
 }
 
-int	check_loaded_textures(t_game *game)
-{
-	t_tex	tex;
-	int		i;
-
-	i = -1;
-	while (++i < 6)
-	{
-		tex = game->map_text[i];
-		if (!tex.img && tex.color == COLOR_NONE)
-			return (0);
-	}
-	return (1);
-}
-
-int	validate_line(char *line)
+static int	*get_textures_defined(char **content)
 {
 	int	i;
+	int	*textures;
 
 	i = -1;
-	while (line[++i])
+	textures = ft_safe_calloc(sizeof(int), sizeof(int) * 6);
+	while (content[++i])
 	{
-		if (!(line[i] == '0' || line[i] == '1' || line[i] == 'N'
-				|| line[i] == 'S' || line[i] == 'E' || line[i] == 'W'
-				|| line[i] == ' ' || line[i] == 'B' || line[i] == 'L'
-				|| line[i] == 'P'))
-			return (0);
+		if (ft_strncmp(content[i], "NO ", 3) == 0)
+			textures[NO] = 1;
+		else if (ft_strncmp(content[i], "SO ", 3) == 0)
+			textures[SO] = 1;
+		else if (ft_strncmp(content[i], "WE ", 3) == 0)
+			textures[WE] = 1;
+		else if (ft_strncmp(content[i], "EA ", 3) == 0)
+			textures[EA] = 1;
+		else if (ft_strncmp(content[i], "F ", 2) == 0)
+			textures[F] = 1;
+		else if (ft_strncmp(content[i], "C ", 2) == 0)
+			textures[C] = 1;
+		else if (!is_map_str(content[i]) && content[i][0] != '\0')
+			return (free(textures), NULL);
 	}
-	return (1);
+	return (textures);
+}
+
+int	all_textures_defined(char **content)
+{
+	int	*textures;
+
+	textures = get_textures_defined(content);
+	if (!textures)
+	{
+		free(textures);
+		return (-1);
+	}
+	if (textures[NO] && textures[SO] && textures[WE] && textures[EA]
+		&& textures[F] && textures[C])
+	{
+		free(textures);
+		return (1);
+	}
+	free(textures);
+	return (0);
 }
 
 void	set_error_parsing(t_game *g, char *msg, char *path)

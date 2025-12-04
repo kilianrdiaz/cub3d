@@ -12,25 +12,25 @@
 
 #include "../../inc/cub3d.h"
 
-#define NO_MAP "Error: Could not load map"
 #define LINE_AFTER_MAP "Error: Found lines after map definition"
 
-static int	is_map_str(char *s)
+int	is_map_str(char *line)
 {
 	int	i;
 
-	if (!s)
+	if (!line)
 		return (0);
 	i = 0;
-	while (ft_isspace(s[i]))
+	while (ft_isspace(line[i]))
 		i++;
-	if (s[i] == '\0')
+	if (line[i] == '\0')
 		return (0);
-	while (s[i])
+	while (line[i])
 	{
-		if (!(s[i] == '0' || s[i] == '1' || s[i] == 'N' || s[i] == 'S'
-				|| s[i] == 'E' || s[i] == 'W' || s[i] == ' ' || s[i] == 'P'
-				|| s[i] == 'B' || s[i] == 'L'))
+		if (!(line[i] == '0' || line[i] == '1' || line[i] == 'N'
+				|| line[i] == 'S' || line[i] == 'E' || line[i] == 'W'
+				|| line[i] == ' ' || line[i] == 'P' || line[i] == 'B'
+				|| line[i] == 'L'))
 			return (0);
 		i++;
 	}
@@ -56,14 +56,14 @@ char	**get_map(char **content)
 	int		i;
 	char	*line;
 
+	if (!content)
+		return (NULL);
 	map = NULL;
 	i = 0;
 	while (content[i] && !is_map_str(content[i]))
 		i++;
 	while (content[i] && is_map_str(content[i]))
 	{
-		if (!validate_line(content[i]))
-			break ;
 		line = ft_safe_strdup(content[i]);
 		ft_append_array((void ***)&map, line);
 		i++;

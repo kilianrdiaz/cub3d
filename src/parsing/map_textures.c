@@ -12,9 +12,7 @@
 
 #include "../../inc/cub3d.h"
 
-#define INVALID_LINE "Error: Invalid line in texture definitions\n"
 #define ERR_LINE_TEXT "Error en la línea de textura %s\n"
-#define NO_TEXTURE "Error: Not all textures/colors were defined\n"
 
 static t_tex	*get_tex_id(t_game *g, char *line)
 {
@@ -33,8 +31,6 @@ static t_tex	*get_tex_id(t_game *g, char *line)
 		tex = &g->map_text[F];
 	else if (ft_strncmp(line, "C ", 2) == 0)
 		tex = &g->map_text[C];
-	else if (!validate_line(line))
-		return (set_error_parsing(g, INVALID_LINE, NULL), NULL);
 	if (g->level > 1 && tex && tex->img)
 	{
 		mlx_destroy_image(g->mlx, tex->img);
@@ -104,6 +100,4 @@ void	load_map_textures(t_game *g, char **content)
 			tex->color = get_rgb_color(splited);
 		ft_free_array((void ***)&splited);
 	}
-	if (!check_loaded_textures(g))
-		return (set_error_parsing(g, NO_TEXTURE, NULL));
 }

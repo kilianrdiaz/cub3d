@@ -15,7 +15,8 @@
 #define O_FAILED "Error: Could not open file %s\n"
 #define R_FAILED "Error: Could not read %s content\n"
 #define NO_BOMBS "Error: No bombs found in the map %s\n"
-#define MAP_INVALID "Error: Invalid map in %s\n"
+#define NO_TEXTURES "Error: Not all textures/colors were defined in %s\n"
+#define INVALID_LINE "Error: Invalid line in texture definitions in %s\n"
 #define MAX_TIMEOUT 3500
 #define MIN_TIMEOUT 500
 
@@ -81,6 +82,7 @@ static char	**get_content(t_game *g)
 {
 	int		fd;
 	char	**content;
+	int		all;
 
 	fd = open(*g->levels, O_RDONLY);
 	if (fd == -1)
@@ -89,6 +91,16 @@ static char	**get_content(t_game *g)
 	if (!content)
 		set_error_parsing(g, R_FAILED, *g->levels);
 	close(fd);
+	if (g->level == 0)
+	{
+		all = all_textures_defined(content);
+		if (all != 1)
+			free(content);
+		if (all == -1)
+			return (set_error_parsing(g, INVALID_LINE, *g->levels), NULL);
+		if (all == 0)
+			return (set_error_parsing(g, NO_TEXTURES, *g->levels), NULL);
+	}
 	return (content);
 }
 

@@ -262,8 +262,8 @@ typedef struct s_ray
 
 // utils
 void				set_error_parsing(t_game *g, char *msg, char *path);
+int					all_textures_defined(char **content);
 void				load_texture(t_game *g, t_tex *tex, char *path);
-int					validate_line(char *line);
 int					check_loaded_textures(t_game *game);
 int					clamp_int(int v, int a, int b);
 unsigned int		get_pixel_color(t_tex tex, int x, int y);
@@ -287,6 +287,7 @@ int					check_files_extension(int argc, char **argv);
 void				get_info_file(t_game *g, int only_map);
 void				load_map_textures(t_game *g, char **content);
 char				*check_map_accessibility(char **map);
+int					is_map_str(char *line);
 char				**get_map(char **content);
 void				create_spiderman(t_game *g);
 void				create_sprites(t_game *g);
