@@ -77,26 +77,41 @@ int	check_files_extension(int argc, char **argv)
 	return (0);
 }
 
-void	get_info_file(t_game *g)
+static char	**get_content(t_game *g)
 {
 	int		fd;
 	char	**content;
 
-	if (!ft_memlen(g->levels))
-		return (g->render_state = WIN, (void)0);
-	free_level(g);
 	fd = open(*g->levels, O_RDONLY);
 	if (fd == -1)
-		return (set_error_parsing(g, O_FAILED, *g->levels));
+		return (set_error_parsing(g, O_FAILED, *g->levels), NULL);
 	content = read_file(fd);
 	if (!content)
-		return (set_error_parsing(g, R_FAILED, *g->levels));
-	load_map_textures(g, content);
-	g->map = get_map(content);
-	if (!g->map)
-		return (set_error_parsing(g, NULL, NULL));
-	ft_free_array((void ***)&content);
+		set_error_parsing(g, R_FAILED, *g->levels);
 	close(fd);
+	return (content);
+}
+
+void	get_info_file(t_game *g, int only_map)
+{
+	char	**content;
+
+	if (!ft_memlen(g->levels))
+		return (g->render_state = WIN, (void)0);
+	if (g->level > 1)
+		free_level(g);
+	content = get_content(g);
+	if (!content)
+		return ;
+	if (!g->map)
+		g->map = get_map(content);
+	if (!g->map)
+		return (ft_free_array((void ***)&content), set_error_parsing(g, NULL,
+				NULL));
+	if (only_map)
+		return (ft_free_array((void ***)&content), (void)0);
+	load_map_textures(g, content);
+	ft_free_array((void ***)&content);
 	create_spiderman(g);
 	create_sprites(g);
 	if (!g->bomb_count)

@@ -17,13 +17,13 @@ static double	lerp(double a, double b, double t)
 	return (a + (b - a) * t);
 }
 
-static t_ray	get_ray_animation(const char *msg, double x, double char_w)
+static t_ray	get_ray_animation(const char *msg, double x, t_font font)
 {
 	t_ray	ray;
 	double	text_w;
 
 	ray.row_distance = x;
-	text_w = (ft_strlen(msg) * char_w);
+	text_w = ft_strlen(msg) * font.char_w * font.scale;
 	ray.coords.x = (WIDTH / 2) - (text_w / 2);
 	ray.coords.y = HEIGHT / 2;
 	ray.d_start.x = -text_w;
@@ -31,17 +31,15 @@ static t_ray	get_ray_animation(const char *msg, double x, double char_w)
 	return (ray);
 }
 
-static t_coords	get_animation_coords(t_game *g, const char *msg,
-		double secs_left)
+static t_coords	get_animation_coords(t_game g, const char *msg)
 {
 	t_ray	ray;
 	double	text_speed;
 
-	ray.row_distance = TEXT_DURATION - secs_left;
+	ray.row_distance = TEXT_DURATION - (TEXT_DURATION - g.timer);
 	if (ray.row_distance < 0.0 || ray.row_distance > TEXT_DURATION)
 		return ((t_coords){-1, -1});
-	ray = get_ray_animation(msg, ray.row_distance, g->font.char_w
-			* g->font.scale);
+	ray = get_ray_animation(msg, ray.row_distance, g.font);
 	text_speed = (TEXT_DURATION - TEXT_HOLD_TIME) / 2.0;
 	if (ray.row_distance < text_speed)
 	{
@@ -59,14 +57,19 @@ static t_coords	get_animation_coords(t_game *g, const char *msg,
 	return (ray.coords);
 }
 
-static void	put_message(t_game *g, char *msg, int render_state)
+static void	put_message(t_game *g, char *msg, int next_render_state)
 {
 	t_timeleft	t;
 	t_coords	coords;
 
-	coords = get_animation_coords(g, msg, TEXT_DURATION - g->timer);
+	coords = get_animation_coords(*g, msg);
 	t = set_message(g, msg, coords);
-	timeout_render(g, t, render_state);
+	if (t.minutes == 0 && t.seconds == 0)
+	{
+		g->render_state = next_render_state;
+		g->timer = 0;
+		return ;
+	}
 	g->timer++;
 }
 
@@ -79,7 +82,7 @@ void	load_level(t_game *g)
 	{
 		++g->levels;
 		++g->level;
-		get_info_file(g);
+		get_info_file(g, 0);
 	}
 	if (g->render_state == WIN)
 		put_message(g, "WELL DONE! YOU ESCAPED!", HIGH_SCORE);

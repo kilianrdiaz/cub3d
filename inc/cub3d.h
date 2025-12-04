@@ -284,7 +284,7 @@ int					**get_visited_map(char **map);
 
 // parsing
 int					check_files_extension(int argc, char **argv);
-void				get_info_file(t_game *g);
+void				get_info_file(t_game *g, int only_map);
 void				load_map_textures(t_game *g, char **content);
 char				*check_map_accessibility(char **map);
 char				**get_map(char **content);
@@ -305,7 +305,6 @@ void				show_intro(t_game *g);
 void				draw_fullscreen_image(t_game *g, t_tex tex);
 void				render_map(t_game *g);
 t_timeleft			set_message(t_game *g, char *msg, t_coords coords);
-void				timeout_render(t_game *g, t_timeleft t, int render_state);
 void				put_timer(t_game *g, t_coords coords);
 void				update_timer(t_game *g);
 void				render_stats(t_game *g);

@@ -106,6 +106,11 @@ int	main(int argc, char **argv)
 	if (check_files_extension(argc, argv))
 		return (1);
 	g.levels = argv;
+	++g.levels;
+	get_info_file(&g, 1);
+	--g.levels;
+	if (!g.map)
+		return (1);
 	create_mlx_window(&g);
 	prepare_game(&g);
 	mlx_loop_hook(g.mlx, render, &g);
