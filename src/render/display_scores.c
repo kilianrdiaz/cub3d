@@ -22,6 +22,8 @@ static int	close_high_scores(int keycode, t_game *g)
 		g->render_state = END;
 		ft_bzero(&g->keys, sizeof(t_keys));
 		clean_screen(g);
+		if (g->wallpaper.img)
+			mlx_destroy_image(g->mlx, g->wallpaper.img);
 		mlx_hook(g->win, 2, 1L << 0, key_press, g);
 		mlx_hook(g->win, 3, 1L << 1, key_release, g);
 	}
@@ -101,8 +103,6 @@ void	display_score_panel(t_game *g, t_tex score_panel, char **scores)
 		g->font.scale = 3.0;
 	}
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
-	if (score_panel.img)
-		mlx_destroy_image(g->mlx, score_panel.img);
 	g->timer++;
 	mlx_key_hook(g->win, close_high_scores, g);
 }

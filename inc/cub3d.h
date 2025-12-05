@@ -238,6 +238,7 @@ typedef struct s_game
 	t_tex			*bomb_tex;
 	t_tex			*lizard_tex;
 	t_tex			*map_text;
+	t_tex			wallpaper;
 	t_keys			keys;
 	t_minimap		minimap;
 	unsigned int	score;

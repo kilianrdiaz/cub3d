@@ -12,6 +12,10 @@
 
 #include "../../inc/cub3d.h"
 
+#define TARGET_FILE "./textures/web_target.xpm"
+#define SCORE_PANEL "./textures/score_panel.xpm"
+#define SCORE_FILE "scores.txt"
+
 static t_ray	ray_web_target(t_game *g, t_tex web_target, float scale)
 {
 	t_ray	ray;
@@ -64,7 +68,9 @@ static char	*register_score(t_game *g, t_tex score_panel)
 
 	clean_screen(g);
 	ft_bzero(&target, sizeof(t_tex));
-	load_texture(g, &target, "./textures/web_target.xpm");
+	load_texture(g, &target, TARGET_FILE);
+	if (!target.img)
+		return (g->render_state = SCORE_SAVED, NULL);
 	draw_fullscreen_image(g, score_panel);
 	g->font.scale = 1.5;
 	render_text(g, "ENTER NAME", (t_coords){WIDTH / 10, 50});
@@ -75,8 +81,6 @@ static char	*register_score(t_game *g, t_tex score_panel)
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	if (target.img)
 		mlx_destroy_image(g->mlx, target.img);
-	if (score_panel.img)
-		mlx_destroy_image(g->mlx, score_panel.img);
 	free(alphabet);
 	return (result);
 }
@@ -107,19 +111,19 @@ void	show_high_scores(t_game *g)
 {
 	char	**scores;
 	int		position;
-	t_tex	score_panel;
 	char	*new_score;
 
-	load_texture(g, &score_panel, "./textures/score_panel.xpm");
+	if (!g->timer && ++g->timer)
+		load_texture(g, &g->wallpaper, SCORE_PANEL);
 	scores = get_scores();
 	position = get_position(g, scores);
 	if (position != -1 && g->render_state != SCORE_SAVED && g->score)
 		g->render_state = WAITING_FOR_NAME;
 	if (g->render_state == HIGH_SCORE || g->render_state == SCORE_SAVED)
-		display_score_panel(g, score_panel, scores);
+		display_score_panel(g, g->wallpaper, scores);
 	else
 	{
-		new_score = register_score(g, score_panel);
+		new_score = register_score(g, g->wallpaper);
 		if (new_score)
 		{
 			update_scores(scores, position);

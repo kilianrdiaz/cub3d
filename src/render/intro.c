@@ -12,6 +12,8 @@
 
 #include "../inc/cub3d.h"
 
+#define INTRO_FILE "./textures/intro.xpm"
+
 static int	close_intro(int keycode, t_game *g)
 {
 	(void)keycode;
@@ -20,6 +22,8 @@ static int	close_intro(int keycode, t_game *g)
 		g->render_state = PRE_LOAD;
 		ft_bzero(&g->keys, sizeof(t_keys));
 		clean_screen(g);
+		if (g->wallpaper.img)
+			mlx_destroy_image(g->mlx, g->wallpaper.img);
 		g->timer = 0;
 		mlx_hook(g->win, 2, 1L << 0, key_press, g);
 		mlx_hook(g->win, 3, 1L << 1, key_release, g);
@@ -58,14 +62,11 @@ static int	read_intro(t_game *g)
 
 void	show_intro(t_game *g)
 {
-	t_tex	intro;
-
-	load_texture(g, &intro, "./textures/intro.xpm");
-	draw_fullscreen_image(g, intro);
+	if (!g->timer)
+		load_texture(g, &g->wallpaper, INTRO_FILE);
+	draw_fullscreen_image(g, g->wallpaper);
 	read_intro(g);
 	mlx_put_image_to_window(g->mlx, g->win, g->img, 0, 0);
 	g->timer++;
 	mlx_key_hook(g->win, close_intro, g);
-	if (intro.img)
-		mlx_destroy_image(g->mlx, intro.img);
 }

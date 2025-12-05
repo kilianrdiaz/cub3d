@@ -71,6 +71,7 @@ static void	prepare_game(t_game *g)
 		ft_error_exit("Error: Memory allocation failed for map textures\n");
 	g->live.player_hp = 100;
 	g->live.lives_left = 3;
+	g->wallpaper.color = COLOR_NONE;
 	ft_bzero(&g->keys, sizeof(t_keys));
 	mlx_hook(g->win, 2, 1L << 0, key_press, g);
 	mlx_hook(g->win, 3, 1L << 1, key_release, g);
