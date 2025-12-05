@@ -10,13 +10,15 @@
 #                                                                              #
 # **************************************************************************** #
 
+.vscode
 libs
-cub3d
-*.o
-*.d
+cub3D
+cub3DA
 .venv
-obj
-audios
-maps
+obj_deps
+*.wav
+*.mp3
 *.cub
-textures
+*.txt
+*.png
+*.xpm
