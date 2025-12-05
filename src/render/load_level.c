@@ -80,17 +80,15 @@ void	load_level(t_game *g)
 
 	if (!g->timer && g->render_state == LOAD_LEVEL)
 	{
-		++g->levels;
 		++g->level;
+		++g->levels;
 		get_info_file(g, 0);
+		if (g->level == 1 && g->render_state == LOAD_LEVEL)
+			return (g->render_state = INTRO, (void)0);
 	}
-	if (g->render_state == WIN)
-		put_message(g, "WELL DONE! YOU ESCAPED!", HIGH_SCORE);
-	if (g->render_state == GAME_OVER)
-		put_message(g, "GAME OVER!", HIGH_SCORE);
-	if (g->level == 1 && g->render_state == LOAD_LEVEL)
+	else if (g->render_state == PRE_LOAD)
 		put_message(g, "DEFUSE BOMBS!", NEW_LEVEL);
-	if (g->render_state == NEW_LEVEL)
+	else if (g->render_state == NEW_LEVEL)
 	{
 		level = ft_itoa(g->level);
 		msg = ft_strjoin("LEVEL ", level);
@@ -98,4 +96,8 @@ void	load_level(t_game *g)
 		put_message(g, msg, PLAYING);
 		free(msg);
 	}
+	else if (g->render_state == WIN)
+		put_message(g, "WELL DONE! YOU ESCAPED!", HIGH_SCORE);
+	else if (g->render_state == GAME_OVER)
+		put_message(g, "GAME OVER!", HIGH_SCORE);
 }

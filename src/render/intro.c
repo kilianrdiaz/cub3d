@@ -17,7 +17,7 @@ static int	close_intro(int keycode, t_game *g)
 	(void)keycode;
 	if (g->render_state == INTRO && g->timer > MIN_TIME_TO_READ)
 	{
-		g->render_state = LOAD_LEVEL;
+		g->render_state = PRE_LOAD;
 		ft_bzero(&g->keys, sizeof(t_keys));
 		clean_screen(g);
 		g->timer = 0;

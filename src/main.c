@@ -19,8 +19,9 @@ static void	game_loop(void *param)
 	g = (t_game *)param;
 	if (g->render_state == INTRO)
 		show_intro(g);
-	else if (g->render_state == LOAD_LEVEL || g->render_state == NEW_LEVEL
-		|| g->render_state == GAME_OVER || g->render_state == WIN)
+	else if (g->render_state == LOAD_LEVEL || g->render_state == PRE_LOAD
+		|| g->render_state == NEW_LEVEL || g->render_state == GAME_OVER
+		|| g->render_state == WIN)
 		load_level(g);
 	else if (g->render_state == PLAYING || g->render_state == PAUSE)
 		game(g);
@@ -107,6 +108,7 @@ int	main(int argc, char **argv)
 		return (1);
 	create_mlx_window(&g);
 	prepare_game(&g);
+	g.render_state = LOAD_LEVEL;
 	mlx_loop_hook(g.mlx, render, &g);
 	mlx_loop(g.mlx);
 	close_program(&g);

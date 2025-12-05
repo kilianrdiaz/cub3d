@@ -96,11 +96,11 @@ static char	**get_content(t_game *g)
 	if (!content)
 		set_error_parsing(g, R_FAILED, *g->levels);
 	close(fd);
-	if (g->level == 0)
+	if (g->render_state == PRE_LOAD)
 	{
 		all = all_textures_defined(content);
 		if (all != 1)
-			free(content);
+			ft_free_array((void ***)&content);
 		if (all == -1)
 			return (set_error_parsing(g, INVALID_LINE, *g->levels), NULL);
 		if (all == 0)

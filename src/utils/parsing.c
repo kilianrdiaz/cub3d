@@ -80,8 +80,9 @@ int	all_textures_defined(char **content)
 
 void	set_error_parsing(t_game *g, char *msg, char *path)
 {
-	if (g->render_state != HIGH_SCORE && g->render_state != WAITING_FOR_NAME
-		&& g->render_state != SCORE_SAVED && g->render_state != INTRO)
+	if (g->render_state != LOAD_LEVEL && g->render_state != PRE_LOAD)
+		return ;
+	if (g->render_state == LOAD_LEVEL)
 		g->render_state = HIGH_SCORE;
 	if (msg)
 		ft_printf_fd(2, msg, path);
@@ -94,11 +95,7 @@ void	load_texture(t_game *g, t_tex *tex, char *path)
 	tex->color = COLOR_NONE;
 	tex->img = mlx_xpm_file_to_image(g->mlx, path, &tex->width, &tex->height);
 	if (!tex->img)
-	{
-		if (g->render_state == INTRO || g->render_state >= HIGH_SCORE)
-			return ;
 		return (set_error_parsing(g, NO_TEXTURE, path));
-	}
 	tex->addr = mlx_get_data_addr(tex->img, &tex->bpp, &tex->line_len,
 			&tex->endian);
 	if (tex->width <= 0 || tex->height <= 0)

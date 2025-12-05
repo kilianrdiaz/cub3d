@@ -88,8 +88,9 @@ typedef enum e_state
 
 typedef enum e_render
 {
-	INTRO,
+	PRE_LOAD,
 	LOAD_LEVEL,
+	INTRO,
 	NEW_LEVEL,
 	WIN,
 	GAME_OVER,
