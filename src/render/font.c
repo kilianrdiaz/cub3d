@@ -14,6 +14,8 @@
 
 #define NUM_ROWS 5
 #define FONT_ORDER "ABCDEFGHI\nJKLMNOPQR\nSTUVWXYZ0\n123456789\n'+-:,.!?/"
+#define NO_FONT "Error: could not load font %s\n"
+#define INVALID_SIZE "Error: font %s has invalid size\n"
 
 static void	set_bitmap(t_font *f, t_char_bitmap *cb, t_pos rc)
 {
@@ -66,13 +68,13 @@ void	load_font(t_game *g, t_font *f, char *path)
 	f->img = mlx_xpm_file_to_image(g->mlx, path, &f->char_w, &f->char_h);
 	if (!f->img)
 	{
-		ft_printf_fd(2, "Error: could not load font %s\n", path);
+		ft_printf_fd(STDERR_FILENO, NO_FONT, path);
 		exit(EXIT_FAILURE);
 	}
 	f->addr = mlx_get_data_addr(f->img, &f->bpp, &f->line_len, &f->endian);
 	if (!f->addr)
 	{
-		ft_printf_fd(2, "Error: font %s has invalid size\n", path);
+		ft_printf_fd(STDERR_FILENO, INVALID_SIZE, path);
 		exit(EXIT_FAILURE);
 	}
 	f->scale = 1.0;
