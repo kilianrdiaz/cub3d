@@ -10,6 +10,8 @@ The engine uses ray-casting techniques on a 2D map to render a pseudo-3D environ
 
 **Basic movement & additional features** — the player can move and rotate using the WASD keys, turn the camera on the X-axis using the mouse, and interact with map elements using SPACE (to attack enemies or defuse active bombs). The health bar, minimap, bomb counter, countdown timer, and soundtrack implementation are based on the original game. Additional features such as a scoreboard and a pause key (P) are ideas of my own.
 
+**Graphics handled via a Minilibx** — the project uses MiniLibX, a minimal graphics library commonly used in 42-school projects, to open a window and render the game scene.
+
 /* TO-DO 
 *
 * - Installation, compilation and execution
@@ -17,5 +19,4 @@ The engine uses ray-casting techniques on a 2D map to render a pseudo-3D environ
 * - Game objective and explanation
 * - Subject.txt
 * - Screenshots and videos
-
-**Graphics handled via a Minilibx** — the project uses MiniLibX, a minimal graphics library commonly used in 42-school projects, to open a window and render the game scene.
+*/
