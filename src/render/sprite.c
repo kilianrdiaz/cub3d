@@ -57,17 +57,13 @@ static void	draw_sprite(t_game *g, t_sprite *sp, t_ray ray, t_tex tex)
 	}
 }
 
-static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex tex)
+static void	ray_sprite(t_sprite *sp, t_ray *ray, t_tex tex, double pitch)
 {
 	sp->height = (tex.height * sp->scale / sp->trans.y);
 	sp->width = (tex.width * sp->scale / sp->trans.y);
 	ray->view = (int)(HEIGHT / sp->trans.y * 0.5);
-	ray->d_start.y = -sp->height / 2 + HEIGHT / 2 + ray->view;
-	ray->d_end.y = sp->height / 2 + HEIGHT / 2 + ray->view;
-	if (ray->d_start.y < 0)
-		ray->d_start.y = 0;
-	if (ray->d_end.y >= HEIGHT)
-		ray->d_end.y = HEIGHT - 1;
+	ray->d_start.y = -sp->height / 2 + HEIGHT / 2 + ray->view + pitch;
+	ray->d_end.y = sp->height / 2 + HEIGHT / 2 + ray->view + pitch;
 	sp->screen_x = (int)((GAME_W / 2) * (1 + sp->trans.x / sp->trans.y));
 	ray->d_start.x = -sp->width / 2 + sp->screen_x;
 	ray->d_end.x = ray->d_start.x + sp->width;
@@ -98,7 +94,7 @@ static void	position_sprite(t_game *g, t_sprite sp)
 			* sp.pos.y);
 	if (sp.trans.y > 0.0 && tex.img && tex.addr)
 	{
-		ray_sprite(&sp, &ray, tex);
+		ray_sprite(&sp, &ray, tex, g->spider.pitch);
 		while (++ray.line_height < ray.d_end.x)
 			if (sp.trans.y > 0 && ray.line_height >= 0
 				&& ray.line_height < GAME_W

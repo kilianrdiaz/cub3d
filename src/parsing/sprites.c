@@ -54,6 +54,7 @@ void	create_spiderman(t_game *g)
 			{
 				g->spider.pos.x = p.x + 0.5;
 				g->spider.pos.y = p.y + 0.5;
+				g->spider.pitch = 0;
 				set_direction(g, c);
 				return ;
 			}
