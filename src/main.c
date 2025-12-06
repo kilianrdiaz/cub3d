@@ -76,7 +76,7 @@ static void	prepare_game(t_game *g)
 	mlx_hook(g->win, 2, 1L << 0, key_press, g);
 	mlx_hook(g->win, 3, 1L << 1, key_release, g);
 	mlx_hook(g->win, 17, 0, close_window, g);
-	mlx_hook(g->win, 6, 1L << 6, mouse_rotation, g);
+	mlx_hook(g->win, 6, 1L << 6, mouse_control, g);
 	g->game_loop = game_loop;
 }
 

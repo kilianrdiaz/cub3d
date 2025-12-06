@@ -12,6 +12,9 @@
 
 #include "../inc/cub3d.h"
 
+#define MOUSE_SENSITIVITY_X 0.0005
+#define MOUSE_SENSITIVITY_Y 0.2
+
 int	key_press(int key, t_game *g)
 {
 	if (key == 119)
@@ -90,20 +93,21 @@ static int	enable_mouse(t_game *g)
 	return (1);
 }
 
-int	mouse_rotation(int x, int y, t_game *g)
+int	mouse_control(int x, int y, t_game *g)
 {
-	int		dx;
-	double	angle;
+	t_coords	d;
+	double		angle;
 
-	(void)y;
 	if (!g || !g->mlx || !g->win)
 		return (0);
 	if (!enable_mouse(g))
 		return (0);
-	dx = x - WIDTH / 2;
-	if (dx == 0)
+	d.x = x - WIDTH / 2;
+	d.y = y - HEIGHT / 2;
+	g->spider.pitch += d.y * MOUSE_SENSITIVITY_Y;
+	if (d.x == 0)
 		return (0);
-	angle = dx * MOUSE_SENSITIVITY;
+	angle = d.x * MOUSE_SENSITIVITY_X;
 	update_player_position(g, angle);
 	mlx_mouse_move(g->mlx, g->win, WIDTH / 2, HEIGHT / 2);
 	return (0);

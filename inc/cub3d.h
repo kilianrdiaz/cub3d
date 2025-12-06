@@ -34,7 +34,6 @@
 # define MOVE_SPEED 0.1
 # define ROT_SPEED 0.1
 # define DETECT_RADIUS 7.0
-# define MOUSE_SENSITIVITY 0.0005
 
 // MINIMAPA
 # define COL_BG 0x000000
@@ -345,6 +344,6 @@ void				close_program(t_game *g);
 int					close_window(t_game *g);
 void				player_take_damage(t_game *g, t_sprite *lizard);
 
-int					mouse_rotation(int x, int y, t_game *g);
+int					mouse_control(int x, int y, t_game *g);
 
 #endif
