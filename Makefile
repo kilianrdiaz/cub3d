@@ -116,6 +116,11 @@ $(RENDER_OBJ): $(SRC_RENDER) inc/cub3d.h Makefile
 	@echo "🎨 Compilando render normal..."
 	$(CC) $(CFLAGS) -MMD -MP -c $(SRC_RENDER) -o $@
 
+$(OBJ_DIR)/%.o: src/%.c inc/cub3d.h Makefile
+	@mkdir -p $(dir $@)
+	@echo "⚙️  Compilando $<..."
+	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+
 # -----------------------------
 # Compilación render con audio
 # -----------------------------
@@ -128,6 +133,11 @@ $(NAME_AUDIO): $(OBJ_A) $(RENDER_AUDIO_OBJ)
 	@echo "🔊 Linkando render con audio..."
 	$(CC) $(OBJ_A) $(RENDER_AUDIO_OBJ) -o $(NAME_AUDIO) $(MLX) $(LIBFT)
 	@echo "✅ Compilación con audio finalizada."
+
+$(OBJ_DIR_A)/%.o: src/%.c inc/cub3d.h inc/audio.h Makefile
+	@mkdir -p $(dir $@)
+	@echo "⚙️  Compilando $< con audio..."
+	$(CC) $(CFLAGS) $(MINIAUDIO_INC) -MMD -MP -c $< -o $@
 
 miniaudio: $(MINIAUDIO_FILE) $(LIBFT_LIB) $(MLX_LIB) $(NAME_AUDIO)
 
@@ -172,7 +182,6 @@ clean:
 fclean: clean
 	@rm -f $(NAME) $(NAME_AUDIO)
 	@rm -rf libs
-	@make -C $(LIBFT_DIR) fclean || true
 	@echo "🧼 Limpieza completa: binarios y librerías externas eliminados."
 
 re: fclean all
