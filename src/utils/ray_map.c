@@ -40,8 +40,8 @@ int	clamp_int(int v, int a, int b)
 void	calculate_wall_stripe(t_game g, t_ray *ray, t_tex tex, int side)
 {
 	ray->line_height = (int)(HEIGHT / ray->row_distance);
-	ray->d_start.y = -ray->line_height / 2 + HEIGHT / 2;
-	ray->d_end.y = ray->line_height / 2 + HEIGHT / 2;
+	ray->d_start.y = -ray->line_height / 2 + HEIGHT / 2 + g.spider.pitch;
+	ray->d_end.y = ray->line_height / 2 + HEIGHT / 2 + g.spider.pitch;
 	if (ray->d_start.y < 0)
 		ray->d_start.y = 0;
 	if (ray->d_end.y >= HEIGHT)

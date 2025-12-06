@@ -26,6 +26,10 @@ int	key_press(int key, t_game *g)
 		g->keys.left = 1;
 	if (key == 65363)
 		g->keys.right = 1;
+	if (key == 65362)
+		g->keys.up = 1;
+	if (key == 65364)
+		g->keys.down = 1;
 	if (key == 32)
 		g->keys.space = 1;
 	if (key == 112)
@@ -51,6 +55,10 @@ int	key_release(int key, t_game *g)
 		g->keys.left = 0;
 	if (key == 65363)
 		g->keys.right = 0;
+	if (key == 65362)
+		g->keys.up = 0;
+	if (key == 65364)
+		g->keys.down = 0;
 	if (key == 32)
 		g->keys.space = 0;
 	if (key == 112)
