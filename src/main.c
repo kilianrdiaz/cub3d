@@ -109,7 +109,8 @@ int	main(int argc, char **argv)
 		return (1);
 	create_mlx_window(&g);
 	prepare_game(&g);
-	g.render_state = LOAD_LEVEL;
+	if (!g.render_state)
+		g.render_state = LOAD_LEVEL;
 	mlx_loop_hook(g.mlx, render, &g);
 	mlx_loop(g.mlx);
 	close_program(&g);

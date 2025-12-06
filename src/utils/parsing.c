@@ -80,7 +80,7 @@ int	all_textures_defined(char **content)
 
 void	set_error_parsing(t_game *g, char *msg, char *path)
 {
-	if (g->render_state == LOAD_LEVEL)
+	if (!g->render_state || g->render_state == LOAD_LEVEL)
 		g->render_state = HIGH_SCORE;
 	if (msg)
 		ft_printf_fd(2, msg, path);
