@@ -153,6 +153,8 @@ typedef struct s_keys
 	int				p;
 	int				left;
 	int				right;
+	int				up;
+	int				down;
 	int				space;
 	int				shift;
 }					t_keys;
@@ -191,6 +193,7 @@ typedef struct s_spidy
 	t_coords		dir;
 	t_coords		plane;
 	double			move_accum;
+	double			pitch;
 	t_tex			*hand;
 	t_state			state;
 	int				spider_sense;
@@ -283,6 +286,8 @@ int					get_position(t_game *g, char **scores);
 t_sprite			*print_alphabet(t_game *game);
 void				update_scores(char **scores, int position);
 int					**get_visited_map(char **map);
+int					is_walkable(int x, int y, char **map);
+int					slide_player(t_game *g, t_coords *new_pos, t_coords ch_pos);
 
 // parsing
 int					check_files_extension(int argc, char **argv);

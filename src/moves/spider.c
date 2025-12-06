@@ -13,32 +13,8 @@
 #include "../inc/cub3d.h"
 
 #define SAFETY_OFFSET 0.2
-
-static int	is_walkable(int x, int y, char **map)
-{
-	if (y < 0 || x < 0 || !map[y] || x >= (int)ft_strlen(map[y]))
-		return (0);
-	if (map[y][x] == '1')
-		return (0);
-	return (1);
-}
-
-static int	slide_player(t_game *g, t_coords *new_pos, t_coords check_pos)
-{
-	t_pos	slide_pos;
-
-	if (is_walkable((int)check_pos.x, (int)check_pos.y, g->map))
-		return (1);
-	slide_pos.x = is_walkable((int)check_pos.x, (int)g->spider.pos.y, g->map);
-	slide_pos.y = is_walkable((int)g->spider.pos.x, (int)check_pos.y, g->map);
-	if (slide_pos.x && !slide_pos.y)
-		new_pos->y = g->spider.pos.y;
-	else if (slide_pos.y && !slide_pos.x)
-		new_pos->x = g->spider.pos.x;
-	if (!is_walkable((int)new_pos->x, (int)new_pos->y, g->map))
-		return (0);
-	return (1);
-}
+#define MOVE_THRESHOLD 0.40
+#define PITCH_SPEED 5.0
 
 static double	move_player(t_game *g, double dir)
 {
@@ -82,6 +58,21 @@ static void	rotate_spidy(t_spidy *spidy, double angle)
 	spidy->plane.y = oldplane_x * sin(angle) + spidy->plane.y * cos(angle);
 }
 
+static void	change_hand_texture(t_game *g)
+{
+	if (g->keys.space)
+		g->spider.state = ATTACKING;
+	else if (g->spider.state == ATTACKING)
+		g->spider.state = ACTIVE;
+	if (g->spider.move_accum <= MOVE_THRESHOLD)
+		return ;
+	if (g->spider.state == ACTIVE)
+		g->spider.state = MOVING;
+	else if (g->spider.state == MOVING)
+		g->spider.state = ACTIVE;
+	g->spider.move_accum = 0.0;
+}
+
 void	update_player_position(t_game *g, double mouse)
 {
 	if (mouse)
@@ -96,15 +87,9 @@ void	update_player_position(t_game *g, double mouse)
 		g->spider.move_accum += move_player(g, MOVE_SPEED);
 	if (g->keys.s)
 		g->spider.move_accum += move_player(g, -MOVE_SPEED);
-	if (g->keys.space)
-		g->spider.state = ATTACKING;
-	else if (g->spider.state == ATTACKING)
-		g->spider.state = ACTIVE;
-	if (g->spider.move_accum < 0.40)
-		return ;
-	if (g->spider.state == ACTIVE)
-		g->spider.state = MOVING;
-	else if (g->spider.state == MOVING)
-		g->spider.state = ACTIVE;
-	g->spider.move_accum = 0.0;
+	if (g->keys.up)
+		g->spider.pitch += PITCH_SPEED;
+	if (g->keys.down)
+		g->spider.pitch -= PITCH_SPEED;
+	change_hand_texture(g);
 }

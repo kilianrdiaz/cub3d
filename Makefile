@@ -38,6 +38,7 @@ SRC_RENDER_AUDIO = src/render/render_with_audio.c
 # ================================
 SRCS = src/utils/parsing.c \
        src/utils/render.c \
+	   src/utils/moves.c \
        src/utils/ray_map.c \
        src/utils/score.c \
        src/parsing/map_textures.c \
