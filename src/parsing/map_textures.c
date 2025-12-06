@@ -63,18 +63,19 @@ static unsigned int	get_rgb_color(char **splited)
 	char			*str;
 	int				x;
 
-	if (ft_memlen(splited) != 4)
-		return (COLOR_NONE);
 	rgb = NULL;
 	x = 0;
-	while (++x <= 3)
+	while (splited[++x])
 	{
 		str = ft_strtrim(splited[x], ",\n\r\t ");
 		if (!str)
 			return (ft_free_array((void ***)&color), COLOR_NONE);
 		ft_append_array((void ***)&rgb, str);
 	}
-	color = get_color(rgb[0], rgb[1], rgb[2]);
+	if (x == 3)
+		color = get_color(rgb[0], rgb[1], rgb[2]);
+	else
+		color = COLOR_NONE;
 	ft_free_array((void ***)&rgb);
 	return (color);
 }
@@ -84,7 +85,6 @@ void	load_map_textures(t_game *g, char **content)
 	int		i;
 	t_tex	*tex;
 	char	**splited;
-	size_t	len_splited;
 
 	i = -1;
 	while (content[++i])
@@ -95,11 +95,14 @@ void	load_map_textures(t_game *g, char **content)
 		splited = ft_split(content[i], ' ');
 		if (!splited)
 			return (set_error_parsing(g, ERR_LINE_TEXT, content[i]));
-		len_splited = ft_memlen((const void **)splited);
-		if (len_splited == 2)
+		if (ft_memlen((const void **)splited) == 2)
 			load_texture(g, tex, splited[1]);
-		else if (len_splited == 4)
+		else
+		{
 			tex->color = get_rgb_color(splited);
+			if (tex->color == COLOR_NONE)
+				set_error_parsing(g, ERR_LINE_TEXT, content[i]);
+		}
 		ft_free_array((void ***)&splited);
 	}
 }
