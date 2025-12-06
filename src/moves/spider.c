@@ -14,7 +14,7 @@
 
 #define SAFETY_OFFSET 0.2
 #define MOVE_THRESHOLD 0.40
-#define PITCH_SPEED 5.0
+#define PITCH_SPEED 10
 
 static double	move_player(t_game *g, double dir)
 {
