@@ -37,7 +37,7 @@ static int	read_intro(t_game *g)
 	char		*line;
 	t_coords	coords;
 
-	fd = open("./textures/intro.txt", O_RDONLY);
+	fd = open("./intro.txt", O_RDONLY);
 	if (fd == -1)
 		return (0);
 	coords.x = 160;

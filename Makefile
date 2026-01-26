@@ -104,7 +104,7 @@ MINIAUDIO_INC  = -I$(MINIAUDIO_DIR)
 # -----------------------------
 # Compilación normal
 # -----------------------------
-all: $(LIBFT_LIB) $(MLX_LIB) $(NAME)
+all:  $(LIBFT_LIB) $(MLX_LIB) $(NAME)
 
 $(NAME): $(OBJ) $(RENDER_OBJ)
 	@echo "🎨 Linkando render normal..."
@@ -172,6 +172,14 @@ $(MINIAUDIO_FILE):
 	fi
 
 # ===========================
+#   📦 RECURSOS
+# ===========================
+
+resources:
+	@echo "Descomprimiendo recursos..."; \
+	tar -xzpvf multimedia_cub.tar.gz;
+
+# ===========================
 #   🧹 LIMPIEZA
 # ===========================
 clean:
@@ -219,4 +227,4 @@ $(OBJ_DIR_A)/%.o: src/%.c inc/cub3d.h inc/audio.h
 -include $(RENDER_OBJ:.o=.d)
 -include $(RENDER_AUDIO_OBJ:.o=.d)
 
-.PHONY: all miniaudio clean fclean re re_miniaudio san victus
+.PHONY: all miniaudio clean fclean re re_miniaudio san victus resources
